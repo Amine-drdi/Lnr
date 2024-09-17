@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Stepper Navigation */
+.stepper-nav ul {
+  display: flex; /* Utiliser Flexbox pour une disposition horizontale */
+  
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: space-between; /* Espacement égal entre les étapes */
+}
+
+.stepper-nav .step {
+  flex: 1; /* Chaque étape occupe un espace égal */
+  text-align: center;
+  padding: 10px;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s, color 0.3s;
+  color: #000; /* Couleur du texte pour les étapes non remplies */
+}
+
+.stepper-nav .step.active {
+  border-color: #2563eb; /* Couleur bleue pour les étapes remplies */
+  color: #2563eb; /* Couleur du texte pour les étapes remplies */
+}
+
+/* Étapes non remplies */
+.stepper-nav .step.inactive {
+  color: #000; /* Couleur du texte pour les étapes non remplies */
+}
