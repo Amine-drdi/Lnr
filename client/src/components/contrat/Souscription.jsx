@@ -1,35 +1,61 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import axios from 'axios'; // Assure-toi d'avoir installé axios
+import { useNavigate } from 'react-router-dom';
 
-import { Textarea } from "@material-tailwind/react";
 function Souscription({ setIsAdding }) {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [nom, setNom] = useState('');
+  const [prenom, setPrenom] = useState('');
   const [phoneNumber, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [dob, setDob] = useState('');
   const [address, setAddress] = useState('');
   const [profession, setProfession] = useState('');
   const [signatureDate, setSignatureDate] = useState('');
-  const [vpAmount, setVpAmount] = useState('');
+  const [cotisation, setCotisation] = useState('');
   const [compagnie, setCompagnie] = useState('');
   const [effetDate, setEffetDate] = useState('');
-  const [entryFee, setEntryFee] = useState('');
-  const [fileFee, setFileFee] = useState('');
-  const [clientInterest, setClientInterest] = useState('');
-  const [businessIntroducer, setBusinessIntroducer] = useState('');
+  const [fraisEntre, setFraisEntre] = useState('');
+  const [fraisDossier, setFraisDossier] = useState('');
+  const [interetClient, setIntertClient] = useState('');
+  const [apporteurAffaire, setApporteurAffaire] = useState('');
+  const [commercial, setUserName] = useState(''); // Pour stocker le nom de l'utilisateur
+
   const textInput = useRef(null);
+  const navigate = useNavigate(); // Utilisation du hook navigate pour rediriger
 
   useEffect(() => {
     if (textInput.current) {
       textInput.current.focus();
     }
-  }, []);
+
+    // Fonction pour récupérer les informations du profil
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('authToken'); // Récupère le token d'authentification depuis le localStorage
+        if (token) {
+          const response = await axios.get('http://localhost:5000/api/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`, // Envoie le token dans les en-têtes
+            },
+          });
+          setUserName(response.data.user.name); // Définit le nom de l'utilisateur récupéré
+        } else {
+          navigate('/'); // Redirige si pas de token
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération du profil:', error);
+        navigate('/'); // Redirige en cas d'erreur
+      }
+    };
+
+    fetchProfile();
+  }, [navigate]); // Le useEffect dépend de navigate
 
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    if (!firstName || !lastName || !phoneNumber || !email || !dob || !address || !profession || !signatureDate || !vpAmount || !compagnie || !effetDate  || !businessIntroducer   ) {
+    if (!firstName || !lastName || !phoneNumber || !email || !dob || !address || !profession || !signatureDate || !cotisation || !compagnie || !effetDate || !businessIntroducer) {
       return Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -48,19 +74,18 @@ function Souscription({ setIsAdding }) {
       address,
       profession,
       signatureDate,
-      vpAmount,
+      cotisation,
       compagnie,
       effetDate,
       entryFee,
       fileFee,
       clientInterest,
       businessIntroducer,
-      
-      
+      commercial
     };
 
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/contrats', {
+      const response = await fetch('http://localhost:5000/api/contrats', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,9 +98,9 @@ function Souscription({ setIsAdding }) {
         if (typeof setContrat === 'function') {
           setContrat((prevContrats) => [...prevContrats, result.contrat]);
         } else {
-          console.error('setContrat n\'est pas une fonction');
+          console.error("setContrat n'est pas une fonction");
         }
-        
+
         Swal.fire({
           icon: 'success',
           title: 'Ajouté',
@@ -84,44 +109,43 @@ function Souscription({ setIsAdding }) {
           timer: 3000,
         });
       } else {
-        throw new Error('Erreur lors de l\'ajout du contrat');
+        throw new Error("Erreur lors de l'ajout du contrat");
       }
     } catch (error) {
       console.error(error);
       Swal.fire({
         icon: 'error',
         title: 'Erreur',
-        text: 'Impossible d\'ajouter le contrat.',
+        text: "Impossible d'ajouter le contrat.",
         showConfirmButton: true,
         timer: 1500,
       });
     }
   };
-
   return (
     <div className="w-full max-w-4xl mx-auto p-8 bg-blue-gray-50 shadow-lg rounded-lg border border-blue-gray-200">
       <form onSubmit={handleAdd} className="space-y-6">
-
+      
         {/* Section Identité du Souscripteur */}
-        <h2 className="text-2xl font-bold text-blue-gray-800 mb-4">Identité du Souscripteur</h2>
+        <h2 className="text-2xl font-bold text-blue-gray-800 mb-4">Identité du Souscripteur  </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-blue-gray-700">Nom</label>
+            <label htmlFor="nom" className="block text-sm font-medium text-blue-gray-700">Nom</label>
             <input
-              id="lastName"
+              id="nom"
               type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={nom}
+              onChange={(e) => setNom(e.target.value)}
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
             />
           </div>
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-blue-gray-700">Prénom</label>
+            <label htmlFor="prenom" className="block text-sm font-medium text-blue-gray-700">Prénom</label>
             <input
-              id="firstName"
+              id="prenom"
               type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={prenom}
+              onChange={(e) => setPrenom(e.target.value)}
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
             />
           </div>
@@ -191,12 +215,12 @@ function Souscription({ setIsAdding }) {
             />
           </div>
           <div>
-            <label htmlFor="vpAmount" className="block text-sm font-medium text-blue-gray-700">Montant VP/mois</label>
+            <label htmlFor="cotisation" className="block text-sm font-medium text-blue-gray-700">Montant VP/mois</label>
             <input
-              id="vpAmount"
+              id="cotisation"
               type="text"
-              value={vpAmount}
-              onChange={(e) => setVpAmount(e.target.value)}
+              value={cotisation}
+              onChange={(e) => setCotisation(e.target.value)}
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
             />
           </div>
@@ -217,7 +241,6 @@ function Souscription({ setIsAdding }) {
           <option value="Malakoff Humanis">Malakoff Humanis</option>
           <option value="Cegema">Cegema</option>
           <option value="Swisslife">Swisslife</option>
-          <option value="Cegema">Cegema</option>
           <option value="Soly Azar">Soly Azar</option>
           <option value="Zenio">Zenio</option>
         </select>
@@ -233,42 +256,42 @@ function Souscription({ setIsAdding }) {
             />
           </div>
           <div>
-            <label htmlFor="entryFee" className="block text-sm font-medium text-blue-gray-700">Frais d'entrée</label>
+            <label htmlFor="fraisEntre" className="block text-sm font-medium text-blue-gray-700">Frais d'entrée</label>
             <input
-              id="entryFee"
+              id="fraisEntre"
               type="text"
-              value={entryFee}
-              onChange={(e) => setEntryFee(e.target.value)}
+              value={fraisEntre}
+              onChange={(e) => setFraisEntre(e.target.value)}
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
             />
           </div>
           <div>
-            <label htmlFor="fileFee" className="block text-sm font-medium text-blue-gray-700">Frais de dossier</label>
+            <label htmlFor="fraisDossier" className="block text-sm font-medium text-blue-gray-700">Frais de dossier</label>
             <input
-              id="fileFee"
+              id="fraisDossier"
               type="text"
-              value={fileFee}
-              onChange={(e) => setFileFee(e.target.value)}
+              value={fraisDossier}
+              onChange={(e) => setFraisDossier(e.target.value)}
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
             />
           </div>
           <div>
-            <label htmlFor="clientInterest" className="block text-sm font-medium text-blue-gray-700">Intérêt du Client</label>
+            <label htmlFor="interetClient" className="block text-sm font-medium text-blue-gray-700">Intérêt du Client</label>
             <input
-              id="clientInterest"
+              id="interetClient"
               type="text"
-              value={clientInterest}
-              onChange={(e) => setClientInterest(e.target.value)}
+              value={interetClient}
+              onChange={(e) => setIntertClient(e.target.value)}
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
             />
           </div>
           <div>
             <label htmlFor="apporteur" className="block text-sm font-medium text-blue-gray-700">Apporteur d'affaire</label>
          <select
-          id="businessIntroducer"
-          name="businessIntroducer"
-          value={businessIntroducer}
-          onChange={(e) => setBusinessIntroducer(e.target.value)}
+          id="apporteur"
+          name="apporteur"
+          value={apporteurAffaire}
+          onChange={(e) => setApporteurAffaire(e.target.value)}
           className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
         >
           <option value=""></option>
@@ -289,6 +312,7 @@ function Souscription({ setIsAdding }) {
         <button type="submit" className="bg-blue-gray-600 text-white py-2 px-6 rounded-lg hover:bg-blue-gray-700 transition duration-150">
           Ajouter le contrat
         </button>
+      
       </form>
     </div>
   );

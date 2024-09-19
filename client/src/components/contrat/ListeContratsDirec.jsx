@@ -10,13 +10,12 @@ function ListeContratsDirec() {
   const [searchTerm, setSearchTerm] = useState('');
   const [editContratId, setEditContratId] = useState(null);
   const [updatedContrat, setUpdatedContrat] = useState({});
-  const signatureTypes = ["Lead", "RDV", "RDV à chaud"];
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
   const état_dossiers = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -36,7 +35,7 @@ function ListeContratsDirec() {
 
   useEffect(() => {
     const results = contrats.filter((contrat) =>
-      `${contrat.lastName} ${contrat.firstName}`.toLowerCase().includes(searchTerm.toLowerCase())
+      `${contrat.nom} ${contrat.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredContrats(results);
   }, [searchTerm, contrats]);
@@ -48,7 +47,7 @@ function ListeContratsDirec() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +71,7 @@ function ListeContratsDirec() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -143,26 +142,26 @@ function ListeContratsDirec() {
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
-                      name="lastName"
-                      value={updatedContrat.lastName}
+                      name="nom"
+                      value={updatedContrat.nom}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
                   ) : (
-                    contrat.lastName
+                    contrat.nom
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
-                      name="firstName"
-                      value={updatedContrat.firstName}
+                      name="prenom"
+                      value={updatedContrat.prenom}
                       onChange={handleInputChange}
                       className="border rounded-md p-2 text-black"
                     />
                   ) : (
-                    contrat.firstName
+                    contrat.prenom
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
@@ -252,13 +251,13 @@ function ListeContratsDirec() {
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
-                      name="contribution"
-                      value={updatedContrat.contribution}
+                      name="cotisation"
+                      value={updatedContrat.cotisation}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
                   ) : (
-                    contrat.contribution
+                    contrat.cotisation
                   )}
                 </td>
 
@@ -268,30 +267,30 @@ function ListeContratsDirec() {
                     <input
                       type="text"
                       name="num_ancien_contrat"
-                      value={updatedContrat.num_ancien_contrat}
+                      value={updatedContrat.numAncienMutuelle}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
                   ) : (
-                    contrat.num_ancien_contrat
+                    contrat.numAncienMutuelle
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
                  {editContratId === contrat._id ? (
                 <select
                   name="état_dossier"
-                  value={updatedContrat.état_dossier}
+                  value={updatedContrat.etatDossier}
                   onChange={handleSelectChange}
                   className="border rounded-md p-2"
                  >
-                 {état_dossiers.map(état_dossier => (
-                 <option key={état_dossier} value={état_dossier}>
-                 {état_dossier}
+                 {état_dossiers.map(etatDossier => (
+                 <option key={etatDossier} value={etatDossier}>
+                 {etatDossier}
                  </option>
                  ))}
                  </select>
                  ) : (
-                 contrat.état_dossier
+                 contrat.etatDossier
                   )}
                 </td>
 

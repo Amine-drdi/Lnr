@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
 
 function ListeContratsGestio() {
@@ -17,7 +17,7 @@ function ListeContratsGestio() {
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -37,7 +37,7 @@ function ListeContratsGestio() {
 
   useEffect(() => {
     const results = contrats.filter((contrat) =>
-      `${contrat.lastName} ${contrat.firstName}`.toLowerCase().includes(searchTerm.toLowerCase())
+      `${contrat.nom} ${contrat.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredContrats(results);
   }, [searchTerm, contrats]);
@@ -49,7 +49,7 @@ function ListeContratsGestio() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ function ListeContratsGestio() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -146,26 +146,26 @@ function ListeContratsGestio() {
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
-                      name="lastName"
-                      value={updatedContrat.lastName}
+                      name="nom"
+                      value={updatedContrat.nom}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
                   ) : (
-                    contrat.lastName
+                    contrat.nom
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
-                      name="firstName"
-                      value={updatedContrat.firstName}
+                      name="prenom"
+                      value={updatedContrat.prenom}
                       onChange={handleInputChange}
                       className="border rounded-md p-2 text-black"
                     />
                   ) : (
-                    contrat.firstName
+                    contrat.prenom
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
@@ -256,12 +256,12 @@ function ListeContratsGestio() {
                     <input
                       type="text"
                       name="contribution"
-                      value={updatedContrat.contribution}
+                      value={updatedContrat.cotisation}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
                   ) : (
-                    contrat.contribution
+                    contrat.cotisation
                   )}
                 </td>
 
@@ -269,18 +269,18 @@ function ListeContratsGestio() {
                  {editContratId === contrat._id ? (
                 <select
                   name="etatDoc"
-                  value={updatedContrat.etatDoc}
+                  value={updatedContrat.etatDossier}
                   onChange={handleSelectChange}
                   className="border rounded-md p-2"
                  >
-                 {etatDocs.map(etatDoc => (
-                 <option key={etatDoc} value={etatDoc}>
-                 {etatDoc}
+                 {etatDocs.map(etatDossier => (
+                 <option key={etatDossier} value={etatDossier}>
+                 {etatDossier}
                  </option>
                  ))}
                  </select>
                  ) : (
-                 contrat.etatDoc
+                 contrat.etatDossier
                   )}
                 </td>
 
@@ -290,7 +290,7 @@ function ListeContratsGestio() {
                     <input
                       type="text"
                       name="num_ancien_contrat"
-                      value={updatedContrat.num_ancien_contrat}
+                      value={updatedContrat.numAncienMutuelle}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
@@ -304,12 +304,12 @@ function ListeContratsGestio() {
                     <input
                       type="text"
                       name="comment"
-                      value={updatedContrat.comment}
+                      value={updatedContrat.commentaire}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
                   ) : (
-                    contrat.comment
+                    contrat.commentaire
                   )}
                 </td>
 

@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb://mongodb:27017/mydatabase')
+mongoose.connect('mongodb://localhost:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
@@ -85,17 +85,39 @@ app.get('/api/users', async (req, res) => {
 // Route pour récupérer les informations du gestionnaire connecté
 app.get('/api/profile', async (req, res) => {
   try {
-    const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, 'votre_secret');
-    const user = await User.findById(decodedToken.id);
-
-    if (!user) {
-      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    // Vérifier si le header Authorization est bien présent
+    if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'Aucun token fourni, accès refusé.' });
     }
 
+    // Extraire le token du header Authorization
+    const token = req.headers.authorization.split(' ')[1];
+
+    // Vérification du token JWT
+    const decodedToken = jwt.verify(token, 'votre_secret');
+
+    // Rechercher l'utilisateur dans la base de données
+    const user = await User.findById(decodedToken.id);
+
+    // Vérifier si l'utilisateur existe
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+    }
+
+    // Renvoyer les informations de l'utilisateur
     res.json({ user });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la récupération du profil' });
+    // Gérer les erreurs spécifiques liées à la vérification du JWT
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Token invalide.' });
+    }
+
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Le token a expiré.' });
+    }
+
+    // Pour toutes autres erreurs
+    res.status(500).json({ message: 'Erreur lors de la récupération du profil.' });
   }
 });
 
@@ -114,41 +136,42 @@ app.get('/api/users/managers', async (req, res) => {
 app.post('/api/contrats', async (req, res) => {
   try {
     const {
-      firstName,
-      lastName,
+      nom,
+      prenom,
       phoneNumber,
       email,
       dob,
       address,
       profession,
       signatureDate,
-      vpAmount,
+      cotisation,
       compagnie,
       effetDate,
-      entryFee,
-      fileFee,
-      clientInterest,
-      businessIntroducer
+      fraisEntre,
+      fraisDossier,
+      interetClient,
+      apporteurAffaire,
+      commercial,
     
     } = req.body;
 
     const newContrat = new Contrat({
-      firstName,
-      lastName,
+      nom,
+      prenom,
       phoneNumber,
       email,
       dob,
       address,
       profession,
       signatureDate,
-      vpAmount,
+      cotisation,
       compagnie,
       effetDate,
-      entryFee,
-      fileFee,
-      clientInterest,
-      businessIntroducer,
-      
+      fraisEntre,
+      fraisDossier,
+      interetClient,
+      apporteurAffaire,
+      commercial,
     });
 
     await newContrat.save();
