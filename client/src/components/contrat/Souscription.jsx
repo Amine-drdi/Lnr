@@ -37,7 +37,7 @@ function Souscription({ setIsAdding }) {
       try {
         const token = localStorage.getItem('authToken'); // Récupère le token d'authentification depuis le localStorage
         if (token) {
-          const response = await axios.get('http://localhost:5000/api/profile', {
+          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`, // Envoie le token dans les en-têtes
             },
@@ -88,7 +88,7 @@ function Souscription({ setIsAdding }) {
     };
   
     try {
-      const response = await fetch('http://localhost:5000/api/contrats', {
+      const response = await fetch('http://51.83.69.195:5000/api/contrats', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
