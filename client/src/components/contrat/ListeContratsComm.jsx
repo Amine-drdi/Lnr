@@ -34,7 +34,7 @@ function ListeContratsComm() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://51.83.69.195:5000:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
