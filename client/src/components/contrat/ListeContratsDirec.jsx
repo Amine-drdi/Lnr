@@ -15,7 +15,7 @@ function ListeContratsDirec() {
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/contrats');
+        const response = await fetch('http://51.83.69.195:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -47,7 +47,7 @@ function ListeContratsDirec() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ function ListeContratsDirec() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -226,12 +226,12 @@ function ListeContratsDirec() {
                   <input
                   type="text"
                   name="Commercial"
-                  value={updatedContrat.commercial}
+                  value={updatedContrat.Commercial}
                   onChange={handleInputChange}
                   className="border rounded-md p-2"
                   />
                  ) : (
-                contrat.commercial
+                contrat.Commercial
                  )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">

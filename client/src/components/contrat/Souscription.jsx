@@ -19,7 +19,7 @@ function Souscription({ setIsAdding }) {
   const [fraisDossier, setFraisDossier] = useState('');
   const [interetClient, setIntertClient] = useState('');
   const [apporteurAffaire, setApporteurAffaire] = useState('');
-  const [commercial, setUserName] = useState(''); // Pour stocker le nom de l'utilisateur
+  const [Commercial, setUserName] = useState(''); // Pour stocker le nom de l'utilisateur
 
   const textInput = useRef(null);
   const navigate = useNavigate(); // Utilisation du hook navigate pour rediriger
@@ -34,7 +34,7 @@ function Souscription({ setIsAdding }) {
       try {
         const token = localStorage.getItem('authToken'); // Récupère le token d'authentification depuis le localStorage
         if (token) {
-          const response = await axios.get('http://localhost:5000/api/profile', {
+          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`, // Envoie le token dans les en-têtes
             },
@@ -81,11 +81,11 @@ function Souscription({ setIsAdding }) {
       fileFee,
       clientInterest,
       businessIntroducer,
-      commercial
+      Commercial
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/contrats', {
+      const response = await fetch('http://51.83.69.195:5000/api/contrats', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

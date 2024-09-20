@@ -17,7 +17,7 @@ function ListeContratsGestio() {
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/contrats');
+        const response = await fetch('http://51.83.69.195:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -49,7 +49,7 @@ function ListeContratsGestio() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ function ListeContratsGestio() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 

@@ -22,7 +22,7 @@ const contratSchema = new mongoose.Schema({
   interetClient: { type: String },
   etatDossier: { type: String },
   commentaire: { type: String},
-  commercial :{ type: String, },
+  Commercial :{ type: String, },
   numAncienMutuelle: {type: String},
   transmissionDocument: {type : String} ,
   status: { type: String, default: 'pending' }, // Le statut du contrat
