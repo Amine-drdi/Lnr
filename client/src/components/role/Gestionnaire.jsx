@@ -57,7 +57,7 @@ export function Gestionnaire() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -186,10 +186,7 @@ export function Gestionnaire() {
             Se déconnecter
           </ListItem>
         </List>
-        <p className="pt-28 font-light text-gray-800 flex items-center justify-center"> 
-          <FaRegCopyright className="mr-1"/> 2024
-           Developed by LNR Finance
-            </p>
+
       </Card>
      
 

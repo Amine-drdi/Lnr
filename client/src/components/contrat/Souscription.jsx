@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 function Souscription({ setIsAdding }) {
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
-  const [phoneNumber, setPhone] = useState('');
+  const [telephone, setTelephone] = useState('');
   const [email, setEmail] = useState('');
   const [dob, setDob] = useState('');
   const [address, setAddress] = useState('');
@@ -23,7 +23,10 @@ function Souscription({ setIsAdding }) {
 
   const textInput = useRef(null);
   const navigate = useNavigate(); // Utilisation du hook navigate pour rediriger
-
+  const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
+  };
   useEffect(() => {
     if (textInput.current) {
       textInput.current.focus();
@@ -34,7 +37,7 @@ function Souscription({ setIsAdding }) {
       try {
         const token = localStorage.getItem('authToken'); // Récupère le token d'authentification depuis le localStorage
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`, // Envoie le token dans les en-têtes
             },
@@ -54,8 +57,8 @@ function Souscription({ setIsAdding }) {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-
-    if (!firstName || !lastName || !phoneNumber || !email || !dob || !address || !profession || !signatureDate || !cotisation || !compagnie || !effetDate || !businessIntroducer) {
+  
+    if (!nom || !prenom || !telephone || !email || !dob || !address || !profession || !signatureDate || !cotisation || !compagnie || !effetDate || !apporteurAffaire) {
       return Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -64,35 +67,35 @@ function Souscription({ setIsAdding }) {
         timer: 1500,
       });
     }
-
+  
     const newContract = {
-      firstName,
-      lastName,
-      phoneNumber,
+      nom,
+      prenom,
+      telephone,
       email,
-      dob,
+      dob: formatDate(dob), // Formater la date de naissance
       address,
       profession,
-      signatureDate,
+      signatureDate: formatDate(signatureDate), // Formater la date de signature
       cotisation,
       compagnie,
-      effetDate,
-      entryFee,
-      fileFee,
-      clientInterest,
-      businessIntroducer,
+      effetDate: formatDate(effetDate), // Formater la date d'effet
+      fraisEntre,
+      fraisDossier,
+      interetClient,
+      apporteurAffaire,
       Commercial
     };
-
+  
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/contrats', {
+      const response = await fetch('http://localhost:5000/api/contrats', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(newContract),
       });
-
+  
       if (response.ok) {
         const result = await response.json();
         if (typeof setContrat === 'function') {
@@ -100,11 +103,11 @@ function Souscription({ setIsAdding }) {
         } else {
           console.error("setContrat n'est pas une fonction");
         }
-
+  
         Swal.fire({
           icon: 'success',
           title: 'Ajouté',
-          text: `Les données de ${firstName} ${lastName} ont été ajoutées.`,
+          text: `Les données de ${nom} ${prenom} ont été ajoutées.`,
           showConfirmButton: false,
           timer: 3000,
         });
@@ -122,6 +125,7 @@ function Souscription({ setIsAdding }) {
       });
     }
   };
+  
   return (
     <div className="w-full max-w-4xl mx-auto p-8 bg-blue-gray-50 shadow-lg rounded-lg border border-blue-gray-200">
       <form onSubmit={handleAdd} className="space-y-6">
@@ -152,10 +156,10 @@ function Souscription({ setIsAdding }) {
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-blue-gray-700">Téléphone</label>
             <input
-              id="phoneNumber"
-              type="tel"
-              value={phoneNumber}
-              onChange={(e) => setPhone(e.target.value)}
+              id="telephone"
+              type="text"
+              value={telephone}
+              onChange={(e) => setTelephone(e.target.value)}
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
             />
           </div>

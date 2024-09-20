@@ -13,7 +13,7 @@ function  Souscription({ contrat, setContrat, setIsAdding }) {
   const [signatureType2, setSignatureType2] = useState('');
   const [contribution, setContribution] = useState('');
   const [num_ancien_contrat, setNum_ancien_contrat] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [telephone, setTelephone] = useState('');
   const [managerComment, setManagerComment] = useState('');
   const textInput = useRef(null);
 
@@ -26,7 +26,7 @@ function  Souscription({ contrat, setContrat, setIsAdding }) {
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    if (!firstName || !lastName || !email || !signatureDate || !effetDate || !signatureType || !comment || !signatureType2 || !contribution || !num_ancien_contrat || !phoneNumber || !managerComment || !commercial) {
+    if (!firstName || !lastName || !email || !signatureDate || !effetDate || !signatureType || !comment || !signatureType2 || !contribution || !num_ancien_contrat || !telephone || !managerComment || !commercial) {
       return Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -47,13 +47,13 @@ function  Souscription({ contrat, setContrat, setIsAdding }) {
       signatureType2,
       contribution,
       num_ancien_contrat,
-      phoneNumber,
+      telephone ,
       managerComment,
       commercial
     };
 
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/contrats', {
+      const response = await fetch('http://localhost:5000/api/contrats', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -220,13 +220,13 @@ function  Souscription({ contrat, setContrat, setIsAdding }) {
           onChange={(e) => setNum_ancien_contrat(e.target.value)}
           className="border rounded-md p-2 w-full"
         />
-        <label htmlFor="phoneNumber" className="block text-sm font-medium text-blue-gray-500">Numéro de Téléphone</label>
+        <label htmlFor="telephone" className="block text-sm font-medium text-blue-gray-500">Numéro de Téléphone</label>
         <input
-          id="phoneNumber"
+          id="telephone"
           type="tel"
-          name="phoneNumber"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
+          name="telephone"
+          value={telephone}
+          onChange={(e) => setTelephone(e.target.value)}
           className="border rounded-md p-2 w-full"
         />
         <label htmlFor="managerComment" className="block text-sm font-medium text-blue-gray-500">Commentaire pour le Gestionnaire</label>

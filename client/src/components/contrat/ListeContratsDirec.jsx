@@ -12,10 +12,12 @@ function ListeContratsDirec() {
   const [updatedContrat, setUpdatedContrat] = useState({});
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
   const état_dossiers = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
+  const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
+
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -47,7 +49,7 @@ function ListeContratsDirec() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -71,7 +73,7 @@ function ListeContratsDirec() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -86,7 +88,26 @@ function ListeContratsDirec() {
       setError(error.message);
     }
   };
+      // Fonction pour extraire le mois à partir d'une chaîne de date "DD/MM/YY"
+      const extractMonthFromDate = (dateString) => {
+        if (!dateString) {
+          return null; // Si la date est undefined ou null, retourner null
+        }
+        const [day, month, year] = dateString.split('/'); // Séparer la chaîne par "/"
+        return parseInt(month, 10); // Retourner le mois comme entier
+      };
+    
+      // Filtrage selon le commercial, la recherche et le mois
+  useEffect(() => {
+    const filtered = contrats.filter((contrat) => {
+      const signatureMonth = extractMonthFromDate(contrat.signatureDate); // Obtenez le mois de la date de signature
+      const isMonthMatch = selectedMonth ? signatureMonth === parseInt(selectedMonth) : true;
+      
+      return isMonthMatch; // Adjust your condition to suit any other filters
+    });
 
+    setFilteredContrats(filtered);
+  }, [contrats, selectedMonth]); // Ensure correct dependencies
   const handleInputChange = (e) => {
     setUpdatedContrat({ ...updatedContrat, [e.target.name]: e.target.value });
   };
@@ -115,6 +136,28 @@ function ListeContratsDirec() {
           className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
         />
       </div>
+                    {/* Filtre par mois */}
+                    <div className="mb-4 flex space-x-4">
+        <select
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
+        >
+          <option value="">Tous les mois</option>
+          <option value="1">Janvier</option>
+          <option value="2">Février</option>
+          <option value="3">Mars</option>
+          <option value="4">Avril</option>
+          <option value="5">Mai</option>
+          <option value="6">Juin</option>
+          <option value="7">Juillet</option>
+          <option value="8">Août</option>
+          <option value="9">Septembre</option>
+          <option value="10">Octobre</option>
+          <option value="11">Novembre</option>
+          <option value="12">Décembre</option>
+        </select>
+      </div>
       <div className="overflow-x-scroll">
       <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
       
@@ -130,7 +173,7 @@ function ListeContratsDirec() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date d'Effet</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/mois</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Numéro de l’ancien contrat</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             </tr>
@@ -168,7 +211,7 @@ function ListeContratsDirec() {
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
-                      name="signatureDate"
+                      name="date de signature"
                       value={updatedContrat.signatureDate}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
@@ -194,13 +237,13 @@ function ListeContratsDirec() {
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
-                      name="phoneNumber"
-                      value={updatedContrat.phoneNumber}
+                      name="telephone"
+                      value={updatedContrat.telephone}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
                   ) : (
-                    contrat.phoneNumber
+                    contrat.telephone
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
@@ -260,21 +303,6 @@ function ListeContratsDirec() {
                     contrat.cotisation
                   )}
                 </td>
-
-
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {editContratId === contrat._id ? (
-                    <input
-                      type="text"
-                      name="num_ancien_contrat"
-                      value={updatedContrat.numAncienMutuelle}
-                      onChange={handleInputChange}
-                      className="border rounded-md p-2"
-                    />
-                  ) : (
-                    contrat.numAncienMutuelle
-                  )}
-                </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
                  {editContratId === contrat._id ? (
                 <select
@@ -293,6 +321,21 @@ function ListeContratsDirec() {
                  contrat.etatDossier
                   )}
                 </td>
+
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="num_ancien_contrat"
+                      value={updatedContrat.ancienneMutuelle}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.ancienneMutuelle
+                  )}
+                </td>
+
 
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (

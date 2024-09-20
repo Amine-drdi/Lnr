@@ -7,12 +7,12 @@ const contratSchema = new mongoose.Schema({
 
   nom: { type: String, required: true },
   prenom: { type: String, required: true },
-  phoneNumber: { type: String, required: true },
+  telephone: { type: String, required: true },
   email: { type: String, required: true },
   dob: { type: String, required: true },
   address: { type: String, required: true },
   profession: { type: String, required: true },
-  signatureDate: { type: String, required: true },
+  signatureDate: { type: String , required: true },
   cotisation: { type: String, required: true },
   compagnie: { type: String, required: true },
   effetDate: { type: String, required: true },
@@ -23,7 +23,7 @@ const contratSchema = new mongoose.Schema({
   etatDossier: { type: String },
   commentaire: { type: String},
   Commercial :{ type: String, },
-  numAncienMutuelle: {type: String},
+  ancienneMutuelle: {type: String},
   transmissionDocument: {type : String} ,
   status: { type: String, default: 'pending' }, // Le statut du contrat
   createdAt: { type: Date, default: Date.now },

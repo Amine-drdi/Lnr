@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 
-mongoose.connect('mongodb://51.83.69.195:27017/mydatabase')
+mongoose.connect('mongodb://localhost:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie'))
   .catch((error) => console.error('Erreur de connexion à MongoDB:', error));
 
 const addUser = async () => {
-  const matricule = '1';
+  const matricule = '1001';
   const name = 'Gestionnaire' ;
   const password = 'gestionnaire123';
   const role = 'Gestionnaire';
