@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';function ListeContratsComm() {
+
+function ListeContratsComm() {
   const [contrats, setContrats] = useState([]);
   const [filteredContrats, setFilteredContrats] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +11,7 @@ import { useNavigate } from 'react-router-dom';function ListeContratsComm() {
   const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
 
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife", "Soly Azar", "Zenio"];
-  const navigate = useNavigate();
+ 
   useEffect(() => {
     const fetchContrats = async () => {
       try {
