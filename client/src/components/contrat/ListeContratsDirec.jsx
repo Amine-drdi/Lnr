@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
-
+import { FaEye } from 'react-icons/fa';
 function ListeContratsDirec() {
   const [contrats, setContrats] = useState([]);
   const [filteredContrats, setFilteredContrats] = useState([]);
@@ -13,11 +13,12 @@ function ListeContratsDirec() {
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
   const état_dossiers = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
   const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
-
+  const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
+  const [showModal, setShowModal] = useState(false); // Contrôle du modal
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -49,7 +50,7 @@ function ListeContratsDirec() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +74,7 @@ function ListeContratsDirec() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -115,6 +116,14 @@ function ListeContratsDirec() {
   const handleSelectChange = (e) => {
     setUpdatedContrat({ ...updatedContrat, [e.target.name]: e.target.value });
   };
+  const handleViewContrat = (contrat) => {
+    setSelectedContrat(contrat); // Définir le contrat sélectionné
+    setShowModal(true); // Afficher le modal
+  };
+
+  const closeModal = () => {
+    setShowModal(false); // Fermer le modal
+  };
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen text-gray-600">Chargement des contrats...</div>;
@@ -136,8 +145,8 @@ function ListeContratsDirec() {
           className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
         />
       </div>
-                    {/* Filtre par mois */}
-                    <div className="mb-4 flex space-x-4">
+      {/* Filtre par mois */}
+      <div className="mb-4 flex space-x-4">
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
@@ -163,6 +172,7 @@ function ListeContratsDirec() {
       
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
@@ -175,12 +185,36 @@ function ListeContratsDirec() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {filteredContrats.map((contrat) => (
               <tr key={contrat._id} className="hover:bg-gray-50 transition-colors">
+             <td className="px-4 py-3 text-sm text-gray-700">
+             {editContratId === contrat._id ? (
+              <button onClick={() => handleSaveClick(contrat._id)} className="text-blue-500">
+              Sauvegarder
+              </button>
+               ) : (
+               <div className="flex items-center space-x-2">
+                <FaEye 
+                 className="text-blue-500 cursor-pointer w-4 h-4" 
+                 onClick={() => handleViewContrat(contrat)}
+                />
+                <FontAwesomeIcon
+                 icon={faEdit}
+                 className="text-indigo-600 cursor-pointer w-4 h-4"
+                 onClick={() => handleEditClick(contrat)}
+                />
+                <FontAwesomeIcon
+                 icon={faTrash}
+                 className="text-red-500 cursor-pointer w-4 h-4"
+                 onClick={() => handleDeleteClick(contrat._id)}
+                />
+               </div>
+             )}
+            </td>
+
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input
@@ -350,35 +384,35 @@ function ListeContratsDirec() {
                     contrat.commentaire
                   )}
                 </td>
-
-
-
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {editContratId === contrat._id ? (
-                    <button onClick={() => handleSaveClick(contrat._id)} className="text-blue-500">
-                      Sauvegarder
-                    </button>
-                  ) : (
-                    <>
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        className="text-blue-500 cursor-pointer mr-2 w-5 h-5"
-                        onClick={() => handleEditClick(contrat)}
-                      />
-                      <FontAwesomeIcon
-                        icon={faTrash}
-                        className="text-red-500 cursor-pointer w-5 h-5"
-                        onClick={() => handleDeleteClick(contrat._id)}
-                      />
-                    </>
-                  )}
-                </td>
               </tr>
             ))}
           </tbody>
           
         </table>
       </div>
+            {/* Modal */}
+            {showModal && selectedContrat && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
+            <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Contrat</h2>
+            <p><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
+            <p><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
+            <p><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
+            <p><strong>Nom :</strong> {selectedContrat.nom}</p>
+            <p><strong>Prénom :</strong> {selectedContrat.prenom}</p>
+            <p><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
+            <p><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
+            <p><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
+            <p><strong>Commentaire :</strong> {selectedContrat.commentaire}</p>
+            <button
+              onClick={closeModal}
+              className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
       </div>
   );
 }

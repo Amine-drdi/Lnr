@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { FaEye } from 'react-icons/fa'; // Importer l'icône de vue
 
 function ListeContratsComm() {
   const [contrats, setContrats] = useState([]);
@@ -8,14 +10,17 @@ function ListeContratsComm() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [userName, setUserName] = useState('');
-  const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
+  const [showModal, setShowModal] = useState(false); // Contrôle du modal
+  const navigate = useNavigate();
 
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife", "Soly Azar", "Zenio"];
- 
+
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -34,7 +39,7 @@ function ListeContratsComm() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -52,16 +57,14 @@ function ListeContratsComm() {
     fetchProfile();
   }, []);
 
-  // Fonction pour extraire le mois à partir d'une chaîne de date "DD/MM/YY"
   const extractMonthFromDate = (dateString) => {
     if (!dateString) {
-      return null; // Si la date est undefined ou null, retourner null
+      return null;
     }
-    const [day, month, year] = dateString.split('/'); // Séparer la chaîne par "/"
-    return parseInt(month, 10); // Retourner le mois comme entier
+    const [day, month] = dateString.split('/');
+    return parseInt(month, 10);
   };
 
-  // Filtrage selon le commercial, la recherche et le mois
   useEffect(() => {
     if (userName) {
       const filtered = contrats.filter((contrat) => {
@@ -69,18 +72,31 @@ function ListeContratsComm() {
           contrat.Commercial &&
           contrat.Commercial.toLowerCase() === userName.toLowerCase();
 
-        const signatureMonth = extractMonthFromDate(contrat.signatureDate); // Obtenez le mois de la date de signature
-
+        const signatureMonth = extractMonthFromDate(contrat.signatureDate);
         const isMonthMatch = selectedMonth
           ? signatureMonth === parseInt(selectedMonth)
           : true;
 
-        return isCommercialMatch && isMonthMatch;
+        const isSearchMatch =
+          searchTerm === '' ||
+          (contrat.nom && contrat.nom.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (contrat.prenom && contrat.prenom.toLowerCase().includes(searchTerm.toLowerCase()));
+
+        return isCommercialMatch && isMonthMatch && isSearchMatch;
       });
 
       setFilteredContrats(filtered);
     }
-  }, [contrats, userName, selectedMonth]);
+  }, [contrats, userName, selectedMonth, searchTerm]);
+
+  const handleViewContrat = (contrat) => {
+    setSelectedContrat(contrat); // Définir le contrat sélectionné
+    setShowModal(true); // Afficher le modal
+  };
+
+  const closeModal = () => {
+    setShowModal(false); // Fermer le modal
+  };
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen text-gray-600">Chargement des contrats...</div>;
@@ -102,9 +118,9 @@ function ListeContratsComm() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
         />
-         </div>
-        {/* Filtre par mois */}
-        <div className="mb-4 flex space-x-4">
+      </div>
+
+      <div className="mb-4 flex space-x-4">
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
@@ -130,6 +146,7 @@ function ListeContratsComm() {
         <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Vue</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">État du dossier</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date d'Effet</th>
@@ -144,6 +161,9 @@ function ListeContratsComm() {
           <tbody className="divide-y divide-gray-200">
             {filteredContrats.map((contrat) => (
               <tr key={contrat._id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-4 py-3 text-center">
+                  <FaEye className="text-blue-500 cursor-pointer" onClick={() => handleViewContrat(contrat)} />
+                </td>
                 <td className="px-4 py-3 text-sm text-gray-700">{contrat.etatDossier}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{contrat.signatureDate}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{contrat.effetDate}</td>
@@ -158,6 +178,30 @@ function ListeContratsComm() {
           </tbody>
         </table>
       </div>
+
+      {/* Modal */}
+      {showModal && selectedContrat && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
+            <h2 className="text-2xl font-semibold mb-4">Détails du Contrat</h2>
+            <p><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
+            <p><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
+            <p><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
+            <p><strong>Nom :</strong> {selectedContrat.nom}</p>
+            <p><strong>Prénom :</strong> {selectedContrat.prenom}</p>
+            <p><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
+            <p><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
+            <p><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
+            <p><strong>Commentaire :</strong> {selectedContrat.commentaire}</p>
+            <button
+              onClick={closeModal}
+              className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

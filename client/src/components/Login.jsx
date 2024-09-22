@@ -22,7 +22,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post('http://51.83.69.195:5000/api/login', { matricule, password });
+      const response = await axios.post('http://localhost:5000/api/login', { matricule, password });
       const { token, user } = response.data;
 
       localStorage.setItem('authToken', token);

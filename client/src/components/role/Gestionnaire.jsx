@@ -47,7 +47,7 @@ function Calendrier() {
   return <div><Calend/></div>;
 }
 
-export function Gestionnaire() {
+export default function Gestionnaire() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
   const [notifications, setNotifications] = useState([]); 
@@ -57,7 +57,7 @@ export function Gestionnaire() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -198,4 +198,4 @@ export function Gestionnaire() {
       </div>
     </div>
   );
-}
+}  

@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
-import { Gestionnaire } from './components/role/Gestionnaire';
+import  Gestionnaire  from './components/role/Gestionnaire';
 import Commercial from './components/role/Commercial';
 import Signup from './components/Signup';
 import Addcommerciale from './components/Addcommerciale';
