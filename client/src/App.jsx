@@ -15,6 +15,7 @@ import ListeContratsDirec from './components/contrat/ListeContratsDirec';
 import Souscription from './components/contrat/Souscription';
 import Manager from './components/role/Manager';
 import ProfileSetting from './components/ProfileSetting';
+import ListeContratsManager from './components/contrat/ListeContratsManager';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/contratsGest" element={<ListeContratsGestio />} />
         <Route path="/contratsComm" element={<ListeContratsComm />} />
         <Route path="/contratsDire" element={<ListeContratsDirec/>} />
+        <Route path="/contratsManager" element={<ListeContratsManager />} />
         <Route path="/ajouter-contrat" element={<Souscription />} />
         <Route path="/Liste-employe" element={<ListeEmp />} />
         <Route path="/ajout-employe" element={<Addcommerciale />} />

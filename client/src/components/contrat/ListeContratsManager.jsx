@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
-function ListeContratsGestio() {
+function ListeContratsManager() {
   const [contrats, setContrats] = useState([]);
   const [filteredContrats, setFilteredContrats] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,12 +10,10 @@ function ListeContratsGestio() {
   const [searchTerm, setSearchTerm] = useState('');
   const [editContratId, setEditContratId] = useState(null);
   const [updatedContrat, setUpdatedContrat] = useState({});
-  const signatureTypes = ["Lead", "RDV", "RDV à chaud"];
-  const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
-  const etatDocs = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
-  const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
   const [showModal, setShowModal] = useState(false); // Contrôle du modal
+  const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
+
   useEffect(() => {
     const fetchContrats = async () => {
       try {
@@ -50,29 +48,7 @@ function ListeContratsGestio() {
   };
   
 
-  const handleSaveClick = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedContrat),
-      });
 
-      if (!response.ok) {
-        throw new Error('Erreur lors de la mise à jour du contrat');
-      }
-
-      const updatedList = contrats.map((contrat) =>
-        contrat._id === id ? updatedContrat : contrat
-      );
-      setContrats(updatedList);
-      setEditContratId(null);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
   
     // Fonction pour extraire le mois à partir d'une chaîne de date "DD/MM/YY"
     const extractMonthFromDate = (dateString) => {
@@ -97,23 +73,6 @@ function ListeContratsGestio() {
   }, [contrats, selectedMonth]); // Ensure correct dependencies
 
 
-  const handleDeleteClick = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Erreur lors de la suppression du contrat');
-      }
-
-      const updatedList = contrats.filter((contrat) => contrat._id !== id);
-      setContrats(updatedList);
-      setFilteredContrats(updatedList);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
 
   const handleInputChange = (e) => {
     setUpdatedContrat({ ...updatedContrat, [e.target.name]: e.target.value });
@@ -180,17 +139,15 @@ function ListeContratsGestio() {
       
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
-            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Action</th>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Email</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Numéro de téléphone</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Compagnie</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date d'Effet</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/mois</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
             </tr>
@@ -210,13 +167,39 @@ function ListeContratsGestio() {
                       onClick={() => handleViewContrat(contrat)}
                       />
 
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        className="text-indigo-700 cursor-pointer mr-2 w-4 h-4" 
-                        onClick={() => handleEditClick(contrat)}
-                      />
 
                     </div>
+                  )}
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                 {editContratId === contrat._id ? (
+                <select
+                  name="etatDoc"
+                  value={updatedContrat.etatDossier}
+                  onChange={handleSelectChange}
+                  className="border rounded-md p-2"
+                 >
+                 {etatDocs.map(etatDossier => (
+                 <option key={etatDossier} value={etatDossier}>
+                 {etatDossier}
+                 </option>
+                 ))}
+                 </select>
+                 ) : (
+                 contrat.etatDossier
+                  )}
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="signatureDate"
+                      value={updatedContrat.signatureDate}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.signatureDate
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
@@ -245,45 +228,8 @@ function ListeContratsGestio() {
                     contrat.prenom
                   )}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {editContratId === contrat._id ? (
-                    <input
-                      type="text"
-                      name="signatureDate"
-                      value={updatedContrat.signatureDate}
-                      onChange={handleInputChange}
-                      className="border rounded-md p-2"
-                    />
-                  ) : (
-                    contrat.signatureDate
-                  )}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {editContratId === contrat._id ? (
-                    <input
-                      type="text"
-                      name="email"
-                      value={updatedContrat.email}
-                      onChange={handleInputChange}
-                      className="border rounded-md p-2"
-                    />
-                  ) : (
-                    contrat.email
-                  )}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {editContratId === contrat._id ? (
-                    <input
-                      type="text"
-                      name="telephone"
-                      value={updatedContrat.telephone}
-                      onChange={handleInputChange}
-                      className="border rounded-md p-2"
-                    />
-                  ) : (
-                    contrat.telephone
-                  )}
-                </td>
+
+
                 <td className="px-4 py-3 text-sm text-gray-700">
                  {editContratId === contrat._id ? (
                 <select
@@ -342,24 +288,7 @@ function ListeContratsGestio() {
                   )}
                 </td>
 
-                <td className="px-4 py-3 text-sm text-gray-700">
-                 {editContratId === contrat._id ? (
-                <select
-                  name="etatDoc"
-                  value={updatedContrat.etatDossier}
-                  onChange={handleSelectChange}
-                  className="border rounded-md p-2"
-                 >
-                 {etatDocs.map(etatDossier => (
-                 <option key={etatDossier} value={etatDossier}>
-                 {etatDossier}
-                 </option>
-                 ))}
-                 </select>
-                 ) : (
-                 contrat.etatDossier
-                  )}
-                </td>
+
 
 
                 <td className="px-4 py-3 text-sm text-gray-700">
@@ -425,4 +354,5 @@ function ListeContratsGestio() {
   );
 }
 
-export default ListeContratsGestio;
+export default ListeContratsManager;
+

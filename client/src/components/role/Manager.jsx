@@ -9,12 +9,11 @@ import {
   ListItemPrefix,
 } from "@material-tailwind/react";
 import { FaFileContract, FaFileSignature } from "react-icons/fa6";
-import { SlEarphonesAlt } from "react-icons/sl";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import logo from "../../assets/logo.png";
 import img from "../../assets/manager.png";
-import ListeContratsComm from '../contrat/ListeContratsComm';
 import Souscription from '../contrat/Souscription';
+import ListeContratsManager from '../contrat/ListeContratsManager';
 
 function Manager() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
@@ -27,7 +26,7 @@ function Manager() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -56,7 +55,7 @@ function Manager() {
   const renderComponent = () => {
     switch (activeComponent) {
       case 'listeContrats':
-        return <ListeContratsComm />;
+        return <ListeContratsManager />;
       case 'AjoutContrat':
         return <Souscription />;
       default:
@@ -67,8 +66,7 @@ function Manager() {
   return (
     <div className="flex bg-blue-gray-100">
       {/* Sidebar */}
-      <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl bg-blue-gray-500 shadow-blue-gray-900/5">
-        {/* Logo */}
+      <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">        {/* Logo */}
         <img
           className="object-cover w-auto h-24"
           src={logo}

@@ -57,7 +57,7 @@ export default function Gestionnaire() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -116,8 +116,7 @@ export default function Gestionnaire() {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
-        <img
+      <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">        <img
           className="object-cover w-auto h-24"
           src={logo}
           alt=""

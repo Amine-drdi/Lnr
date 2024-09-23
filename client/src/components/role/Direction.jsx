@@ -55,7 +55,7 @@ export function Direction() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -102,19 +102,19 @@ export function Direction() {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
+      <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
         <img
           className="object-cover w-auto h-24"
           src={logo}
           alt=""
         />
-        <List>
+          <List className="flex flex-col space-x-4">
         <div className="text-light-blue-900 pl-5 mb-4 pt-8 flex items-center space-x-2">
           <Typography variant="h6" className="flex items-center">
             <img className="object-cover w-auto h-12" src={img} alt="User" />
             {userName}
           </Typography>
-        </div>
+          </div>
           <ListItem onClick={() => setActiveComponent('dashboard')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <PresentationChartBarIcon className="h-5 w-5 text-white" />

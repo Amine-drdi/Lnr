@@ -40,7 +40,7 @@ function Commercial() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -58,7 +58,7 @@ function Commercial() {
     // Fonction pour récupérer les modifications des contrats
     const fetchContratUpdates = async () => {
       try {
-        const response = await axios.get('http://51.83.69.195:5000/api/contrat-updates');
+        const response = await axios.get('http://localhost:5000/api/contrat-updates');
         setContratUpdates(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des mises à jour :", error);
@@ -122,7 +122,7 @@ function Commercial() {
     <div className="flex bg-blue-gray-100">
       {/* Barre latérale */}
 
-      <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl bg-blue-gray-500 shadow-blue-gray-900/5">
+      <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
         {/* Logo */}
         <img
           className="object-cover w-auto h-24"
