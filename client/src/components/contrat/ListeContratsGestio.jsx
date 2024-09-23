@@ -19,23 +19,27 @@ function ListeContratsGestio() {
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
         const data = await response.json();
-        console.log(data.contrats); // Ajoutez cette ligne pour vérifier
-        setContrats(data.contrats);
-        setFilteredContrats(data.contrats);
+  
+        // Filtrer les contrats dès la récupération pour exclure ceux sans date de signature
+        const validContrats = data.contrats.filter(contrat => contrat.signatureDate && contrat.signatureDate.trim() !== '');
+  
+        setContrats(validContrats);
+        setFilteredContrats(validContrats);
       } catch (error) {
         setError(error.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchContrats();
   }, []);
+  
 
   useEffect(() => {
     const results = contrats.filter((contrat) =>
@@ -52,7 +56,7 @@ function ListeContratsGestio() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -84,22 +88,25 @@ function ListeContratsGestio() {
     };
   
     // Filtrage selon le commercial, la recherche et le mois
-
-   useEffect(() => {
-    const filtered = contrats.filter((contrat) => {
-      const signatureMonth = extractMonthFromDate(contrat.signatureDate); // Obtenez le mois de la date de signature
-      const isMonthMatch = selectedMonth ? signatureMonth === parseInt(selectedMonth) : true;
-      
-      return isMonthMatch; // Adjust your condition to suit any other filters
-    });
-
-    setFilteredContrats(filtered);
-  }, [contrats, selectedMonth]); // Ensure correct dependencies
+    useEffect(() => {
+      const filtered = contrats.filter((contrat) => {
+        const signatureMonth = extractMonthFromDate(contrat.signatureDate); // Obtenez le mois de la date de signature
+        const isMonthMatch = selectedMonth ? signatureMonth === parseInt(selectedMonth) : true;
+    
+        // Vérifie si la date de signature n'est ni vide ni nulle
+        const hasValidSignatureDate = contrat.signatureDate && contrat.signatureDate.trim() !== '';
+    
+        return isMonthMatch && hasValidSignatureDate; // Appliquer les deux filtres
+      });
+    
+      setFilteredContrats(filtered);
+    }, [contrats, selectedMonth]); // Assurez-vous que les dépendances sont correctes
+    
 
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -400,18 +407,18 @@ function ListeContratsGestio() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
             <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Contrat</h2>
-            <p><strong>Nom :</strong> {selectedContrat.nom}</p>
-            <p><strong>Prénom :</strong> {selectedContrat.prenom}</p>
-            <p><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
-            <p><strong>Email:</strong> {selectedContrat.email}</p>
-            <p><strong>Téléphone :</strong> {selectedContrat.telephone}</p>
-            <p><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
-            <p><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
-            <p><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
-            <p><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
-            <p><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
-            <p><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
-            <p><strong>Commentaire :</strong> {selectedContrat.commentaire}</p>
+            <p className='text-left'><strong>Nom :</strong> {selectedContrat.nom}</p>
+            <p className='text-left'><strong>Prénom :</strong> {selectedContrat.prenom}</p>
+            <p className='text-left'><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
+            <p className='text-left'><strong>Email:</strong> {selectedContrat.email}</p>
+            <p className='text-left'><strong>Téléphone :</strong> {selectedContrat.telephone}</p>
+            <p className='text-left'><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
+            <p className='text-left'><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
+            <p className='text-left'><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
+            <p className='text-left'><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
+            <p className='text-left'><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
+            <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
+            <p className='text-left'><strong>Commentaire :</strong> {selectedContrat.commentaire}</p>
             <button
               onClick={closeModal}
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
@@ -426,3 +433,4 @@ function ListeContratsGestio() {
 }
 
 export default ListeContratsGestio;
+

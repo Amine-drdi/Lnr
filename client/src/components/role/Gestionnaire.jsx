@@ -11,10 +11,10 @@ import {
   PresentationChartBarIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
-import { FaFileContract, FaUsers, FaRegCalendarCheck } from "react-icons/fa6";
+import { VscError } from "react-icons/vsc";
+import { FaFileContract, FaUsers} from "react-icons/fa6";
 import { IoSettingsSharp } from "react-icons/io5";
 import { RiUserAddLine } from "react-icons/ri";
-import { FaRegCopyright } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import logo from "../../assets/logo.png";
 import img from "../../assets/gestionnaire.png";
@@ -23,6 +23,7 @@ import ListeContratsGestio from "../contrat/ListeContratsGestio";
 import Addcommerciale from "../Addcommerciale";
 import Souscription from "../contrat/Souscription";
 import ProfileSetting from "../ProfileSetting";
+import ContratNvalideGestio from "../contrat/ContratNvalideGestio";
 
 
 
@@ -57,7 +58,7 @@ export default function Gestionnaire() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -106,6 +107,8 @@ export default function Gestionnaire() {
         return <ListeEmployes />;
       case 'ajouterEmploye':
         return <AjouterEmploye />;
+        case 'NonValide':
+          return <ContratNvalideGestio />;
      case 'profile':
         return <ProfileSetting />;
       default:
@@ -157,6 +160,13 @@ export default function Gestionnaire() {
               <FaFileContract className="h-5 w-5 text-white" />
             </ListItemPrefix>
             Souscription
+          </ListItem>
+
+          <ListItem onClick={() => setActiveComponent('NonValide')}  className="hover:bg-blue-600 text-white">
+            <ListItemPrefix>
+            <VscError className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            Contrats non finalisé
           </ListItem>
 
           <ListItem onClick={() => setActiveComponent('listeEmployes')} className="hover:bg-blue-600 text-white">

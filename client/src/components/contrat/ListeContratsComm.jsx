@@ -20,7 +20,7 @@ function ListeContratsComm() {
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -39,7 +39,7 @@ function ListeContratsComm() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -81,8 +81,9 @@ function ListeContratsComm() {
           searchTerm === '' ||
           (contrat.nom && contrat.nom.toLowerCase().includes(searchTerm.toLowerCase())) ||
           (contrat.prenom && contrat.prenom.toLowerCase().includes(searchTerm.toLowerCase()));
+          const isSignatureDateValid = contrat.signatureDate && contrat.signatureDate.trim() !== ''; // Vérification de la date de signature
 
-        return isCommercialMatch && isMonthMatch && isSearchMatch;
+          return isCommercialMatch && isMonthMatch && isSearchMatch && isSignatureDateValid;
       });
 
       setFilteredContrats(filtered);
@@ -183,16 +184,16 @@ function ListeContratsComm() {
       {showModal && selectedContrat && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
-            <h2 className="text-2xl font-semibold mb-4">Détails du Contrat</h2>
-            <p><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
-            <p><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
-            <p><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
-            <p><strong>Nom :</strong> {selectedContrat.nom}</p>
-            <p><strong>Prénom :</strong> {selectedContrat.prenom}</p>
-            <p><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
-            <p><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
-            <p><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
-            <p><strong>Commentaire :</strong> {selectedContrat.commentaire}</p>
+            <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Contrat</h2>
+            <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
+            <p className='text-left'><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
+            <p className='text-left'><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
+            <p className='text-left'><strong>Nom :</strong> {selectedContrat.nom}</p>
+            <p className='text-left'><strong>Prénom :</strong> {selectedContrat.prenom}</p>
+            <p className='text-left'><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
+            <p className='text-left'><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
+            <p className='text-left'><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
+            <p className='text-left'><strong>Commentaire :</strong> {selectedContrat.commentaire}</p>
             <button
               onClick={closeModal}
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"

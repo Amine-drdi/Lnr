@@ -11,7 +11,7 @@ import {
   PresentationChartBarIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
-
+import { VscError } from "react-icons/vsc";
 import Calend from "../Calend";
 import { FaFileContract } from "react-icons/fa6";
 import { FaFileSignature } from "react-icons/fa";
@@ -23,6 +23,7 @@ import ListeContratsDirec from "../contrat/ListeContratsDirec";
 import Souscription from "../contrat/Souscription";
 import img from "../../assets/direction.png"
 import ProfileSetting from "../ProfileSetting";
+import ContratNonValide from "../contrat/ContratNonValide";
 
 
 // Les composants pour chaque section de la dashboard
@@ -55,7 +56,7 @@ export function Direction() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -90,10 +91,10 @@ export function Direction() {
         return <ListeContrats />;
         case 'AjoutContrat':
         return <Souscription />;
-
-    
         case 'profile':
-          return <ProfileSetting />;
+        return <ProfileSetting />;
+        case 'NonValide':
+          return <ContratNonValide />;
       default:
         return <DashboardContent />;
     }
@@ -132,6 +133,13 @@ export function Direction() {
               <FaFileSignature className="h-5 w-5" /> 
             </ListItemPrefix>
             Souscription
+          </ListItem>
+
+          <ListItem onClick={() => setActiveComponent('NonValide')}  className="hover:bg-blue-600 text-white">
+            <ListItemPrefix>
+            <VscError className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            Contrats non finalisé
           </ListItem>
 
           <ListItem onClick={() => setActiveComponent('profile')} className="hover:bg-blue-600 text-white">

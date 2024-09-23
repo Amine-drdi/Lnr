@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
-function ListeContratsDirec() {
+function ContratNonValide() {
   const [contrats, setContrats] = useState([]);
   const [filteredContrats, setFilteredContrats] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,11 +10,10 @@ function ListeContratsDirec() {
   const [searchTerm, setSearchTerm] = useState('');
   const [editContratId, setEditContratId] = useState(null);
   const [updatedContrat, setUpdatedContrat] = useState({});
-  const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
-  const état_dossiers = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
-  const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
-  const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
-  const [showModal, setShowModal] = useState(false); // Contrôle du modal
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedContrat, setSelectedContrat] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     const fetchContrats = async () => {
       try {
@@ -23,20 +22,21 @@ function ListeContratsDirec() {
           throw new Error('Erreur lors de la récupération des contrats');
         }
         const data = await response.json();
-         // Filtrer les contrats dès la récupération pour exclure ceux sans date de signature
-         const validContrats = data.contrats.filter(contrat => contrat.signatureDate && contrat.signatureDate.trim() !== '');
   
-         setContrats(validContrats);
-         setFilteredContrats(validContrats);
-       } catch (error) {
-         setError(error.message);
-       } finally {
-         setLoading(false);
-       }
-     };
-   
-     fetchContrats();
-   }, []);
+        // Filtrer les contrats qui n'ont pas la propriété "signatureDate"
+        const contratsFiltres = data.contrats.filter(contrat => !contrat.hasOwnProperty('signatureDate'));
+  
+        setContrats(contratsFiltres);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchContrats();
+  }, []);
+  
 
   useEffect(() => {
     const results = contrats.filter((contrat) =>
@@ -91,26 +91,7 @@ function ListeContratsDirec() {
       setError(error.message);
     }
   };
-      // Fonction pour extraire le mois à partir d'une chaîne de date "DD/MM/YY"
-      const extractMonthFromDate = (dateString) => {
-        if (!dateString) {
-          return null; // Si la date est undefined ou null, retourner null
-        }
-        const [day, month, year] = dateString.split('/'); // Séparer la chaîne par "/"
-        return parseInt(month, 10); // Retourner le mois comme entier
-      };
-    
-      // Filtrage selon le commercial, la recherche et le mois
-  useEffect(() => {
-    const filtered = contrats.filter((contrat) => {
-      const signatureMonth = extractMonthFromDate(contrat.signatureDate); // Obtenez le mois de la date de signature
-      const isMonthMatch = selectedMonth ? signatureMonth === parseInt(selectedMonth) : true;
-      
-      return isMonthMatch; // Adjust your condition to suit any other filters
-    });
 
-    setFilteredContrats(filtered);
-  }, [contrats, selectedMonth]); // Ensure correct dependencies
   const handleInputChange = (e) => {
     setUpdatedContrat({ ...updatedContrat, [e.target.name]: e.target.value });
   };
@@ -118,13 +99,14 @@ function ListeContratsDirec() {
   const handleSelectChange = (e) => {
     setUpdatedContrat({ ...updatedContrat, [e.target.name]: e.target.value });
   };
+
   const handleViewContrat = (contrat) => {
-    setSelectedContrat(contrat); // Définir le contrat sélectionné
-    setShowModal(true); // Afficher le modal
+    setSelectedContrat(contrat);
+    setShowModal(true);
   };
 
   const closeModal = () => {
-    setShowModal(false); // Fermer le modal
+    setShowModal(false);
   };
 
   if (loading) {
@@ -134,10 +116,9 @@ function ListeContratsDirec() {
   if (error) {
     return <div className="flex justify-center items-center h-screen text-red-500">Erreur : {error}</div>;
   }
-
   return (
     <div className="max-w-full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-semibold text-left  text-blue-gray-700 mb-6 border-b pb-4 ">Liste des Contrats</h1>
+      <h1 className="text-3xl font-semibold text-left  text-blue-gray-700 mb-6 border-b pb-4 ">Liste des Contrats non finalisé </h1>
       <div className="mb-4">
         <input
           type="text"
@@ -147,28 +128,8 @@ function ListeContratsDirec() {
           className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
         />
       </div>
-      {/* Filtre par mois */}
-      <div className="mb-4 flex space-x-4">
-        <select
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
-        >
-          <option value="">Tous les mois</option>
-          <option value="1">Janvier</option>
-          <option value="2">Février</option>
-          <option value="3">Mars</option>
-          <option value="4">Avril</option>
-          <option value="5">Mai</option>
-          <option value="6">Juin</option>
-          <option value="7">Juillet</option>
-          <option value="8">Août</option>
-          <option value="9">Septembre</option>
-          <option value="10">Octobre</option>
-          <option value="11">Novembre</option>
-          <option value="12">Décembre</option>
-        </select>
-      </div>
+  
+     
       <div className="overflow-x-scroll">
       <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
       
@@ -419,4 +380,4 @@ function ListeContratsDirec() {
   );
 }
 
-export default ListeContratsDirec;
+export default ContratNonValide ;
