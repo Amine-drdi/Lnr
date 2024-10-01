@@ -37,7 +37,7 @@ function ProfileSetting() {
 
     try {
       const token = localStorage.getItem('authToken');
-      await axios.put(`http://83.69.195:5000/api/users/${user._id}`, user, {
+      await axios.put(`http://51.83.69.195:5000/api/users/${user._id}`, user, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

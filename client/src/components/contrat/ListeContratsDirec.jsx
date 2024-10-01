@@ -399,9 +399,11 @@ function ListeContratsDirec() {
             <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Contrat</h2>
             <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
             <p className='text-left'><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
-            <p className='text-left'><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
             <p className='text-left'><strong>Nom :</strong> {selectedContrat.nom}</p>
             <p className='text-left'><strong>Prénom :</strong> {selectedContrat.prenom}</p>
+            <p className='text-left'><strong>Email :</strong> {selectedContrat.email}</p>
+            <p className='text-left'><strong>Télephone :</strong> {selectedContrat.telephone}</p>
+            <p className='text-left'><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
             <p className='text-left'><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
             <p className='text-left'><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
             <p className='text-left'><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>

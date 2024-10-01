@@ -80,7 +80,7 @@ function Commercial() {
   // Fonction pour formater et afficher les champs modifiés
   const renderUpdatedFields = () => {
     return contratUpdates.map((update, index) => (
-      <div key={index} className="mb-4">
+      <div key={index} className="mb-4 m-14">
  
         <ul>
           {Object.keys(update.updatedFields).map((field, idx) => (

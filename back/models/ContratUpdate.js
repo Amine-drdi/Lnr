@@ -12,3 +12,5 @@ const contratUpdateSchema = new mongoose.Schema({
 
 const ContratUpdate = mongoose.model('ContratUpdate', contratUpdateSchema);
 module.exports = ContratUpdate;
+
+

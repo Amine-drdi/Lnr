@@ -335,8 +335,6 @@ function ListeContratsManager() {
             <p className='text-left'><strong>Nom :</strong> {selectedContrat.nom}</p>
             <p className='text-left'><strong>Prénom :</strong> {selectedContrat.prenom}</p>
             <p className='text-left'><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
-            <p className='text-left'><strong>Email:</strong> {selectedContrat.email}</p>
-            <p className='text-left'><strong>Téléphone :</strong> {selectedContrat.telephone}</p>
             <p className='text-left'><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
             <p className='text-left'><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
             <p className='text-left'><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
