@@ -20,7 +20,7 @@ function ListeContratsComm() {
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -39,7 +39,7 @@ function ListeContratsComm() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -156,7 +156,10 @@ function ListeContratsComm() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Compagnie</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/ mois</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne mutuelle</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type de Résiliation</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
+
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -173,7 +176,11 @@ function ListeContratsComm() {
                 <td className="px-4 py-3 text-sm text-gray-700">{contrat.Commercial}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{contrat.compagnie}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{contrat.cotisation}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{contrat.ancienneMutuelle}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{contrat.typeResiliation}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{contrat.commentaire}</td>
+                
+
               </tr>
             ))}
           </tbody>
@@ -193,6 +200,8 @@ function ListeContratsComm() {
             <p className='text-left'><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
             <p className='text-left'><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
             <p className='text-left'><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
+            <p className='text-left'><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
+            <p className='text-left'><strong>Type de résiliation :</strong> {selectedContrat.typeResiliation}</p>
             <p className='text-left'><strong>Commentaire :</strong> {selectedContrat.commentaire}</p>
             <button
               onClick={closeModal}

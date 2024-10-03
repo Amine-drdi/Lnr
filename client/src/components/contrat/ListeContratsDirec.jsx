@@ -12,13 +12,14 @@ function ListeContratsDirec() {
   const [updatedContrat, setUpdatedContrat] = useState({});
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
   const état_dossiers = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
+  const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
   const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
   const [showModal, setShowModal] = useState(false); // Contrôle du modal
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -52,7 +53,7 @@ function ListeContratsDirec() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +77,7 @@ function ListeContratsDirec() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -186,6 +187,10 @@ function ListeContratsDirec() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/mois</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Type de résiliation</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Retour compagnie</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Suivie gestion</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Remarque gestionnaire</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
             </tr>
           </thead>
@@ -371,6 +376,65 @@ function ListeContratsDirec() {
                     contrat.ancienneMutuelle
                   )}
                 </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                 {editContratId === contrat._id ? (
+                <select
+                  name="typeResiliation"
+                  value={updatedContrat.typeResiliation}
+                  onChange={handleSelectChange}
+                  className="border rounded-md p-2"
+                 >
+                 {typeResiliations.map(typeResiliation => (
+                 <option key={typeResiliation} value={typeResiliation}>
+                 {typeResiliation}
+                 </option>
+                 ))}
+                 </select>
+                 ) : (
+                 contrat.typeResiliation
+                  )}
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="retourCompagnie"
+                      value={updatedContrat.retourCompagnie}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.retourCompagnie
+                  )}
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="suivieGestion"
+                      value={updatedContrat.suivieGestion}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.suivieGestion
+                  )}
+                </td>
+
+
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="remarque"
+                      value={updatedContrat.remarque}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.remarque
+                  )}
+                </td>
 
 
                 <td className="px-4 py-3 text-sm text-gray-700">
@@ -407,6 +471,11 @@ function ListeContratsDirec() {
             <p className='text-left'><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
             <p className='text-left'><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
             <p className='text-left'><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
+            <p className='text-left'><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
+            <p className='text-left'><strong>Retour Compagnie :</strong> {selectedContrat.retourCompagnie}</p>
+            <p className='text-left'><strong>Suivie gestion :</strong> {selectedContrat.suivieGestion}</p>
+            <p className='text-left'><strong>Type de résiliation :</strong> {selectedContrat.typeResiliation}</p>
+            <p className='text-left'><strong>Remarque gestionnaire :</strong> {selectedContrat.remarque}</p>
             <p className='text-left'><strong>Commentaire :</strong> {selectedContrat.commentaire}</p>
             <button
               onClick={closeModal}

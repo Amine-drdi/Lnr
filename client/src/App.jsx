@@ -18,6 +18,7 @@ import ProfileSetting from './components/ProfileSetting';
 import ListeContratsManager from './components/contrat/ListeContratsManager';
 import ContratNonValide from './components/contrat/ContratNonValide';
 import ContratNvalideGestio from './components/contrat/ContratNvalideGestio';
+import Dashboard from './components/Dashboard';
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
         <Route path="/Liste-employe" element={<ListeEmp />} />
         <Route path="/ajout-employe" element={<Addcommerciale />} />
        {/* <Route path="/gestionnaire-contrats" element={<ContratsGestionnaire />} />*/}
+        <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/calendrier" element={<Calend />} />
         <Route path="/profile-settings" element={<ProfileSetting/>} />
         <Route path="/contrats-non-valide" element={<ContratNonValide />} />

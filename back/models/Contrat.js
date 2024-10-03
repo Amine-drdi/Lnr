@@ -24,7 +24,12 @@ const contratSchema = new mongoose.Schema({
   commentaire: { type: String},
   Commercial :{ type: String, },
   ancienneMutuelle: {type: String},
-  transmissionDocument: {type : String} ,
+  file: {type : String} ,
+  remarque: {type : String},
+  retourCompagnie : {type : String},
+  suivieGestion : { type : String} ,
+  typeResiliation : { type : String} ,
+
   status: { type: String, default: 'pending' }, // Le statut du contrat
   createdAt: { type: Date, default: Date.now },
 

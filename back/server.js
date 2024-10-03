@@ -6,14 +6,33 @@ const cors = require('cors');
 const User = require('./models/User'); // Importer le modèle User
 const Contrat = require('./models/Contrat');
 const ContratUpdate = require('./models/ContratUpdate');
+const multer = require('multer');
+const path = require('path');
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb://mongodb:27017/mydatabase')
+mongoose.connect('mongodb://localhost:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
+
+// Middleware pour servir les fichiers statiques à partir du dossier 'uploads'
+app.use('/uploads', express.static('uploads'));
+
+// Configuration de multer pour enregistrer les fichiers dans un dossier
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Renommer le fichier avec un timestamp
+  }
+});
+
+const upload = multer({ storage: storage });
+
+
 
 // Route pour se connecter
 app.post('/api/login', async (req, res) => {
@@ -133,7 +152,7 @@ app.get('/api/users/managers', async (req, res) => {
 });*/
 
 // Route pour ajouter un nouveau contrat
-app.post('/api/contrats', async (req, res) => {
+app.post('/api/contrats',upload.single('fichier'),   async (req, res) => {
   try {
     const {
       nom,
@@ -152,8 +171,9 @@ app.post('/api/contrats', async (req, res) => {
       interetClient,
       apporteurAffaire,
       Commercial,
-    
     } = req.body;
+
+   
 
     const newContrat = new Contrat({
       nom,
@@ -172,6 +192,7 @@ app.post('/api/contrats', async (req, res) => {
       interetClient,
       apporteurAffaire,
       Commercial,
+      file: req.file.path // Chemin du fichier enregistré
     });
 
     await newContrat.save();
@@ -181,6 +202,7 @@ app.post('/api/contrats', async (req, res) => {
     res.status(500).json({ message: 'Erreur du serveur' });
   }
 });
+
 
 // Route pour récupérer tous les contrats
 app.get('/api/contrats', async (req, res) => {

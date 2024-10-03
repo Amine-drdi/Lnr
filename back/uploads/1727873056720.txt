@@ -1,0 +1,4 @@
+ user: ubuntu
+ password : LNRfinance123
+ adresse IPv4: 51.83.69.195
+ adresse IPv6: 2001:41d0:305:2100::4a83

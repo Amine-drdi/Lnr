@@ -17,47 +17,50 @@ function Souscription({ setIsAdding }) {
   const [effetDate, setEffetDate] = useState('');
   const [fraisEntre, setFraisEntre] = useState('');
   const [fraisDossier, setFraisDossier] = useState('');
-  const [interetClient, setIntertClient] = useState('');
+  const [interetClient, setInteretClient] = useState('');
   const [apporteurAffaire, setApporteurAffaire] = useState('');
-  const [Commercial, setUserName] = useState(''); // Pour stocker le nom de l'utilisateur
+  const [ancienneMutuelle , setAncienneMutuelle] = useState('');
+  const [typeResiliation , setTypeResiliation] = useState('');
+  const [file, setFile] = useState(null); // Capture le fichier sélectionné
+  const [Commercial, setUserName] = useState('');
 
   const textInput = useRef(null);
   const navigate = useNavigate(); // Utilisation du hook navigate pour rediriger
-  const formatDate = (dateString) => {
-    const [year, month, day] = dateString.split('-');
-    return `${day}/${month}/${year}`;
-  };
+
   useEffect(() => {
     if (textInput.current) {
       textInput.current.focus();
     }
 
-    // Fonction pour récupérer les informations du profil
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem('authToken'); // Récupère le token d'authentification depuis le localStorage
+        const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
-              Authorization: `Bearer ${token}`, // Envoie le token dans les en-têtes
+              Authorization: `Bearer ${token}`,
             },
           });
-          setUserName(response.data.user.name); // Définit le nom de l'utilisateur récupéré
+          setUserName(response.data.user.name);
         } else {
-          navigate('/'); // Redirige si pas de token
+          navigate('/');
         }
       } catch (error) {
         console.error('Erreur lors de la récupération du profil:', error);
-        navigate('/'); // Redirige en cas d'erreur
+        navigate('/');
       }
     };
 
     fetchProfile();
-  }, [navigate]); // Le useEffect dépend de navigate
+  }, [navigate]);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]); // Capture le fichier sélectionné
+  };
 
   const handleAdd = async (e) => {
     e.preventDefault();
-  
+
     if (!nom || !prenom || !telephone || !email || !dob || !address || !profession || !signatureDate || !cotisation || !compagnie || !effetDate || !apporteurAffaire) {
       return Swal.fire({
         icon: 'error',
@@ -67,43 +70,40 @@ function Souscription({ setIsAdding }) {
         timer: 1500,
       });
     }
-  
-    const newContract = {
-      nom,
-      prenom,
-      telephone,
-      email,
-      dob: formatDate(dob), // Formater la date de naissance
-      address,
-      profession,
-      signatureDate: formatDate(signatureDate), // Formater la date de signature
-      cotisation,
-      compagnie,
-      effetDate: formatDate(effetDate), // Formater la date d'effet
-      fraisEntre,
-      fraisDossier,
-      interetClient,
-      apporteurAffaire,
-      Commercial
-    };
-  
+
+    // Utilisation de FormData pour envoyer le fichier et les données
+    const formData = new FormData();
+
+    formData.append('nom', nom);
+    formData.append('prenom', prenom);
+    formData.append('telephone', telephone);
+    formData.append('email', email);
+    formData.append('dob', dob);
+    formData.append('address', address);
+    formData.append('profession', profession);
+    formData.append('signatureDate', signatureDate);
+    formData.append('cotisation', cotisation);
+    formData.append('compagnie', compagnie);
+    formData.append('effetDate', effetDate);
+    formData.append('fraisEntre', fraisEntre);
+    formData.append('fraisDossier', fraisDossier);
+    formData.append('interetClient', interetClient);
+    formData.append('apporteurAffaire', apporteurAffaire);
+    formData.append('Commercial', Commercial);
+
+    // Ajouter le fichier
+    if (file) {
+      formData.append('fichier', file); // Assurez-vous que 'fichier' correspond au nom attendu par le backend
+    }
+
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/contrats', {
+      const response = await fetch('http://localhost:5000/api/contrats', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newContract),
+        body: formData, // Envoi du formData avec le fichier
       });
-  
+
       if (response.ok) {
         const result = await response.json();
-        if (typeof setContrat === 'function') {
-          setContrat((prevContrats) => [...prevContrats, result.contrat]);
-        } else {
-          console.error("setContrat n'est pas une fonction");
-        }
-  
         Swal.fire({
           icon: 'success',
           title: 'Ajouté',
@@ -285,9 +285,35 @@ function Souscription({ setIsAdding }) {
               id="interetClient"
               type="text"
               value={interetClient}
-              onChange={(e) => setIntertClient(e.target.value)}
+              onChange={(e) => setInteretClient(e.target.value)}
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
             />
+          </div>
+          <div>
+            <label htmlFor="ancienneMutuelle" className="block text-sm font-medium text-blue-gray-700">Ancienne Mutuelle</label>
+            <input
+              id="ancienneMutuelle"
+              type="text"
+              value={ancienneMutuelle}
+              onChange={(e) => setAncienneMutuelle(e.target.value)}
+              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="typeResiliation" className="block text-sm font-medium text-blue-gray-700">Type de Résiliation</label>
+         <select
+          id="typeResiliation"
+          name="typeResiliation"
+          value={typeResiliation}
+          onChange={(e) => setTypeResiliation(e.target.value)}
+          className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
+        >
+          <option value=""></option>
+          <option value="Infra">Infra</option>
+          <option value="Résiliation à échéance">Résiliation à échéance </option>
+
+        </select>
+    
           </div>
           <div>
             <label htmlFor="apporteur" className="block text-sm font-medium text-blue-gray-700">Apporteur d'affaire</label>
@@ -310,7 +336,15 @@ function Souscription({ setIsAdding }) {
     
           </div>
 
-
+          <div>
+         <label htmlFor="file" className="block text-sm font-medium text-blue-gray-700 mb-2">Fichier</label>
+         <input 
+         onChange={handleFileChange} // Utilisez handleFileChange pour capturer le fichier
+        className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
+        id="file"
+        type="file"
+        />
+</div>
 
         </div>
 

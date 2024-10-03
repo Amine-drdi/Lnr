@@ -24,12 +24,13 @@ import Addcommerciale from "../Addcommerciale";
 import Souscription from "../contrat/Souscription";
 import ProfileSetting from "../ProfileSetting";
 import ContratNvalideGestio from "../contrat/ContratNvalideGestio";
+import Dashboard from "../Dashboard";
 
 
 
 // Les composants pour chaque section de la dashboard
 function DashboardContent() {
-  return <div></div>;
+  return <div><Dashboard/></div>;
 }
 
 function ListeContrats() {
@@ -58,7 +59,7 @@ export default function Gestionnaire() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -98,7 +99,7 @@ export default function Gestionnaire() {
   const renderComponent = () => {
     switch (activeComponent) {
       case 'dashboard':
-        return ;
+        return <Dashboard/> ;
       case 'listeContrats':
         return <ListeContrats />;
         case 'AjoutContrat':

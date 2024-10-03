@@ -13,13 +13,14 @@ function ListeContratsGestio() {
   const signatureTypes = ["Lead", "RDV", "RDV à chaud"];
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
   const etatDocs = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
+  const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
   const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
   const [showModal, setShowModal] = useState(false); // Contrôle du modal
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -56,7 +57,7 @@ function ListeContratsGestio() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -77,6 +78,10 @@ function ListeContratsGestio() {
       setError(error.message);
     }
   };
+
+
+  
+  
   
     // Fonction pour extraire le mois à partir d'une chaîne de date "DD/MM/YY"
     const extractMonthFromDate = (dateString) => {
@@ -106,7 +111,7 @@ function ListeContratsGestio() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -199,7 +204,12 @@ function ListeContratsGestio() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/mois</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Type de résiliation</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Retour compagnie</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Suivie gestion</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Remarque</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Fichier</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -382,7 +392,66 @@ function ListeContratsGestio() {
                     contrat.ancienneMutuelle
                   )}
                 </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                 {editContratId === contrat._id ? (
+                <select
+                  name="typeResiliation"
+                  value={updatedContrat.typeResiliation}
+                  onChange={handleSelectChange}
+                  className="border rounded-md p-2"
+                 >
+                 {typeResiliations.map(typeResiliation => (
+                 <option key={typeResiliation} value={typeResiliation}>
+                 {typeResiliation}
+                 </option>
+                 ))}
+                 </select>
+                 ) : (
+                 contrat.typeResiliation
+                  )}
+                </td>
 
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="retourCompagnie"
+                      value={updatedContrat.retourCompagnie}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.retourCompagnie
+                  )}
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="suivieGestion"
+                      value={updatedContrat.suivieGestion}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.suivieGestion
+                  )}
+                </td>
+ 
+                <td className="px-4 py-3 text-sm text-red-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="remarque"
+                      value={updatedContrat.remarque}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.remarque
+                  )}
+                </td>
+                
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input
@@ -396,6 +465,21 @@ function ListeContratsGestio() {
                     contrat.commentaire
                   )}
                 </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+        {contrat.file ? (
+          <a 
+            href={`http://localhost:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-blue-500 hover:underline"
+          >
+            Voir le fichier
+          </a>
+        ) : (
+          'Pas de fichier'
+        )}
+      </td>
+
               </tr>
             ))}
           </tbody>
@@ -416,9 +500,28 @@ function ListeContratsGestio() {
             <p className='text-left'><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
             <p className='text-left'><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
             <p className='text-left'><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
-            <p className='text-left'><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
             <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
+            <p className='text-left'><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
+            <p className='text-left'><strong>Type de résiliation:</strong> {selectedContrat.typeResiliation}</p>
+            <p className='text-left'><strong>Retour compagnie :</strong> {selectedContrat.retourCompagnie}</p>
+            <p className='text-left'><strong>Suivie gestion :</strong> {selectedContrat.suivieGestion}</p>
+            <p className='text-left'><strong>Remarque :</strong> {selectedContrat.remarque}</p>
             <p className='text-left'><strong>Commentaire :</strong> {selectedContrat.commentaire}</p>
+         
+
+            {selectedContrat.file && (
+        <p className='text-left'>
+          <strong>Fichier :</strong> 
+          <a 
+            href={`http://localhost:5000/${selectedContrat.file}`} // Assurez-vous que le chemin est correct
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-blue-500 hover:underline"
+          >
+            Voir le fichier
+          </a>
+        </p>
+      )}
             <button
               onClick={closeModal}
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
