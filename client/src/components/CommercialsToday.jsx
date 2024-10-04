@@ -29,7 +29,7 @@ const CommercialsToday = () => {
           </tr>
         </thead>
         <tbody>
-        {commercials.length > 0 ? (
+        {commercials?.length > 0 ? (
               commercials.map((commercial) => (
                 <tr key={commercial.nom} className="hover:bg-gray-50">
                   <td className="py-3 px-4 border-b border-gray-200">{commercial.commercial}</td>
