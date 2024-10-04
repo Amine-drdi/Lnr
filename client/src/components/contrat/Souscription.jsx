@@ -21,7 +21,7 @@ function Souscription({ setIsAdding }) {
   const [apporteurAffaire, setApporteurAffaire] = useState('');
   const [ancienneMutuelle , setAncienneMutuelle] = useState('');
   const [typeResiliation , setTypeResiliation] = useState('');
-  const [file, setFile] = useState(null); // Capture le fichier sélectionné
+
   const [Commercial, setUserName] = useState('');
 
   const textInput = useRef(null);
@@ -54,9 +54,7 @@ function Souscription({ setIsAdding }) {
     fetchProfile();
   }, [navigate]);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]); // Capture le fichier sélectionné
-  };
+
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -72,34 +70,31 @@ function Souscription({ setIsAdding }) {
     }
 
     // Utilisation de FormData pour envoyer le fichier et les données
-    const formData = new FormData();
-
-    formData.append('nom', nom);
-    formData.append('prenom', prenom);
-    formData.append('telephone', telephone);
-    formData.append('email', email);
-    formData.append('dob', dob);
-    formData.append('address', address);
-    formData.append('profession', profession);
-    formData.append('signatureDate', signatureDate);
-    formData.append('cotisation', cotisation);
-    formData.append('compagnie', compagnie);
-    formData.append('effetDate', effetDate);
-    formData.append('fraisEntre', fraisEntre);
-    formData.append('fraisDossier', fraisDossier);
-    formData.append('interetClient', interetClient);
-    formData.append('apporteurAffaire', apporteurAffaire);
-    formData.append('Commercial', Commercial);
-
-    // Ajouter le fichier
-    if (file) {
-      formData.append('fichier', file); // Assurez-vous que 'fichier' correspond au nom attendu par le backend
-    }
-
+    const newContract = {
+      nom,
+      prenom,
+      telephone,
+      email,
+      dob,
+      address,
+      profession,
+      signatureDate,
+      cotisation,
+      compagnie,
+      effetDate,
+      fraisEntre,
+      fraisDossier,
+      interetClient,
+      apporteurAffaire,
+      Commercial,
+    };
     try {
       const response = await fetch('http://localhost:5000/api/contrats', {
         method: 'POST',
-        body: formData, // Envoi du formData avec le fichier
+        headers: {
+          'Content-Type': 'application/json', // Ajout du header pour JSON
+        },
+        body: JSON.stringify(newContract),
       });
 
       if (response.ok) {
@@ -316,10 +311,10 @@ function Souscription({ setIsAdding }) {
     
           </div>
           <div>
-            <label htmlFor="apporteur" className="block text-sm font-medium text-blue-gray-700">Apporteur d'affaire</label>
+            <label htmlFor="apporteurAffaire" className="block text-sm font-medium text-blue-gray-700">Apporteur d'affaire</label>
          <select
-          id="apporteur"
-          name="apporteur"
+          id="apporteurAffaire"
+          name="apporteurAffaire"
           value={apporteurAffaire}
           onChange={(e) => setApporteurAffaire(e.target.value)}
           className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
@@ -336,15 +331,7 @@ function Souscription({ setIsAdding }) {
     
           </div>
 
-          <div>
-         <label htmlFor="file" className="block text-sm font-medium text-blue-gray-700 mb-2">Fichier</label>
-         <input 
-         onChange={handleFileChange} // Utilisez handleFileChange pour capturer le fichier
-        className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
-        id="file"
-        type="file"
-        />
-</div>
+
 
         </div>
 

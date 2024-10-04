@@ -24,11 +24,12 @@ import Souscription from "../contrat/Souscription";
 import img from "../../assets/direction.png"
 import ProfileSetting from "../ProfileSetting";
 import ContratNonValide from "../contrat/ContratNonValide";
-
+import { CiBoxList } from "react-icons/ci";
+import Dashboard from "../Dashboard";
 
 // Les composants pour chaque section de la dashboard
 function DashboardContent() {
-  return <div></div>;
+  return <div><Dashboard/></div>;
 }
 
 function ListeContrats() {
@@ -86,7 +87,7 @@ export function Direction() {
   const renderComponent = () => {
     switch (activeComponent) {
       case 'dashboard':
-        return ;
+        return <Dashboard/> ;
       case 'listeContrats':
         return <ListeContrats />;
         case 'AjoutContrat':
@@ -124,7 +125,7 @@ export function Direction() {
           </ListItem>
           <ListItem onClick={() => setActiveComponent('listeContrats')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
-              <FaFileContract className="h-5 w-5 text-white" />
+              <CiBoxList className="h-5 w-5 text-white" />
             </ListItemPrefix>
             Consulter la liste des contrats
           </ListItem>

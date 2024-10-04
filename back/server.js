@@ -5,9 +5,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const User = require('./models/User'); // Importer le modèle User
 const Contrat = require('./models/Contrat');
-const ContratUpdate = require('./models/ContratUpdate');
-const multer = require('multer');
-const path = require('path');
+const ContratUpdate = require('./models/ContratUpdate') ;
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -17,20 +15,8 @@ mongoose.connect('mongodb://localhost:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
-// Middleware pour servir les fichiers statiques à partir du dossier 'uploads'
-app.use('/uploads', express.static('uploads'));
 
-// Configuration de multer pour enregistrer les fichiers dans un dossier
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Renommer le fichier avec un timestamp
-  }
-});
 
-const upload = multer({ storage: storage });
 
 
 
@@ -152,8 +138,9 @@ app.get('/api/users/managers', async (req, res) => {
 });*/
 
 // Route pour ajouter un nouveau contrat
-app.post('/api/contrats',upload.single('fichier'),   async (req, res) => {
+app.post('/api/contrats',  async (req, res) => {
   try {
+
     const {
       nom,
       prenom,
@@ -171,6 +158,7 @@ app.post('/api/contrats',upload.single('fichier'),   async (req, res) => {
       interetClient,
       apporteurAffaire,
       Commercial,
+   
     } = req.body;
 
    
@@ -192,7 +180,7 @@ app.post('/api/contrats',upload.single('fichier'),   async (req, res) => {
       interetClient,
       apporteurAffaire,
       Commercial,
-      file: req.file.path // Chemin du fichier enregistré
+
     });
 
     await newContrat.save();
@@ -203,6 +191,23 @@ app.post('/api/contrats',upload.single('fichier'),   async (req, res) => {
   }
 });
 
+// Route pour récupérer les contrats ajoutés aujourd'hui
+app.get('/api/contrats/today', async (req, res) => {
+  try {
+    const today = new Date();
+    const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+    const contratsToday = await Contrat.find({
+      createdAt: { $gte: startOfToday, $lt: endOfToday }
+    });
+
+    res.status(200).json({ contrats: contratsToday });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de la récupération des contrats ajoutés aujourd\'hui' });
+  }
+});
 
 // Route pour récupérer tous les contrats
 app.get('/api/contrats', async (req, res) => {
@@ -422,6 +427,69 @@ app.delete('/api/evenements/:id', async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+
+// Route pour récupérer les commerciaux ayant signé des contrats aujourd'hui
+app.get('/api/commercials/today', async (req, res) => {
+  try {
+    const today = new Date();
+    const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+    // Récupérer les contrats signés aujourd'hui
+    const contratsToday = await Contrat.find({
+      createdAt: { $gte: startOfToday, $lt: endOfToday }
+    });
+
+    // Compter le nombre de contrats par commercial
+    const commercialCounts = contratsToday.reduce((acc, contrat) => {
+      acc[contrat.Commercial] = (acc[contrat.Commercial] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Convertir l'objet en tableau
+    const result = Object.entries(commercialCounts).map(([commercial, count]) => ({
+      commercial,
+      count
+    }));
+
+    res.status(200).json({ result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de la récupération des commerciaux' });
+  }
+});
+
+// Route pour récupérer le nombre de contrats ajoutés par mois à partir de signatureDate
+app.get('/monthly-count', async (req, res) => {
+  try {
+      const result = await Contrat.aggregate([
+          {
+              $project: {
+                  month: { $month: "$createdAt" } // Assurez-vous que signatureDate est de type Date
+              }
+          },
+          {
+              $group: {
+                  _id: "$month",
+                  count: { $sum: 1 }
+              }
+          },
+          {
+              $sort: { _id: 1 } // Trier par mois
+          }
+      ]);
+
+      const monthlyCount = Array(12).fill(0);
+      result.forEach(item => {
+          monthlyCount[item._id - 1] = item.count;
+      });
+
+      res.json(monthlyCount);
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
+});
+
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;

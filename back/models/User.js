@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema({
     default: '',
   },
  
-
+}, {
+  timestamps: true
 });
 
 // Méthode pour comparer les mots de passe

@@ -4,28 +4,31 @@ import { FaFileContract } from "react-icons/fa";
 import { BsBarChartLineFill } from "react-icons/bs";
 import { GrBusinessService } from "react-icons/gr";
 import axios from 'axios'; // Assurez-vous d'avoir axios installé
+import CommercialsToday from './CommercialsToday';
+import ProgressionChart from './ProgressionChart';
 
 function Dashboard() {
   const [table, setTable] = useState(1);
-  const [contractsTodayCount, setContractsTodayCount] = useState(0);
+  const [contractsSignedToday, setContractsSignedToday] = useState(0);
+  useEffect(() => {
+    const fetchContractsToday = async () => {
+      try {
+        const response = await axios.get('/api/contrats/today');
+        setContractsSignedToday(response.data.contrats.length);
+      } catch (error) {
+        console.error("Error fetching contracts:", error);
+      }
+    };
+
+    fetchContractsToday();
+  }, []);
+
 
   const handleStatsCardClick = (value) => {
     setTable(value);
   };
 
-  useEffect(() => {
-    // Appel API pour obtenir le nombre de contrats d'aujourd'hui
-    const fetchContractsTodayCount = async () => {
-      try {
-        const response = await axios.get('/api/contrats/today/count'); // Assurez-vous que le chemin est correct
-        setContractsTodayCount(response.data.count);
-      } catch (error) {
-        console.error('Error fetching contracts count:', error);
-      }
-    };
 
-    fetchContractsTodayCount();
-  }, []);
 
   return (
     <div className="text-center">
@@ -36,7 +39,7 @@ function Dashboard() {
           icon={<FaFileContract className='h-6 w-6' />}
           bgColor="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-blue-500/40"
           title="Nombre de contrats signés aujourd'hui"
-          amount={`$${contractsTodayCount}`} // Utiliser la valeur récupérée
+          amount=  {contractsSignedToday} 
           percentage="+55%"
           percentageColor="text-green-500"
           onClick={() => handleStatsCardClick(1)}
@@ -63,8 +66,8 @@ function Dashboard() {
           isActive={table === 3}
         />
       </div>
-      {table === 1 && <div className='flex justify-center items-center h-full'>Nbr Contrats signés</div>}
-      {table === 2 && <div className='flex justify-center items-center h-full'>Courbe de contrat par mois</div>}
+      {table === 1 && <div className='flex justify-center items-center h-full'><CommercialsToday/></div>}
+      {table === 2 && <div className='flex justify-center items-center h-full'><ProgressionChart/></div>}
       {table === 3 && <div className='flex justify-center items-center h-full'>Compagnies</div>}
     </div>
   );

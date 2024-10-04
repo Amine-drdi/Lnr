@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const contratSchema = new mongoose.Schema({
 
 
-  nom: { type: String, required: true },
+ /* nom: { type: String, required: true },
   prenom: { type: String, required: true },
   telephone: { type: String, required: true },
   email: { type: String, required: true },
@@ -24,16 +24,34 @@ const contratSchema = new mongoose.Schema({
   commentaire: { type: String},
   Commercial :{ type: String, },
   ancienneMutuelle: {type: String},
-  file: {type : String} ,
   remarque: {type : String},
   retourCompagnie : {type : String},
   suivieGestion : { type : String} ,
   typeResiliation : { type : String} ,
-
+  file: {type : String} ,
   status: { type: String, default: 'pending' }, // Le statut du contrat
-  createdAt: { type: Date, default: Date.now },
-
-
+  createdAt: { type: Date, default: Date.now },*/
+  nom: String,
+  prenom: String,
+  telephone: String,
+  email: String,
+  dob: Date,
+  address: String,
+  profession: String,
+  signatureDate: Date,
+  cotisation: String,
+  compagnie: String,
+  effetDate: Date,
+  fraisEntre: String,
+  fraisDossier: String,
+  interetClient: String,
+  apporteurAffaire: String,
+  Commercial: String,
+  etatDossier: String,
+ 
+}, {
+  timestamps: true // Ajoute les champs createdAt et updatedAt
+  
 });
 
 const Contrat = mongoose.model('Contrat', contratSchema);

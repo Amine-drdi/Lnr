@@ -25,7 +25,7 @@ import Souscription from "../contrat/Souscription";
 import ProfileSetting from "../ProfileSetting";
 import ContratNvalideGestio from "../contrat/ContratNvalideGestio";
 import Dashboard from "../Dashboard";
-
+import { CiBoxList } from "react-icons/ci";
 
 
 // Les composants pour chaque section de la dashboard
@@ -152,7 +152,7 @@ export default function Gestionnaire() {
           </ListItem>
           <ListItem onClick={() => setActiveComponent('listeContrats')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
-              <FaFileContract className="h-5 w-5 text-white" />
+              <CiBoxList className="h-5 w-5 text-white" />
             </ListItemPrefix>
             Consulter la liste des contrats
           </ListItem>

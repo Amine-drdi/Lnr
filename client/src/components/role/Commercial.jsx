@@ -17,7 +17,7 @@ import {
   Badge,
 } from "@material-tailwind/react";
 import { IoIosNotifications } from "react-icons/io";
-
+import { CiBoxList } from "react-icons/ci";
 import { FaFileContract, FaFileSignature } from "react-icons/fa6";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import logo from "../../assets/logo.png";
@@ -148,7 +148,7 @@ function Commercial() {
             className="hover:bg-blue-600 text-white"
           >
             <ListItemPrefix>
-              <FaFileContract className="h-5 w-5" />
+              <CiBoxList className="h-5 w-5" />
             </ListItemPrefix>
             Consulter la liste des contrats
           </ListItem>

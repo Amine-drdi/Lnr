@@ -11,7 +11,7 @@ function ListeContratsDirec() {
   const [editContratId, setEditContratId] = useState(null);
   const [updatedContrat, setUpdatedContrat] = useState({});
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
-  const état_dossiers = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
+  const etatDocs = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
   const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
   const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
@@ -347,12 +347,12 @@ function ListeContratsDirec() {
                 <td className="px-4 py-3 text-sm text-gray-700">
                  {editContratId === contrat._id ? (
                 <select
-                  name="état_dossier"
+                  name="etatDossier"
                   value={updatedContrat.etatDossier}
                   onChange={handleSelectChange}
                   className="border rounded-md p-2"
                  >
-                 {état_dossiers.map(etatDossier => (
+                 {etatDocs.map(etatDossier => (
                  <option key={etatDossier} value={etatDossier}>
                  {etatDossier}
                  </option>
@@ -362,7 +362,6 @@ function ListeContratsDirec() {
                  contrat.etatDossier
                   )}
                 </td>
-
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input

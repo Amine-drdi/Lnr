@@ -14,7 +14,7 @@ import logo from "../../assets/logo.png";
 import img from "../../assets/manager.png";
 import Souscription from '../contrat/Souscription';
 import ListeContratsManager from '../contrat/ListeContratsManager';
-
+import { CiBoxList } from "react-icons/ci";
 function Manager() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -87,7 +87,7 @@ function Manager() {
             className="hover:bg-blue-600 text-white"
           >
             <ListItemPrefix>
-              <FaFileContract className="h-5 w-5" />
+              <CiBoxList className="h-5 w-5" />
             </ListItemPrefix>
             Consulter la liste des contrats
           </ListItem>

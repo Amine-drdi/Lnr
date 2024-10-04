@@ -362,7 +362,7 @@ function ListeContratsGestio() {
                 <td className="px-4 py-3 text-sm text-gray-700">
                  {editContratId === contrat._id ? (
                 <select
-                  name="etatDoc"
+                  name="etatDossier"
                   value={updatedContrat.etatDossier}
                   onChange={handleSelectChange}
                   className="border rounded-md p-2"
