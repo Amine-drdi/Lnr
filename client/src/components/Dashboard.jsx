@@ -14,7 +14,7 @@ function Dashboard() {
     const fetchContractsToday = async () => {
       try {
         const response = await axios.get('/api/contrats/today');
-        setContractsSignedToday(response.data.contrats.length);
+        setContractsSignedToday(response.data.contrats?.length);
       } catch (error) {
         console.error("Error fetching contracts:", error);
       }

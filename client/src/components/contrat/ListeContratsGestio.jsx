@@ -95,17 +95,18 @@ function ListeContratsGestio() {
     // Filtrage selon le commercial, la recherche et le mois
     useEffect(() => {
       const filtered = contrats.filter((contrat) => {
-        const signatureMonth = extractMonthFromDate(contrat.signatureDate); // Obtenez le mois de la date de signature
-        const isMonthMatch = selectedMonth ? signatureMonth === parseInt(selectedMonth) : true;
+        if (!contrat.signatureDate) return false; // S'assurer que la date de signature existe
     
-        // Vérifie si la date de signature n'est ni vide ni nulle
-        const hasValidSignatureDate = contrat.signatureDate && contrat.signatureDate.trim() !== '';
+        const signatureDate = new Date(contrat.signatureDate); // Créer un objet Date à partir de la chaîne de date
+        const signatureMonth = signatureDate.getMonth() + 1; // Obtenir le mois de 1 à 12
     
-        return isMonthMatch && hasValidSignatureDate; // Appliquer les deux filtres
+        const isMonthMatch = selectedMonth ? signatureMonth === parseInt(selectedMonth, 10) : true;
+    
+        return isMonthMatch;
       });
     
       setFilteredContrats(filtered);
-    }, [contrats, selectedMonth]); // Assurez-vous que les dépendances sont correctes
+    }, [contrats, selectedMonth]);
     
 
 
