@@ -68,7 +68,7 @@ function Dashboard() {
       </div>
       {table === 1 && <div className='flex justify-center items-center h-full'><CommercialsToday/></div>}
       {table === 2 && <div className='flex justify-center items-center h-full'><ProgressionChart/></div>}
-      {table === 3 && <div className='flex justify-center items-center h-full'>Compagnies</div>}
+      {table === 3 && <div className='flex justify-center items-center h-full'>hello</div>}
     </div>
   );
 }
