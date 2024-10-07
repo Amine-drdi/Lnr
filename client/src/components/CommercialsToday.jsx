@@ -35,31 +35,24 @@ const CommercialsToday = () => {
 
   return (
     <div className="container mx-auto p-4">
-     <h3 className="text-1xl font-semibold mb-4">Commerciaux ayant signé aujourd'hui</h3>
-     <div className="overflow-x-auto">
-        <table className="w-full  bg-white border border-gray-200 rounded-lg shadow-md ">
-        <thead className="bg-blue-gray-500 border-b w-full">
+      <h3 className="text-1xl font-semibold mb-4">Commerciaux ayant signé aujourd'hui</h3>
+      <div className="overflow-x-auto">
+        <table className="w-full bg-white border border-gray-200 rounded-lg shadow-md">
+          <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
-            <th className="py-3 px-4 border-b-2 border-gray-200 text-center text-lg font-medium text-white">Nom du Commercial</th>
-            <th className="py-3 px-4 border-b-2 border-gray-200 text-center text-lg font-medium text-white">Nombre de Contrats Signés</th>
-          </tr>
-        </thead>
-        <tbody>
-        {commercials?.length > 0 ? (
-              commercials.map((commercial) => (
-                <tr key={commercial.nom} className="hover:bg-gray-50">
-                  <td className="py-3 px-4 border-b border-gray-200">{commercial.nom}</td>
-
-                  <td className="py-3 px-4 border-b border-gray-200">{commercial.nombreContrats}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="3" className="py-3 px-4 text-center text-gray-500">Aucun contrat signé aujourd'hui</td>
+              <th className="py-3 px-4 border-b-2 border-gray-200 text-center text-lg font-medium text-white">Nom du Commercial</th>
+              <th className="py-3 px-4 border-b-2 border-gray-200 text-center text-lg font-medium text-white">Nombre de Contrats Signés</th>
+            </tr>
+          </thead>
+          <tbody>
+            {commercials.map((commercial) => (
+              <tr key={commercial.nom} className="hover:bg-gray-50">
+                <td className="py-3 px-4 border-b border-gray-200">{commercial.nom}</td>
+                <td className="py-3 px-4 border-b border-gray-200">{commercial.nombreContrats}</td>
               </tr>
-            )}
+            ))}
           </tbody>
-      </table>
+        </table>
       </div>
     </div>
   );
