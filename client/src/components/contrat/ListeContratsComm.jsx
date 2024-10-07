@@ -57,12 +57,28 @@ function ListeContratsComm() {
     fetchProfile();
   }, []);
 
-  const extractMonthFromDate = (dateString) => {
-    if (!dateString) {
-      return null;
+  // Fonction pour extraire le mois d'une date sous forme de chaîne
+  const extractMonthFromDateString = (dateString) => {
+    if (!dateString) return null;
+
+    const formats = [
+      { regex: /(\d{4})-(\d{2})-(\d{2})/, groupIndex: 2 }, // yyyy-mm-dd
+      { regex: /(\d{4})\/(\d{2})\/(\d{2})/, groupIndex: 2 }, // yyyy/mm/dd
+      { regex: /(\d{2})-(\d{2})-(\d{4})/, groupIndex: 2 }, // dd-mm-yyyy (mois au milieu)
+      { regex: /(\d{2})\/(\d{2})\/(\d{4})/, groupIndex: 2 }  // dd/mm/yyyy (mois au milieu)
+    ];
+
+    for (const format of formats) {
+      const match = dateString.match(format.regex);
+      if (match) {
+        const month = parseInt(match[format.groupIndex], 10);
+        if (month >= 1 && month <= 12) {
+          return month; // Renvoie le mois sous forme de nombre
+        }
+      }
     }
-    const [day, month] = dateString.split('/');
-    return parseInt(month, 10);
+
+    return null; // Aucun mois trouvé
   };
 
   useEffect(() => {
@@ -72,18 +88,19 @@ function ListeContratsComm() {
           contrat.Commercial &&
           contrat.Commercial.toLowerCase() === userName.toLowerCase();
 
-        const signatureMonth = extractMonthFromDate(contrat.signatureDate);
+        const signatureMonth = extractMonthFromDateString(contrat.signatureDate);
         const isMonthMatch = selectedMonth
-          ? signatureMonth === parseInt(selectedMonth)
+          ? signatureMonth === parseInt(selectedMonth, 10)
           : true;
 
         const isSearchMatch =
           searchTerm === '' ||
           (contrat.nom && contrat.nom.toLowerCase().includes(searchTerm.toLowerCase())) ||
           (contrat.prenom && contrat.prenom.toLowerCase().includes(searchTerm.toLowerCase()));
-          const isSignatureDateValid = contrat.signatureDate && contrat.signatureDate.trim() !== ''; // Vérification de la date de signature
 
-          return isCommercialMatch && isMonthMatch && isSearchMatch && isSignatureDateValid;
+        const isSignatureDateValid = contrat.signatureDate && contrat.signatureDate.trim() !== ''; // Vérification de la date de signature
+
+        return isCommercialMatch && isMonthMatch && isSearchMatch && isSignatureDateValid;
       });
 
       setFilteredContrats(filtered);
@@ -109,7 +126,7 @@ function ListeContratsComm() {
 
   return (
     <div className="max-w-full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
-      <h1 className="  text-3xl font-semibold text-left text-blue-gray-700 mb-6 border-b pb-4">Liste des Contrats</h1>
+      <h1 className="text-3xl font-semibold text-left text-blue-gray-700 mb-6 border-b pb-4">Liste des Contrats</h1>
 
       <div className="mb-4 flex space-x-4">
         <input
@@ -155,57 +172,53 @@ function ListeContratsComm() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Compagnie</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/ mois</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/mois</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne mutuelle</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type de Résiliation</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
-
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {filteredContrats.map((contrat) => (
               <tr key={contrat._id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-4 py-3 text-center">
-                  <FaEye className="text-blue-500 cursor-pointer" onClick={() => handleViewContrat(contrat)} />
+                  <FaEye className="text-blue-500 hover:text-blue-700 cursor-pointer" onClick={() => handleViewContrat(contrat)} />
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-700">{contrat.etatDossier}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{contrat.signatureDate}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{contrat.effetDate}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{contrat.nom}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{contrat.prenom}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{contrat.Commercial}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{contrat.compagnie}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{contrat.cotisation}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{contrat.ancienneMutuelle}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{contrat.typeResiliation}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{contrat.commentaire}</td>
-                
-
+                <td className="px-4 py-3 text-center">{contrat.etatDossier}</td>
+                <td className="px-4 py-3 text-center">{contrat.signatureDate}</td>
+                <td className="px-4 py-3 text-center">{contrat.effetDate}</td>
+                <td className="px-4 py-3 text-center">{contrat.nom}</td>
+                <td className="px-4 py-3 text-center">{contrat.prenom}</td>
+                <td className="px-4 py-3 text-center">{contrat.Commercial}</td>
+                <td className="px-4 py-3 text-center">{contrat.compagnie}</td>
+                <td className="px-4 py-3 text-center">{contrat.montantVP}</td>
+                <td className="px-4 py-3 text-center">{contrat.ancienneMutuelle}</td>
+                <td className="px-4 py-3 text-center">{contrat.typeResiliation}</td>
+                <td className="px-4 py-3 text-center">{contrat.commentaire}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Modal */}
+      {/* Modal pour afficher les détails d'un contrat */}
       {showModal && selectedContrat && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
-            <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Contrat</h2>
-            <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
-            <p className='text-left'><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
-            <p className='text-left'><strong>Nom :</strong> {selectedContrat.nom}</p>
-            <p className='text-left'><strong>Prénom :</strong> {selectedContrat.prenom}</p>
-            <p className='text-left'><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
-            <p className='text-left'><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
-            <p className='text-left'><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
-            <p className='text-left'><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
-            <p className='text-left'><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
-            <p className='text-left'><strong>Type de résiliation :</strong> {selectedContrat.typeResiliation}</p>
-            <p className='text-left'><strong>Commentaire :</strong> {selectedContrat.commentaire}</p>
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+            <h2 className="text-2xl font-semibold mb-4">Détails du contrat</h2>
+            <p><strong>Nom:</strong> {selectedContrat.nom}</p>
+            <p><strong>Prénom:</strong> {selectedContrat.prenom}</p>
+            <p><strong>Date de Signature:</strong> {selectedContrat.signatureDate}</p>
+            <p><strong>Date d'Effet:</strong> {selectedContrat.effetDate}</p>
+            <p><strong>Commercial:</strong> {selectedContrat.Commercial}</p>
+            <p><strong>Compagnie:</strong> {selectedContrat.compagnie}</p>
+            <p><strong>Montant VP/mois:</strong> {selectedContrat.montantVP}</p>
+            <p><strong>Ancienne mutuelle:</strong> {selectedContrat.ancienneMutuelle}</p>
+            <p><strong>Type de Résiliation:</strong> {selectedContrat.typeResiliation}</p>
+            <p><strong>Commentaire:</strong> {selectedContrat.commentaire}</p>
             <button
               onClick={closeModal}
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              className="mt-4 px-4 py-2 bg-blue-gray-500 text-white rounded-lg hover:bg-blue-gray-700 transition"
             >
               Fermer
             </button>

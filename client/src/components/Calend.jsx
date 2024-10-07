@@ -55,7 +55,7 @@ const Calend = () => {
         setEvenements(evenements.map(evenement => evenement._id === modifierEvenementId ? { ...evenement, titre_evenement: titreEvenement, date_evenement: dateEvenement, theme_evenement: themeEvenement } : evenement));
       } else {
         // Ajouter un nouvel événement
-        const response = await axios.post('http://51.83.69.195:5000/api/evenements', {
+        const response = await axios.post('http://51.83.69.195t:5000/api/evenements', {
           date_evenement: dateEvenement,
           titre_evenement: titreEvenement,
           theme_evenement: themeEvenement,
