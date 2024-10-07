@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb://mongodb:27017/mydatabase')
+mongoose.connect('mongodb://localhost:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
@@ -428,67 +428,46 @@ app.delete('/api/evenements/:id', async (req, res) => {
   }
 });
 
-// Route pour récupérer les commerciaux ayant signé des contrats aujourd'hui
-app.get('/api/commercials/today', async (req, res) => {
-  try {
-    const today = new Date();
-    const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+ //  progression de signature par mois 
 
-    // Récupérer les contrats signés aujourd'hui
-    const contratsToday = await Contrat.find({
-      createdAt: { $gte: startOfToday, $lt: endOfToday }
+app.get('/api/contrats/monthly-progression', async (req, res) => {
+  try {
+    const currentYear = new Date().getFullYear(); // Récupérer l'année actuelle
+
+    const contratsByMonth = await Contrat.aggregate([
+      {
+        $match: {
+          // Utiliser la conversion de la chaîne en date
+          signatureDate: {
+            $gte: `${currentYear}-01-01`, // Début de l'année actuelle
+            $lt: `${currentYear + 1}-01-01`, // Début de l'année suivante
+          }
+        }
+      },
+      {
+        $group: {
+          _id: { $month: { $dateFromString: { dateString: "$signatureDate" } } }, // Conversion de string à date
+          total: { $sum: 1 } // Compter le nombre de contrats par mois
+        }
+      },
+      {
+        $sort: { _id: 1 } // Trier par mois
+      }
+    ]);
+
+    // Formater les données pour chaque mois de l'année actuelle
+    const monthlyData = Array.from({ length: 12 }, (_, index) => {
+      const monthData = contratsByMonth.find(m => m._id === index + 1);
+      return monthData ? monthData.total : 0; // Si pas de données pour le mois, retourner 0
     });
 
-    // Compter le nombre de contrats par commercial
-    const commercialCounts = contratsToday.reduce((acc, contrat) => {
-      acc[contrat.Commercial] = (acc[contrat.Commercial] || 0) + 1;
-      return acc;
-    }, {});
-
-    // Convertir l'objet en tableau
-    const result = Object.entries(commercialCounts).map(([commercial, count]) => ({
-      commercial,
-      count
-    }));
-
-    res.status(200).json({ result });
+    res.status(200).json({ data: monthlyData });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Erreur lors de la récupération des commerciaux' });
+    console.error("Erreur lors de la récupération des contrats par mois :", error);
+    res.status(500).json({ message: "Erreur serveur lors de la récupération des contrats" });
   }
 });
 
-// Route pour récupérer le nombre de contrats ajoutés par mois à partir de signatureDate
-app.get('/monthly-count', async (req, res) => {
-  try {
-      const result = await Contrat.aggregate([
-          {
-              $project: {
-                  month: { $month: "$createdAt" } // Assurez-vous que signatureDate est de type Date
-              }
-          },
-          {
-              $group: {
-                  _id: "$month",
-                  count: { $sum: 1 }
-              }
-          },
-          {
-              $sort: { _id: 1 } // Trier par mois
-          }
-      ]);
-
-      const monthlyCount = Array(12).fill(0);
-      result.forEach(item => {
-          monthlyCount[item._id - 1] = item.count;
-      });
-
-      res.json(monthlyCount);
-  } catch (err) {
-      res.status(500).json({ message: err.message });
-  }
-});
 
 
 // Démarrer le serveur

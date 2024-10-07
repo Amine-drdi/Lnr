@@ -17,10 +17,11 @@ function ListeContratsGestio() {
   const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
   const [showModal, setShowModal] = useState(false); // Contrôle du modal
+  
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -57,7 +58,7 @@ function ListeContratsGestio() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -83,14 +84,29 @@ function ListeContratsGestio() {
   
   
   
-    // Fonction pour extraire le mois à partir d'une chaîne de date "DD/MM/YY"
-    const extractMonthFromDate = (dateString) => {
-      if (!dateString) {
-        return null; // Si la date est undefined ou null, retourner null
+     // Fonction pour extraire le mois d'une date sous forme de chaîne
+  const extractMonthFromDateString = (dateString) => {
+    if (!dateString) return null;
+
+    const formats = [
+      { regex: /(\d{4})-(\d{2})-(\d{2})/, groupIndex: 2 }, // yyyy-mm-dd
+      { regex: /(\d{4})\/(\d{2})\/(\d{2})/, groupIndex: 2 }, // yyyy/mm/dd
+      { regex: /(\d{2})-(\d{2})-(\d{4})/, groupIndex: 2 }, // dd-mm-yyyy (mois au milieu)
+      { regex: /(\d{2})\/(\d{2})\/(\d{4})/, groupIndex: 2 }  // dd/mm/yyyy (mois au milieu)
+    ];
+
+    for (const format of formats) {
+      const match = dateString.match(format.regex);
+      if (match) {
+        const month = parseInt(match[format.groupIndex], 10);
+        if (month >= 1 && month <= 12) {
+          return month; // Renvoie le mois sous forme de nombre
+        }
       }
-      const [day, month, year] = dateString.split('/'); // Séparer la chaîne par "/"
-      return parseInt(month, 10); // Retourner le mois comme entier
-    };
+    }
+
+    return null; // Aucun mois trouvé
+  };
   
     // Filtrage selon le commercial, la recherche et le mois
     useEffect(() => {
@@ -112,7 +128,7 @@ function ListeContratsGestio() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -469,7 +485,7 @@ function ListeContratsGestio() {
                 <td className="px-4 py-3 text-sm text-gray-700">
         {contrat.file ? (
           <a 
-            href={`http://51.83.69.195:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
+            href={`http://localhost:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-blue-500 hover:underline"
@@ -514,7 +530,7 @@ function ListeContratsGestio() {
         <p className='text-left'>
           <strong>Fichier :</strong> 
           <a 
-            href={`http://51.83.69.195:5000/${selectedContrat.file}`} // Assurez-vous que le chemin est correct
+            href={`http://localhost:5000/${selectedContrat.file}`} // Assurez-vous que le chemin est correct
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-blue-500 hover:underline"

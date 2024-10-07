@@ -48,9 +48,7 @@ const contratSchema = new mongoose.Schema({
   apporteurAffaire: String,
   Commercial: String,
   etatDossier: String,
- 
-}, {
-  timestamps: true // Ajoute les champs createdAt et updatedAt
+  createdAt: { type: Date, default: Date.now },
   
 });
 
