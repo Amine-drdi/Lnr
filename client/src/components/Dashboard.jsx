@@ -17,31 +17,36 @@ function Dashboard() {
     setTable(tableId);
   };
 
+  const fetchContractsData = async () => {
+    try {
+      const [responseToday, responseYesterday] = await Promise.all([
+        axios.get('/api/contrats-aujourdhui'),
+        axios.get('/api/contrats-hier')
+      ]);
+
+      const totalToday = responseToday.data?.total || 0; // Valeur par défaut
+      const totalYesterday = responseYesterday.data?.total || 0; // Valeur par défaut
+
+      setContractsToday(totalToday);
+      setContractsYesterday(totalYesterday);
+
+      // Calculer le pourcentage de progression
+      const percentageProgression = totalYesterday > 0
+        ? ((totalToday - totalYesterday) / totalYesterday) * 100
+        : totalToday > 0 ? 100 : 0;
+
+      setProgression(percentageProgression.toFixed(2));
+    } catch (error) {
+      console.error('Erreur lors de la récupération des contrats:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchContractsToday = async () => {
-      try {
-        const responseToday = await axios.get('/api/contrats-aujourdhui');
-        const responseYesterday = await axios.get('/api/contrats-hier');
-        setContractsToday(responseToday.data.total);
-        setContractsYesterday(responseYesterday.data.total);
+    fetchContractsData(); // Appel lors du montage du composant
+  }, []); // Exécute une seule fois
 
-        // Calculer le pourcentage de progression
-        if (responseYesterday.data.total > 0) {
-          const percentageProgression = ((responseToday.data.total - responseYesterday.data.total) / responseYesterday.data.total) * 100;
-          setProgression(percentageProgression.toFixed(2));
-        } else {
-          setProgression(responseToday.data.total > 0 ? 100 : 0); // Si aucun contrat hier
-        }
-      } catch (error) {
-        console.error('Erreur lors de la récupération des contrats:', error);
-      }
-    };
-
-    fetchContractsToday();
-  }, []); // Appel lors du montage du composant
-
-    // Déterminer la couleur en fonction de la valeur du pourcentage
-    const percentageColor = progression >= 0 ? "text-green-500" : "text-red-500";
+  // Déterminer la couleur en fonction de la valeur du pourcentage
+  const percentageColor = progression >= 0 ? "text-green-500" : "text-red-500";
 
   return (
     <div className="text-center">
@@ -52,7 +57,7 @@ function Dashboard() {
           icon={<FaFileContract className='h-6 w-6' />}
           bgColor="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-blue-500/40"
           title="Nombre de contrats signés aujourd'hui"
-          amount={contractsToday}  //Remplacement de "total" par la variable contractsToday 
+          amount={contractsToday}
           percentage={`${progression}%`}
           percentageColor={percentageColor}
           onClick={() => handleStatsCardClick(1)}
@@ -80,8 +85,8 @@ function Dashboard() {
         />
       </div>
 
-      {table === 1 && <div className='flex justify-center items-center h-full'><CommercialsToday/></div>}
-      {table === 2 && <div className='flex justify-center items-center h-full'><ProgressionChart/></div>}
+      {table === 1 && <div className='flex justify-center items-center h-full'><CommercialsToday /></div>}
+      {table === 2 && <div className='flex justify-center items-center h-full'><ProgressionChart /></div>}
       {table === 3 && <div className='flex justify-center items-center h-full'>hello</div>}
     </div>
   );
