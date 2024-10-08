@@ -12,7 +12,7 @@ function ListeContratsGestio() {
   const [updatedContrat, setUpdatedContrat] = useState({});
   const signatureTypes = ["Lead", "RDV", "RDV à chaud"];
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
-  const etatDocs = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
+  const etatDocs = ["" , "Validé", "Non validé","NRP" , "Impayé", "Sans effet", "Rétractation", "Résigné"];
   const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
   const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
@@ -210,6 +210,7 @@ function ListeContratsGestio() {
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
@@ -219,7 +220,6 @@ function ListeContratsGestio() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date d'Effet</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/mois</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Type de résiliation</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Retour compagnie</th>
@@ -253,6 +253,26 @@ function ListeContratsGestio() {
                     </div>
                   )}
                 </td>
+
+                <td className="px-4 py-3 text-sm text-gray-700">
+                 {editContratId === contrat._id ? (
+                <select
+                  name="etatDossier"
+                  value={updatedContrat.etatDossier}
+                  onChange={handleSelectChange}
+                  className="border rounded-md p-2"
+                 >
+                 {etatDocs.map(etatDossier => (
+                 <option key={etatDossier} value={etatDossier}>
+                 {etatDossier}
+                 </option>
+                 ))}
+                 </select>
+                 ) : (
+                 contrat.etatDossier
+                  )}
+                </td>
+
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input
@@ -377,26 +397,6 @@ function ListeContratsGestio() {
                 </td>
 
                 <td className="px-4 py-3 text-sm text-gray-700">
-                 {editContratId === contrat._id ? (
-                <select
-                  name="etatDossier"
-                  value={updatedContrat.etatDossier}
-                  onChange={handleSelectChange}
-                  className="border rounded-md p-2"
-                 >
-                 {etatDocs.map(etatDossier => (
-                 <option key={etatDossier} value={etatDossier}>
-                 {etatDossier}
-                 </option>
-                 ))}
-                 </select>
-                 ) : (
-                 contrat.etatDossier
-                  )}
-                </td>
-
-
-                <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
@@ -508,6 +508,7 @@ function ListeContratsGestio() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
             <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Contrat</h2>
+            <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
             <p className='text-left'><strong>Nom :</strong> {selectedContrat.nom}</p>
             <p className='text-left'><strong>Prénom :</strong> {selectedContrat.prenom}</p>
             <p className='text-left'><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
@@ -517,7 +518,6 @@ function ListeContratsGestio() {
             <p className='text-left'><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
             <p className='text-left'><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
             <p className='text-left'><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
-            <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
             <p className='text-left'><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
             <p className='text-left'><strong>Type de résiliation:</strong> {selectedContrat.typeResiliation}</p>
             <p className='text-left'><strong>Retour compagnie :</strong> {selectedContrat.retourCompagnie}</p>

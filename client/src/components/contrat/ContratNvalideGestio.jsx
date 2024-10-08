@@ -14,7 +14,7 @@ function ContratNvalideGestio() {
   const [selectedContrat, setSelectedContrat] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
-  const etatDocs = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
+  const etatDocs = ["" , "Validé", "Non validé", "NRP", "Impayé", "Sans effet", "Rétractation", "Résigné"];
   const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
   useEffect(() => {
     const fetchContrats = async () => {
@@ -138,6 +138,7 @@ function ContratNvalideGestio() {
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
@@ -151,7 +152,6 @@ function ContratNvalideGestio() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type de résiliation</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Retour compagnie</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">suivie gestion</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Remarque gestionnaire</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
 
@@ -180,6 +180,25 @@ function ContratNvalideGestio() {
                </div>
              )}
             </td>
+
+            <td className="px-4 py-3 text-sm text-gray-700">
+                 {editContratId === contrat._id ? (
+                <select
+                  name="etatDoc"
+                  value={updatedContrat.etatDossier}
+                  onChange={handleSelectChange}
+                  className="border rounded-md p-2"
+                 >
+                 {etatDocs.map(etatDossier => (
+                 <option key={etatDossier} value={etatDossier}>
+                 {etatDossier}
+                 </option>
+                 ))}
+                 </select>
+                 ) : (
+                 contrat.etatDossier
+                  )}
+                </td>
 
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
@@ -361,24 +380,6 @@ function ContratNvalideGestio() {
                   )}
                 </td>
 
-                <td className="px-4 py-3 text-sm text-gray-700">
-                 {editContratId === contrat._id ? (
-                <select
-                  name="etatDoc"
-                  value={updatedContrat.etatDossier}
-                  onChange={handleSelectChange}
-                  className="border rounded-md p-2"
-                 >
-                 {etatDocs.map(etatDossier => (
-                 <option key={etatDossier} value={etatDossier}>
-                 {etatDossier}
-                 </option>
-                 ))}
-                 </select>
-                 ) : (
-                 contrat.etatDossier
-                  )}
-                </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input

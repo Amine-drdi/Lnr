@@ -11,7 +11,7 @@ function ListeContratsDirec() {
   const [editContratId, setEditContratId] = useState(null);
   const [updatedContrat, setUpdatedContrat] = useState({});
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
-  const etatDocs = ["" , "Validé", "Non validé", "Impayé", "Sans effet", "Rétractation", "Résigné"];
+  const etatDocs = ["" , "Validé", "Non validé", "NRP" , "Impayé", "Sans effet", "Rétractation", "Résigné"];
   const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
   const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
@@ -176,6 +176,7 @@ function ListeContratsDirec() {
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
@@ -185,7 +186,6 @@ function ListeContratsDirec() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date d'Effet</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/mois</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Type de résiliation</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Retour compagnie</th>
@@ -221,6 +221,25 @@ function ListeContratsDirec() {
                </div>
              )}
             </td>
+
+            <td className="px-4 py-3 text-sm text-gray-700">
+                 {editContratId === contrat._id ? (
+                <select
+                  name="etatDossier"
+                  value={updatedContrat.etatDossier}
+                  onChange={handleSelectChange}
+                  className="border rounded-md p-2"
+                 >
+                 {etatDocs.map(etatDossier => (
+                 <option key={etatDossier} value={etatDossier}>
+                 {etatDossier}
+                 </option>
+                 ))}
+                 </select>
+                 ) : (
+                 contrat.etatDossier
+                  )}
+                </td>
 
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
@@ -344,24 +363,7 @@ function ListeContratsDirec() {
                     contrat.cotisation
                   )}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                 {editContratId === contrat._id ? (
-                <select
-                  name="etatDossier"
-                  value={updatedContrat.etatDossier}
-                  onChange={handleSelectChange}
-                  className="border rounded-md p-2"
-                 >
-                 {etatDocs.map(etatDossier => (
-                 <option key={etatDossier} value={etatDossier}>
-                 {etatDossier}
-                 </option>
-                 ))}
-                 </select>
-                 ) : (
-                 contrat.etatDossier
-                  )}
-                </td>
+
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input
