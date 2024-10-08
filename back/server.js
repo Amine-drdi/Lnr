@@ -191,24 +191,6 @@ app.post('/api/contrats',  async (req, res) => {
   }
 });
 
-// Route pour récupérer les contrats ajoutés aujourd'hui
-app.get('/api/contrats/today', async (req, res) => {
-  try {
-    const today = new Date();
-    const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-
-    const contratsToday = await Contrat.find({
-      createdAt: { $gte: startOfToday, $lt: endOfToday }
-    });
-
-    res.status(200).json({ contrats: contratsToday });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Erreur lors de la récupération des contrats ajoutés aujourd\'hui' });
-  }
-});
-
 // Route pour récupérer tous les contrats
 app.get('/api/contrats', async (req, res) => {
   try {
@@ -428,45 +410,76 @@ app.delete('/api/evenements/:id', async (req, res) => {
   }
 });
 
- //  progression de signature par mois 
-
-app.get('/api/contrats/monthly-progression', async (req, res) => {
+// Route pour récupérer les commerciaux ayant ajouté des contrats aujourd'hui
+app.get('/api/commerciaux/contrats-aujourdhui', async (req, res) => {
   try {
-    const currentYear = new Date().getFullYear(); // Récupérer l'année actuelle
+    // Récupérer la date actuelle au format 'YYYY-MM-DD'
+    const today = new Date().toISOString().split('T')[0];
 
-    const contratsByMonth = await Contrat.aggregate([
-      {
-        $match: {
-          // Utiliser la conversion de la chaîne en date
-          signatureDate: {
-            $gte: `${currentYear}-01-01`, // Début de l'année actuelle
-            $lt: `${currentYear + 1}-01-01`, // Début de l'année suivante
-          }
-        }
-      },
-      {
-        $group: {
-          _id: { $month: { $dateFromString: { dateString: "$signatureDate" } } }, // Conversion de string à date
-          total: { $sum: 1 } // Compter le nombre de contrats par mois
-        }
-      },
-      {
-        $sort: { _id: 1 } // Trier par mois
-      }
-    ]);
-
-    // Formater les données pour chaque mois de l'année actuelle
-    const monthlyData = Array.from({ length: 12 }, (_, index) => {
-      const monthData = contratsByMonth.find(m => m._id === index + 1);
-      return monthData ? monthData.total : 0; // Si pas de données pour le mois, retourner 0
+    // Récupérer les contrats dont la signatureDate correspond à aujourd'hui
+    const contrats = await Contrat.find({
+      signatureDate: { $regex: `^${today}` } // Recherche par chaîne commençant par la date du jour
     });
 
-    res.status(200).json({ data: monthlyData });
+    // Grouper par commercial et compter les contrats
+    const commerciaux = {};
+    contrats.forEach(contrat => {
+      const commercial = contrat.Commercial;
+      if (!commerciaux[commercial]) {
+        commerciaux[commercial] = 0;
+      }
+      commerciaux[commercial] += 1;
+    });
+
+    // Retourner les commerciaux et leur nombre de contrats
+    res.status(200).json(commerciaux);
   } catch (error) {
-    console.error("Erreur lors de la récupération des contrats par mois :", error);
-    res.status(500).json({ message: "Erreur serveur lors de la récupération des contrats" });
+    console.error("Erreur lors de la récupération des commerciaux :", error);
+    res.status(500).json({ message: 'Erreur du serveur' });
   }
 });
+
+// Route pour récupérer le nombre de contrats signés aujourd'hui
+app.get('/api/contrats-aujourdhui', async (req, res) => {
+  try {
+    // Obtenir la date actuelle au format 'YYYY-MM-DD'
+    const today = new Date().toISOString().split('T')[0];
+
+    // Rechercher les contrats dont la signatureDate correspond à aujourd'hui
+    const contrats = await Contrat.find({
+      signatureDate: { $regex: `^${today}` } // Rechercher par chaîne qui commence avec la date du jour
+    });
+
+    // Renvoyer uniquement le nombre total de contrats
+    res.status(200).json({ total: contrats.length });
+  } catch (error) {
+    console.error('Erreur lors de la récupération des contrats:', error);
+    res.status(500).json({ message: 'Erreur du serveur' });
+  }
+});
+// Route pour récupérer le nombre de contrats signés hier
+app.get('/api/contrats-hier', async (req, res) => {
+  try {
+    // Obtenir la date d'hier au format 'YYYY-MM-DD'
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+    // Rechercher les contrats dont la signatureDate correspond à hier
+    const contrats = await Contrat.find({
+      signatureDate: { $regex: `^${yesterdayStr}` } // Rechercher par chaîne qui commence avec la date d'hier
+    });
+
+    // Renvoyer uniquement le nombre total de contrats
+    res.status(200).json({ total: contrats.length });
+  } catch (error) {
+    console.error('Erreur lors de la récupération des contrats:', error);
+    res.status(500).json({ message: 'Erreur du serveur' });
+  }
+});
+
+
+ 
 
 
 
