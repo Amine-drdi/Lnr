@@ -19,7 +19,7 @@ export default function ProgressionChart() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const result = await axios.get('/api/contrats-per-month');
+        const result = await axios.get('http://51.83.69.195:5000/api/contrats-per-month');
         const categories = result.data.map(item => item._id); // Mois
         const series = result.data.map(item => item.count); // Nombre de contrats
 
