@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import Chart from "react-apexcharts";
-import { Square3Stack3DIcon } from "@heroicons/react/24/outline";
+
 
 export default function ProgressionChart() {
   const [chartData, setChartData] = useState({
@@ -15,12 +15,18 @@ export default function ProgressionChart() {
     series: [],
   });
 
+  // Fonction pour formater le mois
+  const formatMonth = (monthNumber) => {
+    const months = ["Janv", "Févr", "Mars", "Avr", "Mai", "Juin", "Juill", "Août", "Sept", "Oct", "Nov", "Déc"];
+    return months[monthNumber - 1];
+  };
+
   // Récupérer les données depuis l'API
   useEffect(() => {
     async function fetchData() {
       try {
-        const result = await axios.get('http://51.83.69.195:5000/api/contrats-per-month');
-        const categories = result.data.map(item => item._id); // Mois
+        const result = await axios.get('/api/contrats-per-month');
+        const categories = result.data.map(item => `${formatMonth(item._id.month)} ${item._id.year}`); // Mois et année formatés
         const series = result.data.map(item => item.count); // Nombre de contrats
 
         setChartData({
@@ -35,7 +41,6 @@ export default function ProgressionChart() {
     fetchData();
   }, []);
 
-  // Configurer le graphique avec les données dynamiques
   const chartConfig = {
     type: "bar",
     height: 240,
@@ -79,7 +84,7 @@ export default function ProgressionChart() {
             fontWeight: 400,
           },
         },
-        categories: chartData.categories, // Mois comme catégorie
+        categories: chartData.categories, // Mois formaté
       },
       yaxis: {
         labels: {
@@ -115,26 +120,23 @@ export default function ProgressionChart() {
   };
 
   return (
-    <Card>
-      <CardHeader
-        floated={false}
-        shadow={false}
-        color="transparent"
-        className="flex flex-col gap-4 rounded-none md:flex-row md:items-center"
-      >
-        <div className="w-max rounded-lg bg-gray-900 p-5 text-white">
-          <Square3Stack3DIcon className="h-6 w-6" />
-        </div>
-        <div>
-          <Typography variant="h6" color="blue-gray">
-  
-          Visualisez le nombre de contrats ajoutés chaque mois.
-          </Typography>
-        </div>
-      </CardHeader>
-      <CardBody className="px-2 pb-0">
-        <Chart {...chartConfig} />
-      </CardBody>
-    </Card>
+<Card className="w-full lg:w-[90%] xl:w-[80%] mx-auto">
+  <CardHeader
+    floated={false}
+    shadow={false}
+    color="transparent"
+    className="flex flex-col gap-6 rounded-lg md:flex-row md:items-center"
+  >
+    <div>
+      <Typography variant="h4" color="blue-gray">
+        Visualisez le nombre de contrats ajoutés chaque mois.
+      </Typography>
+    </div>
+  </CardHeader>
+  <CardBody className="px-6 pb-4">
+    <Chart {...chartConfig} className="w-full h-[400px]" />
+  </CardBody>
+</Card>
+
   );
 }

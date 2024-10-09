@@ -448,17 +448,20 @@ app.get('/api/contrats/commercials-today', async (req, res) => {
 });
 
  // chart mensuel 
-app.get('/api/contrats-per-month', async (req, res) => {
+ app.get('/api/contrats-per-month', async (req, res) => {
   try {
     const contratsPerMonth = await Contrat.aggregate([
       {
         $group: {
-          _id: { $substr: ["$signatureDate", 0, 7] }, // Obtenir l'année et le mois (YYYY-MM)
+          _id: {
+            month: { $month: { $toDate: "$signatureDate" } }, // Extraire le mois
+            year: { $year: { $toDate: "$signatureDate" } }    // Extraire l'année
+          },
           count: { $sum: 1 }
         }
       },
       {
-        $sort: { "_id": 1 } // Trier par date
+        $sort: { "_id.year": 1, "_id.month": 1 } // Trier par année puis mois
       }
     ]);
 
