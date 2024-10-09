@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb://mongodb:27017/mydatabase')
+mongoose.connect('mongodb://localhost:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
@@ -158,7 +158,7 @@ app.post('/api/contrats',  async (req, res) => {
       interetClient,
       apporteurAffaire,
       Commercial,
-      commentaire
+      commentaireAgent
    
     } = req.body;
 
@@ -181,7 +181,7 @@ app.post('/api/contrats',  async (req, res) => {
       interetClient,
       apporteurAffaire,
       Commercial,
-      commentaire
+      commentaireAgent
 
     });
 
@@ -446,31 +446,61 @@ app.get('/api/contrats/commercials-today', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération des commerciaux' });
   }
 });
-
- // chart mensuel 
- app.get('/api/contrats-per-month', async (req, res) => {
+app.get('/api/contrats/months', async (req, res) => {
   try {
-    const contratsPerMonth = await Contrat.aggregate([
+    const contrats = await Contrat.aggregate([
       {
+        // Filtrer les documents avec une date valide au format DD/MM/YYYY
+        $match: {
+          signatureDate: {
+            $regex: /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/
+          }
+        }
+      },
+      {
+        // Convertir signatureDate en véritable objet Date (YYYY-MM-DD)
+        $addFields: {
+          signatureDateObject: {
+            $dateFromString: {
+              dateString: { $concat: [
+                { $substr: ['$signatureDate', 6, 4] }, '-', // Année
+                { $substr: ['$signatureDate', 3, 2] }, '-', // Mois
+                { $substr: ['$signatureDate', 0, 2] } // Jour
+              ] },
+              format: "%Y-%m-%d"
+            }
+          }
+        }
+      },
+      {
+        // Extraire le mois et l'année
+        $project: {
+          month: { $month: "$signatureDateObject" },
+          year: { $year: "$signatureDateObject" }
+        }
+      },
+      {
+        // Grouper par année et mois et compter les contrats
         $group: {
-          _id: {
-            month: { $month: { $toDate: "$signatureDate" } }, // Extraire le mois
-            year: { $year: { $toDate: "$signatureDate" } }    // Extraire l'année
-          },
+          _id: { year: "$year", month: "$month" },
           count: { $sum: 1 }
         }
       },
       {
-        $sort: { "_id.year": 1, "_id.month": 1 } // Trier par année puis mois
+        // Trier les résultats par année et mois
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1
+        }
       }
     ]);
 
-    res.status(200).json(contratsPerMonth);
+    res.status(200).json(contrats);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la récupération des données' });
+    console.error('Erreur lors de l\'agrégation des contrats par mois :', error);
+    res.status(500).json({ message: 'Erreur du serveur' });
   }
 });
-
 
 
 // Démarrer le serveur

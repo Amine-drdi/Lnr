@@ -14,6 +14,7 @@ function ListeContratsGestio() {
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
   const etatDocs = ["" , "Validé", "Non validé","NRP" , "Impayé", "Sans effet", "Rétractation", "Résigné"];
   const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
+  const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jabra" , "Rihab Kouki" ,"Leads"];
   const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
   const [showModal, setShowModal] = useState(false); // Contrôle du modal
@@ -21,7 +22,7 @@ function ListeContratsGestio() {
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -58,7 +59,7 @@ function ListeContratsGestio() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +129,7 @@ function ListeContratsGestio() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -220,12 +221,14 @@ function ListeContratsGestio() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date d'Effet</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/mois</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Apporteur d'affaire</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Type de résiliation</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Retour compagnie</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Suivie gestion</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Remarque</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Gestionnaire</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Fichier</th>
             </tr>
           </thead>
@@ -395,6 +398,24 @@ function ListeContratsGestio() {
                     contrat.cotisation
                   )}
                 </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                 {editContratId === contrat._id ? (
+                <select
+                  name="apporteurAffaire"
+                  value={updatedContrat.apporteurAffaire}
+                  onChange={handleSelectChange}
+                  className="border rounded-md p-2"
+                 >
+                 {apporteurAffaires.map(apporteurAffaire => (
+                 <option key={apporteurAffaire} value={apporteurAffaire}>
+                 {apporteurAffaire}
+                 </option>
+                 ))}
+                 </select>
+                 ) : (
+                 contrat.apporteurAffaire
+                  )}
+                </td>
 
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
@@ -482,10 +503,24 @@ function ListeContratsGestio() {
                     contrat.commentaire
                   )}
                 </td>
+
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="commentaireAgent"
+                      value={updatedContrat.commentaireAgent}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.commentaireAgent
+                  )}
+                </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
         {contrat.file ? (
           <a 
-            href={`http://51.83.69.195:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
+            href={`http://localhost:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-blue-500 hover:underline"
@@ -523,14 +558,15 @@ function ListeContratsGestio() {
             <p className='text-left'><strong>Retour compagnie :</strong> {selectedContrat.retourCompagnie}</p>
             <p className='text-left'><strong>Suivie gestion :</strong> {selectedContrat.suivieGestion}</p>
             <p className='text-left'><strong>Remarque :</strong> {selectedContrat.remarque}</p>
-            <p className='text-left'><strong>Commentaire :</strong> {selectedContrat.commentaire}</p>
+            <p className='text-left'><strong>Commentaire gestionnaire :</strong> {selectedContrat.commentaire}</p>
+            <p className='text-left'><strong>Commentaire agent :</strong> {selectedContrat.commentaireAgent}</p>
          
 
             {selectedContrat.file && (
         <p className='text-left'>
           <strong>Fichier :</strong> 
           <a 
-            href={`http://51.83.69.195:5000/${selectedContrat.file}`} // Assurez-vous que le chemin est correct
+            href={`http://localhost:5000/${selectedContrat.file}`} // Assurez-vous que le chemin est correct
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-blue-500 hover:underline"

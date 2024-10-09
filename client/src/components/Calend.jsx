@@ -46,7 +46,7 @@ const Calend = () => {
     try {
       if (modifierEvenementId) {
         // Modifier un événement existant
-        const response = await axios.put(`http://51.83.69.195:5000/api/evenements/${modifierEvenementId}`, {
+        const response = await axios.put(`http://localhost:5000/api/evenements/${modifierEvenementId}`, {
           date_evenement: dateEvenement,
           titre_evenement: titreEvenement,
           theme_evenement: themeEvenement,
@@ -55,7 +55,7 @@ const Calend = () => {
         setEvenements(evenements.map(evenement => evenement._id === modifierEvenementId ? { ...evenement, titre_evenement: titreEvenement, date_evenement: dateEvenement, theme_evenement: themeEvenement } : evenement));
       } else {
         // Ajouter un nouvel événement
-        const response = await axios.post('http://51.83.69.195:5000/api/evenements', {
+        const response = await axios.post('http://localhost:5000/api/evenements', {
           date_evenement: dateEvenement,
           titre_evenement: titreEvenement,
           theme_evenement: themeEvenement,
@@ -75,7 +75,7 @@ const Calend = () => {
 
   const supprimerEvenement = async (id) => {
     try {
-      await axios.delete(`http://51.83.69.195/api/evenements/${id}`);
+      await axios.delete(`http://localhost/api/evenements/${id}`);
       setEvenements(evenements.filter(evenement => evenement._id !== id));
     } catch (error) {
       console.error('Erreur lors de la suppression de l\'événement', error);
@@ -93,7 +93,7 @@ const Calend = () => {
 
   const obtenirEvenements = async () => {
     try {
-      const response = await axios.get('http://51.83.69.195:5000/api/evenements');
+      const response = await axios.get('http://localhost:5000/api/evenements');
       // Assurez-vous que la réponse est bien un tableau
       if (Array.isArray(response.data)) {
         setEvenements(response.data);

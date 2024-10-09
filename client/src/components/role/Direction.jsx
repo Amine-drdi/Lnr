@@ -13,8 +13,9 @@ import {
 } from "@heroicons/react/24/solid";
 import { VscError } from "react-icons/vsc";
 import Calend from "../Calend";
-import { FaFileContract } from "react-icons/fa6";
+import { FaFileContract , FaUsers } from "react-icons/fa6";
 import { FaFileSignature } from "react-icons/fa";
+import { RiUserAddLine } from "react-icons/ri";
 import { IoSettingsSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import logo from "../../assets/logo.png";
@@ -57,7 +58,7 @@ export function Direction() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -124,14 +125,7 @@ export function Direction() {
           </Typography>
         </div>
 
-                {/* Affichage des notifications */}
-                <List>
-          {notifications.map((notification, index) => (
-            <ListItem key={index} className="hover:bg-blue-600 text-white">
-              {notification}
-            </ListItem>
-          ))}
-        </List>
+
           <ListItem onClick={() => setActiveComponent('dashboard')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <PresentationChartBarIcon className="h-5 w-5 text-white" />

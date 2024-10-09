@@ -21,7 +21,7 @@ function Souscription({ setIsAdding }) {
   const [apporteurAffaire, setApporteurAffaire] = useState('');
   const [ancienneMutuelle , setAncienneMutuelle] = useState('');
   const [typeResiliation , setTypeResiliation] = useState('');
-  const [commentaire, setCommentaire] = useState('');
+  const [commentaireAgent, setCommentaireAgent] = useState('');
   const [Commercial, setUserName] = useState('');
 
   const textInput = useRef(null);
@@ -36,7 +36,7 @@ function Souscription({ setIsAdding }) {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -87,10 +87,10 @@ function Souscription({ setIsAdding }) {
       interetClient,
       apporteurAffaire,
       Commercial,
-      commentaire
+      commentaireAgent
     };
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/contrats', {
+      const response = await fetch('http://localhost:5000/api/contrats', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // Ajout du header pour JSON
@@ -326,17 +326,18 @@ function Souscription({ setIsAdding }) {
           <option value="Hajer Askri">Hajer Askri</option>
           <option value="Rim Dabebi ">Rim Dabebi </option>
           <option value="Eya Ben Jabra">Eya Ben Jabra</option>
+          <option value="Eya Ben Jabra">Rihab Kouki</option>
           <option value="Leads">Leads </option>
          
         </select>
         </div>
 
         <div className="col-span-2">
-            <label htmlFor="commentaire" className="block text-sm font-medium text-blue-gray-700">Commentaire</label>
+            <label htmlFor="commentaireAgent" className="block text-sm font-medium text-blue-gray-700">Commentaire</label>
             <textarea
-              id="commentaire"
-              value={commentaire}
-              onChange={(e) => setCommentaire(e.target.value)}
+              id="commentaireAgent"
+              value={commentaireAgent}
+              onChange={(e) => setCommentaireAgent(e.target.value)}
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
               rows="4"
             ></textarea>

@@ -49,6 +49,7 @@ const contratSchema = new mongoose.Schema({
   Commercial: String,
   etatDossier: String,
   commentaire:  String,
+  commentaireAgent:  String,
   remarque:  String,
   retourCompagnie : String,
   suivieGestion :String ,

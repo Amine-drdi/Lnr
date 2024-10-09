@@ -12,9 +12,9 @@ import {
   PowerIcon,
 } from "@heroicons/react/24/solid";
 import { VscError } from "react-icons/vsc";
-import { FaFileContract, FaUsers} from "react-icons/fa6";
+import { FaFileContract} from "react-icons/fa6";
 import { IoSettingsSharp } from "react-icons/io5";
-import { RiUserAddLine } from "react-icons/ri";
+
 import { useNavigate } from 'react-router-dom';
 import logo from "../../assets/logo.png";
 import img from "../../assets/gestionnaire.png";
@@ -59,7 +59,7 @@ export default function Gestionnaire() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
