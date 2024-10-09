@@ -436,12 +436,12 @@ app.get('/api/contrats/commercials-today', async (req, res) => {
 
     // Récupérer les commerciaux ayant signé des contrats aujourd'hui
     const commercials = await Contrat.aggregate([
-      { $match: { signatureDate: today } },
-      { $group: { _id: '$Commercial', count: { $sum: 1 } } },
-      { $project: { Commercial: '$_id', count: 1, _id: 0 } } // S'assurer que Commercial est bien renvoyé
+      { $match: { signatureDate: today } }, // Filtrer les contrats du jour
+      { $group: { _id: '$Commercial', count: { $sum: 1 } } }, // Grouper par Commercial
+      { $project: { Commercial: '$_id', count: 1, _id: 0 } } // Projeter le champ Commercial
     ]);
 
-    res.status(200).json(commercials);
+    res.status(200).json(commercials); // Envoyer la réponse JSON
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la récupération des commerciaux' });
   }
