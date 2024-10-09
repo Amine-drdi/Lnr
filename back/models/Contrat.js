@@ -48,6 +48,11 @@ const contratSchema = new mongoose.Schema({
   apporteurAffaire: String,
   Commercial: String,
   etatDossier: String,
+  commentaire:  String,
+  remarque:  String,
+  retourCompagnie : String,
+  suivieGestion :String ,
+  typeResiliation :  String ,
   createdAt: { type: Date, default: Date.now },
   
 });

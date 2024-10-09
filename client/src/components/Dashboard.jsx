@@ -3,50 +3,32 @@ import StatsCard from './StatsCard';
 import { FaFileContract } from "react-icons/fa";
 import { BsBarChartLineFill } from "react-icons/bs";
 import { GrBusinessService } from "react-icons/gr";
-import axios from 'axios';
 import CommercialsToday from './CommercialsToday';
 import ProgressionChart from './ProgressionChart';
 
 function Dashboard() {
-  const [contractsToday, setContractsToday] = useState(0);
-  const [contractsYesterday, setContractsYesterday] = useState(0);
-  const [progression, setProgression] = useState(0);
-  const [table, setTable] = useState(0);
-
-  const handleStatsCardClick = (tableId) => {
-    setTable(tableId);
-  };
-
-  const fetchContractsData = async () => {
-    try {
-      const [responseToday, responseYesterday] = await Promise.all([
-        axios.get('/api/contrats-aujourdhui'),
-        axios.get('/api/contrats-hier')
-      ]);
-
-      const totalToday = responseToday.data?.total || 0; // Valeur par défaut
-      const totalYesterday = responseYesterday.data?.total || 0; // Valeur par défaut
-
-      setContractsToday(totalToday);
-      setContractsYesterday(totalYesterday);
-
-      // Calculer le pourcentage de progression
-      const percentageProgression = totalYesterday > 0
-        ? ((totalToday - totalYesterday) / totalYesterday) * 100
-        : totalToday > 0 ? 100 : 0;
-
-      setProgression(percentageProgression.toFixed(2));
-    } catch (error) {
-      console.error('Erreur lors de la récupération des contrats:', error);
-    }
-  };
+  const [contratsAujourdHui, setContratsAujourdHui] = useState(0);
+  const [pourcentageProgression, setPourcentageProgression] = useState(0);
+  const [table, setTable] = useState(1);
 
   useEffect(() => {
-    fetchContractsData(); // Appel lors du montage du composant
-  }, []); // Exécute une seule fois
+    // Récupérer les contrats ajoutés aujourd'hui
+    const fetchData = async () => {
+      const response = await fetch('/api/contrats/today');
+      const data = await response.json();
+      setContratsAujourdHui(data.todayCount);
 
-  // Déterminer la couleur en fonction de la valeur du pourcentage
-  const percentageColor = progression >= 0 ? "text-green-500" : "text-red-500";
+      // Calculer le pourcentage de progression
+      const progression = data.yesterdayCount
+        ? ((data.todayCount - data.yesterdayCount) / data.yesterdayCount) * 100
+        : 0;
+      setPourcentageProgression(progression);
+    };
+
+    fetchData();
+  }, []);
+
+  const handleStatsCardClick = (index) => setTable(index);
 
   return (
     <div className="text-center">
@@ -57,9 +39,9 @@ function Dashboard() {
           icon={<FaFileContract className='h-6 w-6' />}
           bgColor="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-blue-500/40"
           title="Nombre de contrats signés aujourd'hui"
-          amount={contractsToday}
-          percentage={`${progression}%`}
-          percentageColor={percentageColor}
+          amount={contratsAujourdHui}
+          percentage={pourcentageProgression.toFixed(2) + "%"}
+          percentageColor={pourcentageProgression < 0 ? 'text-red-500' : 'text-green-500'}
           onClick={() => handleStatsCardClick(1)}
           isActive={table === 1}
         />
@@ -92,4 +74,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;  
+export default Dashboard;

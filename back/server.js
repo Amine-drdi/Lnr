@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb://mongodb:27017/mydatabase')
+mongoose.connect('mongodb://localhost:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
@@ -158,6 +158,7 @@ app.post('/api/contrats',  async (req, res) => {
       interetClient,
       apporteurAffaire,
       Commercial,
+      commentaire
    
     } = req.body;
 
@@ -180,6 +181,7 @@ app.post('/api/contrats',  async (req, res) => {
       interetClient,
       apporteurAffaire,
       Commercial,
+      commentaire
 
     });
 
@@ -410,78 +412,40 @@ app.delete('/api/evenements/:id', async (req, res) => {
   }
 });
 
-// Route pour récupérer les commerciaux ayant ajouté des contrats aujourd'hui
-app.get('/api/commerciaux/contrats-aujourdhui', async (req, res) => {
+// Récupérer les contrats ajoutés aujourd'hui et hier
+app.get('/api/contrats/today', async (req, res) => {
   try {
-    // Récupérer la date actuelle au format 'YYYY-MM-DD'
+    const today = new Date().toISOString().split('T')[0]; // Date d'aujourd'hui (format YYYY-MM-DD)
+    const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0]; // Hier
+
+    // Compter les contrats signés aujourd'hui
+    const todayCount = await Contrat.countDocuments({ signatureDate: today });
+    // Compter les contrats signés hier
+    const yesterdayCount = await Contrat.countDocuments({ signatureDate: yesterday });
+
+    res.status(200).json({ todayCount, yesterdayCount });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la récupération des données' });
+  }
+});
+
+  
+app.get('/api/contrats/commercials-today', async (req, res) => {
+  try {
     const today = new Date().toISOString().split('T')[0];
 
-    // Récupérer les contrats dont la signatureDate correspond à aujourd'hui
-    const contrats = await Contrat.find({
-      signatureDate: { $regex: `^${today}` } // Recherche par chaîne commençant par la date du jour
-    });
+    // Récupérer les commerciaux ayant signé des contrats aujourd'hui
+    const commercials = await Contrat.aggregate([
+      { $match: { signatureDate: today } },
+      { $group: { _id: '$Commercial', count: { $sum: 1 } } },
+      { $project: { Commercial: '$_id', count: 1, _id: 0 } } // S'assurer que Commercial est bien renvoyé
+    ]);
 
-    // Grouper par commercial et compter les contrats
-    const commerciaux = {};
-    contrats.forEach(contrat => {
-      const commercial = contrat.Commercial;
-      if (!commerciaux[commercial]) {
-        commerciaux[commercial] = 0;
-      }
-      commerciaux[commercial] += 1;
-    });
-
-    // Retourner les commerciaux et leur nombre de contrats
-    res.status(200).json(commerciaux);
+    res.status(200).json(commercials);
   } catch (error) {
-    console.error("Erreur lors de la récupération des commerciaux :", error);
-    res.status(500).json({ message: 'Erreur du serveur' });
+    res.status(500).json({ message: 'Erreur lors de la récupération des commerciaux' });
   }
 });
-
-// Route pour récupérer le nombre de contrats signés aujourd'hui
-app.get('/api/contrats-aujourdhui', async (req, res) => {
-  try {
-    // Obtenir la date actuelle au format 'YYYY-MM-DD'
-    const today = new Date().toISOString().split('T')[0];
-
-    // Rechercher les contrats dont la signatureDate correspond à aujourd'hui
-    const contrats = await Contrat.find({
-      signatureDate: { $regex: `^${today}` } // Rechercher par chaîne qui commence avec la date du jour
-    });
-
-    // Renvoyer uniquement le nombre total de contrats
-    res.status(200).json({ total: contrats.length });
-  } catch (error) {
-    console.error('Erreur lors de la récupération des contrats:', error);
-    res.status(500).json({ message: 'Erreur du serveur' });
-  }
-});
-// Route pour récupérer le nombre de contrats signés hier
-app.get('/api/contrats-hier', async (req, res) => {
-  try {
-    // Obtenir la date d'hier au format 'YYYY-MM-DD'
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
-
-    // Rechercher les contrats dont la signatureDate correspond à hier
-    const contrats = await Contrat.find({
-      signatureDate: { $regex: `^${yesterdayStr}` } // Rechercher par chaîne qui commence avec la date d'hier
-    });
-
-    // Renvoyer uniquement le nombre total de contrats
-    res.status(200).json({ total: contrats.length });
-  } catch (error) {
-    console.error('Erreur lors de la récupération des contrats:', error);
-    res.status(500).json({ message: 'Erreur du serveur' });
-  }
-});
-
-
- 
-
-
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;
