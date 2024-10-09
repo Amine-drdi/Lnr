@@ -133,14 +133,6 @@ export default function Gestionnaire() {
           </Typography>
         </div>
 
-                {/* Affichage des notifications */}
-                <List>
-          {notifications.map((notification, index) => (
-            <ListItem key={index} className="hover:bg-blue-600 text-white">
-              {notification}
-            </ListItem>
-          ))}
-        </List>
           <ListItem onClick={() => setActiveComponent('dashboard')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <PresentationChartBarIcon className="h-5 w-5 text-white" />
