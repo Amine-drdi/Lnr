@@ -91,11 +91,15 @@ export function Direction() {
       case 'listeContrats':
         return <ListeContrats />;
         case 'AjoutContrat':
-        return <Souscription />;
-        case 'profile':
-        return <ProfileSetting />;
+          return <Souscription />;
+      case 'listeEmployes':
+        return <ListeEmployes />;
+      case 'ajouterEmploye':
+        return <AjouterEmploye />;
         case 'NonValide':
-          return <ContratNonValide />;
+          return <ContratNvalideGestio />;
+     case 'profile':
+        return <ProfileSetting />;
       default:
         return <DashboardContent />;
     }
@@ -104,19 +108,30 @@ export function Direction() {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
-        <img
+      <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">        <img
           className="object-cover w-auto h-24"
           src={logo}
           alt=""
         />
-          <List className="flex flex-col space-x-4">
+
+
+        <List>
+
         <div className="text-light-blue-900 pl-5 mb-4 pt-8 flex items-center space-x-2">
           <Typography variant="h6" className="flex items-center">
             <img className="object-cover w-auto h-12" src={img} alt="User" />
             {userName}
           </Typography>
-          </div>
+        </div>
+
+                {/* Affichage des notifications */}
+                <List>
+          {notifications.map((notification, index) => (
+            <ListItem key={index} className="hover:bg-blue-600 text-white">
+              {notification}
+            </ListItem>
+          ))}
+        </List>
           <ListItem onClick={() => setActiveComponent('dashboard')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <PresentationChartBarIcon className="h-5 w-5 text-white" />
@@ -131,7 +146,7 @@ export function Direction() {
           </ListItem>
           <ListItem onClick={() => setActiveComponent('AjoutContrat')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
-              <FaFileSignature className="h-5 w-5" /> 
+              <FaFileContract className="h-5 w-5 text-white" />
             </ListItemPrefix>
             Souscription
           </ListItem>
@@ -143,6 +158,18 @@ export function Direction() {
             Contrats non finalisé
           </ListItem>
 
+          <ListItem onClick={() => setActiveComponent('listeEmployes')} className="hover:bg-blue-600 text-white">
+            <ListItemPrefix>
+              <FaUsers className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            Liste des employés
+          </ListItem>
+          <ListItem onClick={() => setActiveComponent('ajouterEmploye')} className="hover:bg-blue-600 text-white">
+            <ListItemPrefix>
+              <RiUserAddLine className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            Ajouter un employé
+          </ListItem>
           <ListItem onClick={() => setActiveComponent('profile')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <IoSettingsSharp className="h-5 w-5 text-white" />
@@ -157,7 +184,9 @@ export function Direction() {
             Se déconnecter
           </ListItem>
         </List>
+
       </Card>
+     
 
       {/* Contenu affiché */}
       <div className="flex-1 p-6">

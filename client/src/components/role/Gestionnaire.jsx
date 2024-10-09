@@ -104,10 +104,7 @@ export default function Gestionnaire() {
         return <ListeContrats />;
         case 'AjoutContrat':
           return <Souscription />;
-      case 'listeEmployes':
-        return <ListeEmployes />;
-      case 'ajouterEmploye':
-        return <AjouterEmploye />;
+
         case 'NonValide':
           return <ContratNvalideGestio />;
      case 'profile':
@@ -170,18 +167,6 @@ export default function Gestionnaire() {
             Contrats non finalisé
           </ListItem>
 
-          <ListItem onClick={() => setActiveComponent('listeEmployes')} className="hover:bg-blue-600 text-white">
-            <ListItemPrefix>
-              <FaUsers className="h-5 w-5 text-white" />
-            </ListItemPrefix>
-            Liste des employés
-          </ListItem>
-          <ListItem onClick={() => setActiveComponent('ajouterEmploye')} className="hover:bg-blue-600 text-white">
-            <ListItemPrefix>
-              <RiUserAddLine className="h-5 w-5 text-white" />
-            </ListItemPrefix>
-            Ajouter un employé
-          </ListItem>
           <ListItem onClick={() => setActiveComponent('profile')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <IoSettingsSharp className="h-5 w-5 text-white" />

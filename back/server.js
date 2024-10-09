@@ -429,7 +429,7 @@ app.get('/api/contrats/today', async (req, res) => {
   }
 });
 
-  
+  // compter les contrats ajouter aujourd'hui
 app.get('/api/contrats/commercials-today', async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
@@ -446,6 +446,29 @@ app.get('/api/contrats/commercials-today', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération des commerciaux' });
   }
 });
+
+ // chart mensuel 
+app.get('/api/contrats-per-month', async (req, res) => {
+  try {
+    const contratsPerMonth = await Contrat.aggregate([
+      {
+        $group: {
+          _id: { $substr: ["$signatureDate", 0, 7] }, // Obtenir l'année et le mois (YYYY-MM)
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { "_id": 1 } // Trier par date
+      }
+    ]);
+
+    res.status(200).json(contratsPerMonth);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la récupération des données' });
+  }
+});
+
+
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;
