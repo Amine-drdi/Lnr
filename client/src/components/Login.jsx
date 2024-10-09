@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import img from '../assets/hero2.png';
+import img from '../assets/backround.png';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'; // Importer les icônes
 
 const Login = () => {
