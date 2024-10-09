@@ -3,7 +3,8 @@ import axios from 'axios';
 import Chart from 'react-apexcharts';
 import {
   Card,
-
+  CardHeader,
+  CardBody
 } from "@material-tailwind/react";
 
 export default function ProgressionChart() {
