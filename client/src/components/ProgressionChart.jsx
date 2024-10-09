@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Chart from 'react-apexcharts';
+import {
+  Card,
+
+} from "@material-tailwind/react";
 
 export default function ProgressionChart() {
   const [chartData, setChartData] = useState({
