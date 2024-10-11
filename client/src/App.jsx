@@ -22,7 +22,8 @@ import CommercialsToday from './components/CommercialsToday';
 import ProgressionChart from './components/ProgressionChart';
 import Chart from './components/Chart';
 import CommercialChart from './components/CommercialChart';
-import AddAgent from './components/contrat/AddAgent';
+import AddAgent from './components/AddAgent';
+
 
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
         <Route path="/contratsManager" element={<ListeContratsManager />} />
         <Route path="/ajouter-contrat" element={<Souscription />} />
         <Route path="/Liste-employe" element={<ListeEmp />} />
-        <Route path="/ajout-employe" element={<AddAgent />} />
+        <Route path="/ajout-employe" element={<AddAgent/>} />
        {/* <Route path="/gestionnaire-contrats" element={<ContratsGestionnaire />} />*/}
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/commToday" element={<CommercialsToday />} />

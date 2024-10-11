@@ -27,7 +27,8 @@ import ProfileSetting from "../ProfileSetting";
 import ContratNonValide from "../contrat/ContratNonValide";
 import { CiBoxList } from "react-icons/ci";
 import Dashboard from "../Dashboard";
-import AddAgent from "../contrat/AddAgent";
+import AddAgent from "../AddAgent";
+
 
 
 // Les composants pour chaque section de la dashboard
@@ -42,7 +43,7 @@ function ListeContrats() {
 function ListeEmployes() {
   return <div><ListeEmp/></div>;
 }
-function AddAgent() {
+function Addcomm() {
   return <div><AddAgent/></div>;
 }
 
@@ -52,7 +53,7 @@ function Calendrier() {
   return <div><Calend/></div>;
 }
 
-export function Direction() {
+export function Admin() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
   const navigate = useNavigate();
@@ -100,8 +101,8 @@ export function Direction() {
           return <Souscription />;
       case 'listeEmployes':
         return <ListeEmployes />;
-      case 'AddAgent':
-        return <AddAgent/>;
+      case 'Addcomm':
+        return <AddAgent/> ;
         case 'NonValide':
           return <ContratNvalideGestio />;
      case 'profile':
@@ -163,7 +164,7 @@ export function Direction() {
             </ListItemPrefix>
             Liste des employés
           </ListItem>
-          <ListItem onClick={() => setActiveComponent('AddAgent')} className="hover:bg-blue-600 text-white">
+          <ListItem onClick={() => setActiveComponent('Addcomm')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <RiUserAddLine className="h-5 w-5 text-white" />
             </ListItemPrefix>
