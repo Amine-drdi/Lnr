@@ -99,7 +99,7 @@ export function Direction() {
       case 'listeEmployes':
         return <ListeEmployes />;
       case 'ajouterEmploye':
-        return <Addcommerciale/>
+        return <Addcommerciale/>;
         case 'NonValide':
           return <ContratNvalideGestio />;
      case 'profile':
