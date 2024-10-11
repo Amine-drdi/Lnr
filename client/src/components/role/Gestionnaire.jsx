@@ -25,7 +25,7 @@ import ProfileSetting from "../ProfileSetting";
 import ContratNvalideGestio from "../contrat/ContratNvalideGestio";
 import Dashboard from "../Dashboard";
 import { CiBoxList } from "react-icons/ci";
-import AddAgent from "../AddAgent";
+
 
 
 // Les composants pour chaque section de la dashboard
@@ -41,9 +41,7 @@ function ListeEmployes() {
   return <div><ListeEmp/></div>;
 }
 
-function AjouterEmploye() {
-  return <div><AddAgent/></div>;
-}
+
 
 function Calendrier() {
   return <div><Calend/></div>;
