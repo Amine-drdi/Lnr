@@ -244,6 +244,63 @@ function  Souscription({ contrat, setContrat, setIsAdding }) {
         </div>
       </form>
     </div>
+
+    /*
+    app.get('/api/contrats/months', async (req, res) => {
+  try {
+    const contrats = await Contrat.aggregate([
+      {
+        // Filtrer les documents avec une date valide au format DD/MM/YYYY
+        $match: {
+          signatureDate: {
+            $regex: /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/
+          }
+        }
+      },
+      {
+        // Convertir signatureDate en véritable objet Date (YYYY-MM-DD)
+        $addFields: {
+          signatureDateObject: {
+            $dateFromString: {
+              dateString: { $concat: [
+                { $substr: ['$signatureDate', 6, 4] }, '-', // Année
+                { $substr: ['$signatureDate', 3, 2] }, '-', // Mois
+                { $substr: ['$signatureDate', 0, 2] } // Jour
+              ] },
+              format: "%Y-%m-%d"
+            }
+          }
+        }
+      },
+      {
+        // Extraire le mois et l'année
+        $project: {
+          month: { $month: "$signatureDateObject" },
+          year: { $year: "$signatureDateObject" }
+        }
+      },
+      {
+        // Grouper par année et mois et compter les contrats
+        $group: {
+          _id: { year: "$year", month: "$month" },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        // Trier les résultats par année et mois
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1
+        }
+      }
+    ]);
+
+    res.status(200).json(contrats);
+  } catch (error) {
+    console.error('Erreur lors de l\'agrégation des contrats par mois :', error);
+    res.status(500).json({ message: 'Erreur du serveur' });
+  }
+}); */
   );
 }
 

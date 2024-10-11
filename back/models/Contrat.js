@@ -38,7 +38,7 @@ const contratSchema = new mongoose.Schema({
   dob: Date,
   address: String,
   profession: String,
-  signatureDate: String,
+  signatureDate: Date,
   cotisation: String,
   compagnie: String,
   effetDate: Date,

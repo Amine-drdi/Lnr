@@ -27,6 +27,7 @@ import ProfileSetting from "../ProfileSetting";
 import ContratNonValide from "../contrat/ContratNonValide";
 import { CiBoxList } from "react-icons/ci";
 import Dashboard from "../Dashboard";
+import Addcommerciale from "../Addcommerciale";
 
 // Les composants pour chaque section de la dashboard
 function DashboardContent() {
@@ -96,7 +97,7 @@ export function Direction() {
       case 'listeEmployes':
         return <ListeEmployes />;
       case 'ajouterEmploye':
-        return <AjouterEmploye />;
+        return <Addcommerciale/>
         case 'NonValide':
           return <ContratNvalideGestio />;
      case 'profile':

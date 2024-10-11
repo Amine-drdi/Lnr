@@ -21,6 +21,8 @@ import ContratNvalideGestio from './components/contrat/ContratNvalideGestio';
 import Dashboard from './components/Dashboard';
 import CommercialsToday from './components/CommercialsToday';
 import ProgressionChart from './components/ProgressionChart';
+import Chart from './components/Chart';
+import CommercialChart from './components/CommercialChart';
 
 
 function App() {
@@ -39,7 +41,9 @@ function App() {
        {/* <Route path="/gestionnaire-contrats" element={<ContratsGestionnaire />} />*/}
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/commToday" element={<CommercialsToday />} />
-        <Route path="/chartContrat" element={<ProgressionChart />} />
+        <Route path="/commClassement" element={<CommercialChart />} />
+     {/*   <Route path="/chartContrat" element={<ProgressionChart />} />   */}
+     <Route path="/chart" element={<Chart/>} />
         <Route path="/calendrier" element={<Calend />} />
         <Route path="/profile-settings" element={<ProfileSetting/>} />
         <Route path="/contrats-non-valide" element={<ContratNonValide />} />

@@ -6,6 +6,7 @@ const cors = require('cors');
 const User = require('./models/User'); // Importer le modèle User
 const Contrat = require('./models/Contrat');
 const ContratUpdate = require('./models/ContratUpdate') ;
+const moment = require('moment');
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -446,61 +447,48 @@ app.get('/api/contrats/commercials-today', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération des commerciaux' });
   }
 });
-app.get('/api/contrats/months', async (req, res) => {
-  try {
-    const contrats = await Contrat.aggregate([
-      {
-        // Filtrer les documents avec une date valide au format DD/MM/YYYY
-        $match: {
-          signatureDate: {
-            $regex: /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/
-          }
-        }
-      },
-      {
-        // Convertir signatureDate en véritable objet Date (YYYY-MM-DD)
-        $addFields: {
-          signatureDateObject: {
-            $dateFromString: {
-              dateString: { $concat: [
-                { $substr: ['$signatureDate', 6, 4] }, '-', // Année
-                { $substr: ['$signatureDate', 3, 2] }, '-', // Mois
-                { $substr: ['$signatureDate', 0, 2] } // Jour
-              ] },
-              format: "%Y-%m-%d"
-            }
-          }
-        }
-      },
-      {
-        // Extraire le mois et l'année
-        $project: {
-          month: { $month: "$signatureDateObject" },
-          year: { $year: "$signatureDateObject" }
-        }
-      },
-      {
-        // Grouper par année et mois et compter les contrats
-        $group: {
-          _id: { year: "$year", month: "$month" },
-          count: { $sum: 1 }
-        }
-      },
-      {
-        // Trier les résultats par année et mois
-        $sort: {
-          "_id.year": 1,
-          "_id.month": 1
-        }
-      }
-    ]);
 
-    res.status(200).json(contrats);
+ // afficher le chart graphique mensuel 
+
+ app.get('/api/contrats/count-by-month', async (req, res) => {
+  try {
+    const contrats = await Contrat.find(); // Récupérer tous les contrats
+    const contratsParMois = {};
+
+    contrats.forEach(contrat => {
+      let dateSignature = moment(contrat.signatureDate, ["YYYY-MM-DD", "DD/MM/YYYY", "MM/DD/YYYY"], true);      if (dateSignature.isValid()) {
+        const moisAnnee = dateSignature.format('MM-YYYY'); // Formater en Mois-Année (ex: "01-2024")
+        
+        if (!contratsParMois[moisAnnee]) {
+          contratsParMois[moisAnnee] = 0;
+        }
+        contratsParMois[moisAnnee]++;
+      }
+    });
+
+    res.status(200).json(contratsParMois); // Envoyer la réponse avec les résultats
   } catch (error) {
-    console.error('Erreur lors de l\'agrégation des contrats par mois :', error);
-    res.status(500).json({ message: 'Erreur du serveur' });
+    console.error('Erreur lors de la récupération des contrats par mois', error);
+    res.status(500).json({ message: 'Erreur serveur' });
   }
 });
+
+
+app.get('/api/contrats/commercials-total', async (req, res) => {
+  try {
+    const commercials = await Contrat.aggregate([
+      { $group: { _id: '$Commercial', totalContracts: { $sum: 1 } } }, // Grouper par Commercial et compter les contrats
+      { $project: { Commercial: '$_id', totalContracts: 1, _id: 0 } } // Projeter les données
+    ]);
+
+    res.status(200).json(commercials); // Envoyer la réponse JSON
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la récupération des contrats' });
+  }
+});
+
+
+
 
 
 // Démarrer le serveur

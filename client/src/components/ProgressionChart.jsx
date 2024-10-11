@@ -15,7 +15,7 @@ const [error, setError] = useState(null);
 useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://51.83.69.195:5000/api/contrats/months');
+            const response = await axios.get('/api/contrats/months');
             const data = response.data;
 
             const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];

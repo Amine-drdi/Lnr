@@ -5,6 +5,8 @@ import { BsBarChartLineFill } from "react-icons/bs";
 import { GrBusinessService } from "react-icons/gr";
 import CommercialsToday from './CommercialsToday';
 import ProgressionChart from './ProgressionChart';
+import Chart from './Chart';
+import CommercialChart from './CommercialChart';
 
 function Dashboard() {
   const [contratsAujourdHui, setContratsAujourdHui] = useState(0);
@@ -14,7 +16,7 @@ function Dashboard() {
   useEffect(() => {
     // Récupérer les contrats ajoutés aujourd'hui
     const fetchData = async () => {
-      const response = await fetch('http://51.83.69.195:5000/api/contrats/today');
+      const response = await fetch('/api/contrats/today');
       const data = await response.json();
       setContratsAujourdHui(data.todayCount);
 
@@ -68,8 +70,8 @@ function Dashboard() {
       </div>
 
       {table === 1 && <div className='flex justify-center items-center h-full'><CommercialsToday /></div>}
-      {table === 2 && <div className='flex justify-center items-center h-full'><ProgressionChart /></div>}
-      {table === 3 && <div className='flex justify-center items-center h-full'>hello</div>}
+      {table === 2 && <div className='flex justify-center items-center h-full'><Chart /></div>}
+      {table === 3 && <div className='flex justify-center items-center h-full'><CommercialChart/></div>}
     </div>
   );
 }
