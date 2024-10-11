@@ -4,7 +4,6 @@ import Login from './components/Login';
 import  Gestionnaire  from './components/role/Gestionnaire';
 import Commercial from './components/role/Commercial';
 import Signup from './components/Signup';
-import Addcommerciale from './components/Addcommerciale';
 import ListeEmp from './components/ListeEmp';
 import Calend from './components/Calend';
 import PrivateRoute from './components/PrivateRoute'; // Importez le composant PrivateRoute
@@ -23,6 +22,7 @@ import CommercialsToday from './components/CommercialsToday';
 import ProgressionChart from './components/ProgressionChart';
 import Chart from './components/Chart';
 import CommercialChart from './components/CommercialChart';
+import AddAgent from './components/contrat/AddAgent';
 
 
 function App() {
@@ -37,7 +37,7 @@ function App() {
         <Route path="/contratsManager" element={<ListeContratsManager />} />
         <Route path="/ajouter-contrat" element={<Souscription />} />
         <Route path="/Liste-employe" element={<ListeEmp />} />
-        <Route path="/ajout-employe" element={<Addcommerciale />} />
+        <Route path="/ajout-employe" element={<AddAgent />} />
        {/* <Route path="/gestionnaire-contrats" element={<ContratsGestionnaire />} />*/}
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/commToday" element={<CommercialsToday />} />

@@ -27,7 +27,8 @@ import ProfileSetting from "../ProfileSetting";
 import ContratNonValide from "../contrat/ContratNonValide";
 import { CiBoxList } from "react-icons/ci";
 import Dashboard from "../Dashboard";
-import Addcommerciale from "../Addcommerciale";
+import AddAgent from "../contrat/AddAgent";
+
 
 // Les composants pour chaque section de la dashboard
 function DashboardContent() {
@@ -41,9 +42,10 @@ function ListeContrats() {
 function ListeEmployes() {
   return <div><ListeEmp/></div>;
 }
-function ajouterEmploye() {
-  return <div><Addcommerciale/></div>;
+function AddAgent() {
+  return <div><AddAgent/></div>;
 }
+
 
 
 function Calendrier() {
@@ -98,8 +100,8 @@ export function Direction() {
           return <Souscription />;
       case 'listeEmployes':
         return <ListeEmployes />;
-      case 'ajouterEmploye':
-        return <Addcommerciale/>;
+      case 'AddAgent':
+        return <AddAgent/>;
         case 'NonValide':
           return <ContratNvalideGestio />;
      case 'profile':
@@ -161,7 +163,7 @@ export function Direction() {
             </ListItemPrefix>
             Liste des employés
           </ListItem>
-          <ListItem onClick={() => setActiveComponent('ajouterEmploye')} className="hover:bg-blue-600 text-white">
+          <ListItem onClick={() => setActiveComponent('AddAgent')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <RiUserAddLine className="h-5 w-5 text-white" />
             </ListItemPrefix>
