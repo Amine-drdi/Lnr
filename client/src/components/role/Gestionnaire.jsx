@@ -20,12 +20,12 @@ import logo from "../../assets/logo.png";
 import img from "../../assets/gestionnaire.png";
 import ListeEmp from "../ListeEmp";
 import ListeContratsGestio from "../contrat/ListeContratsGestio";
-import Addcommerciale from "../Addcommerciale";
 import Souscription from "../contrat/Souscription";
 import ProfileSetting from "../ProfileSetting";
 import ContratNvalideGestio from "../contrat/ContratNvalideGestio";
 import Dashboard from "../Dashboard";
 import { CiBoxList } from "react-icons/ci";
+import AddAgent from "../AddAgent";
 
 
 // Les composants pour chaque section de la dashboard
@@ -42,7 +42,7 @@ function ListeEmployes() {
 }
 
 function AjouterEmploye() {
-  return <div><Addcommerciale/></div>;
+  return <div><AddAgent/></div>;
 }
 
 function Calendrier() {
