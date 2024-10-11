@@ -53,7 +53,7 @@ function Calendrier() {
   return <div><Calend/></div>;
 }
 
-export function Admin() {
+export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
   const navigate = useNavigate();
