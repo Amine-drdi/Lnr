@@ -104,7 +104,7 @@ export function Direction() {
       case 'Addcomm':
         return <AddAgent/> ;
         case 'NonValide':
-          return <ContratNvalideGestio />;
+          return <ContratNonValide />;
      case 'profile':
         return <ProfileSetting />;
       default:
