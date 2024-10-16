@@ -227,8 +227,8 @@ function ListeContratsGestio() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Retour compagnie</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Suivie gestion</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Remarque</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Gestionnaire</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Agent</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire du Gestionnaire</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire de l'Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Fichier</th>
             </tr>
           </thead>
@@ -558,15 +558,15 @@ function ListeContratsGestio() {
             <p className='text-left'><strong>Retour compagnie :</strong> {selectedContrat.retourCompagnie}</p>
             <p className='text-left'><strong>Suivie gestion :</strong> {selectedContrat.suivieGestion}</p>
             <p className='text-left'><strong>Remarque :</strong> {selectedContrat.remarque}</p>
-            <p className='text-left'><strong>Commentaire gestionnaire :</strong> {selectedContrat.commentaire}</p>
-            <p className='text-left'><strong>Commentaire agent :</strong> {selectedContrat.commentaireAgent}</p>
+            <p className='text-left'><strong>Commentaire du gestionnaire :</strong> {selectedContrat.commentaire}</p>
+            <p className='text-left'><strong>Commentaire de l'agent :</strong> {selectedContrat.commentaireAgent}</p>
          
 
             {selectedContrat.file && (
         <p className='text-left'>
           <strong>Fichier :</strong> 
           <a 
-            href={`http://51.83.69.195:5000/${selectedContrat.file}`} // Assurez-vous que le chemin est correct
+            href={`http://51.83.69.19551.83.69.195:5000/${selectedContrat.file}`} // Assurez-vous que le chemin est correct
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-blue-500 hover:underline"

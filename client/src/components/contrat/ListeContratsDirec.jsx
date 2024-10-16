@@ -49,7 +49,8 @@ function ListeContratsDirec() {
   // Filtrage par recherche
   useEffect(() => {
     const results = contrats.filter((contrat) =>
-      `${contrat.nom} ${contrat.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
+      `${contrat.nom} ${contrat.prenom} ${contrat.Commercial}` .toLowerCase().includes(searchTerm.toLowerCase())
+
     );
     setFilteredContrats(results);
   }, [searchTerm, contrats]);
@@ -68,6 +69,75 @@ function ListeContratsDirec() {
       return parseInt(parts[1], 10); // Format jj/mm/aaaa
     }
   };
+
+  // Fonction pour activer le mode édition
+const handleEditClick = (contrat) => {
+  setEditContratId(contrat._id);
+  setUpdatedContrat(contrat); // Pré-remplir les champs avec les données du contrat
+};
+
+// Fonction pour sauvegarder les modifications
+const handleSaveClick = async (contratId) => {
+  try {
+    const response = await fetch(`http://51.83.69.195:5000/api/contrats/${contratId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedContrat),
+    });
+
+    if (!response.ok) {
+      throw new Error('Erreur lors de la mise à jour du contrat');
+    }
+
+    // Mise à jour locale du contrat
+    const updatedList = contrats.map((contrat) =>
+      contrat._id === contratId ? updatedContrat : contrat
+    );
+    setContrats(updatedList);
+    setFilteredContrats(updatedList); // Met à jour la liste filtrée
+    setEditContratId(null); // Désactive le mode édition
+  } catch (error) {
+    setError(error.message);
+  }
+};
+const handleViewContrat = (contrat) => {
+  setSelectedContrat(contrat);  // Définir le contrat sélectionné pour l'afficher dans le modal
+  setShowModal(true);  // Ouvrir le modal
+
+};
+
+
+
+
+
+const closeModal = () => {
+  setShowModal(false);  // Fermer le modal
+  setSelectedContrat(null);  // Réinitialiser l'état du contrat sélectionné
+};
+
+// Fonction pour supprimer un contrat
+const handleDeleteClick = async (contratId) => {
+  if (window.confirm('Êtes-vous sûr de vouloir supprimer ce contrat ?')) {
+    try {
+      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${contratId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la suppression du contrat');
+      }
+
+      // Supprimer le contrat localement
+      const updatedList = contrats.filter((contrat) => contrat._id !== contratId);
+      setContrats(updatedList);
+      setFilteredContrats(updatedList); // Met à jour la liste filtrée
+    } catch (error) {
+      setError(error.message);
+    }
+  }
+};
 
   // Filtrage par mois et commercial
   useEffect(() => {
@@ -167,9 +237,10 @@ function ListeContratsDirec() {
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Type de résiliation</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Retour compagnie</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Suivie gestion</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Suivi gestion</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Remarque gestionnaire</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire de l'agent</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire du gestionnaire</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -415,6 +486,20 @@ function ListeContratsDirec() {
                   )}
                 </td>
 
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="commentaireAgent"
+                      value={updatedContrat.commentaireAgent}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.commentaireAgent
+                  )}
+                </td>
+
 
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
@@ -443,13 +528,34 @@ function ListeContratsDirec() {
             <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Contrat</h2>
             <p className="text-left"><strong>Nom :</strong> {selectedContrat.nom}</p>
             <p className="text-left"><strong>Prénom :</strong> {selectedContrat.prenom}</p>
+            <p className="text-left"><strong>état du dossier :</strong> {selectedContrat.etatDossier}</p>
+            <p className="text-left"><strong>Date de signature :</strong> {selectedContrat.signatureDate}</p>
+            <p className="text-left"><strong>Email :</strong> {selectedContrat.email}</p>
+            <p className="text-left"><strong>Numéro de téléphone :</strong> {selectedContrat.telephone}</p>
+            <p className="text-left"><strong>Compagnie :</strong> {selectedContrat.compagnie}</p>
+            <p className="text-left"><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
+            <p className="text-left"><strong>Date d'éffet :</strong> {selectedContrat.effetDate}</p>
+            <p className="text-left"><strong>Montant VP/Mois :</strong> {selectedContrat.cotisation}</p>
+            <p className="text-left"><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
+            <p className="text-left"><strong>Type de résiliation :</strong> {selectedContrat.typeResiliation}</p>
+            <p className="text-left"><strong>Retour compagnie :</strong> {selectedContrat.retourCompagnie}</p>
+            <p className="text-left"><strong>Suivi gestion :</strong> {selectedContrat.suivieGestion}</p>
+            <p className="text-left"><strong>remarque :</strong> {selectedContrat.remarque}</p>
+            <p className="text-left"><strong>Commentaire de l'agent :</strong> {selectedContrat.commentaireAgent}</p>
+            <p className="text-left"><strong>Commentaire du gestionnaire :</strong> {selectedContrat.commentaire}</p>
+      
             {/* ... (autres détails du contrat) */}
             <button
               onClick={closeModal}
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
             >
               Fermer
-            </button>
+            </button>  
+
+
+
+
+           
           </div>
         </div>
       )}
