@@ -202,19 +202,6 @@ const handleDeleteClick = async (contratId) => {
           <option value="12">Décembre</option>
         </select>
 
-           {/* Filtre par commercial */}
-           <select
-          value={selectedCommercial}
-          onChange={(e) => setSelectedCommercial(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
-        >
-          <option value="">Tous les commerciaux</option>
-          {commercials.map((commercial) => (
-            <option key={commercial} value={commercial}>
-              {commercial}
-            </option>
-          ))}
-        </select>
 
       </div>
 
