@@ -46,7 +46,7 @@ function ListeContratsGestio() {
 
   useEffect(() => {
     const results = contrats.filter((contrat) =>
-      `${contrat.nom} ${contrat.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
+      `${contrat.nom} ${contrat.prenom} ${contrat.Commercial}`.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredContrats(results);
   }, [searchTerm, contrats]);
