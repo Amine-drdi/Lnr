@@ -14,9 +14,9 @@ const contratSchema = new mongoose.Schema({
   address: String,
   profession: String,
   signatureDate: String,
-  cotisation: String,
+  cotisation: Number,
   compagnie: String,
-  effetDate: Date,
+  effetDate: String,
   fraisEntre: String,
   fraisDossier: String,
   interetClient: String,
@@ -29,6 +29,7 @@ const contratSchema = new mongoose.Schema({
   retourCompagnie : String,
   suivieGestion :String ,
   typeResiliation :  String ,
+  ancienneMutuelle: String,
   createdAt: { type: Date, default: Date.now },
   
 });

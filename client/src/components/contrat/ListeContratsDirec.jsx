@@ -15,6 +15,8 @@ function ListeContratsDirec() {
   const [commercials, setCommercials] = useState([]);  // Pour stocker la liste des commerciaux
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
   const etatDocs = ["" , "Validé", "Non validé", "NRP" , "Impayé", "Sans effet", "Rétractation", "Résigné"];
+  const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jabra" , "Rihab Kouki" ,"Leads"];
+
   const typeResiliations = ["" , "Infra", "Résiliation à échéance"];
   const [selectedMonth, setSelectedMonth] = useState(''); 
   const [selectedContrat, setSelectedContrat] = useState(null); 
@@ -210,6 +212,7 @@ const handleDeleteClick = async (contratId) => {
       
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
@@ -231,8 +234,9 @@ const handleDeleteClick = async (contratId) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredContrats.map((contrat) => (
+            {filteredContrats.map((contrat, index) => (
               <tr key={contrat._id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-4 py-3 text-sm text-gray-700 text-center">{index + 1}</td>
              <td className="px-4 py-3 text-sm text-gray-700">
              {editContratId === contrat._id ? (
               <button onClick={() => handleSaveClick(contrat._id)} className="text-blue-500">
@@ -282,12 +286,12 @@ const handleDeleteClick = async (contratId) => {
                     <input
                       type="text"
                       name="nom"
-                      value={updatedContrat.nom}
+                      value={updatedContrat.nom ? updatedContrat.nom.toUpperCase() : ''}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
                   ) : (
-                    contrat.nom
+                    contrat.nom ? contrat.nom.toUpperCase() : ''
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
@@ -295,19 +299,19 @@ const handleDeleteClick = async (contratId) => {
                     <input
                       type="text"
                       name="prenom"
-                      value={updatedContrat.prenom}
+                      value={updatedContrat.prenom ? updatedContrat.prenom.toUpperCase() : ''}
                       onChange={handleInputChange}
                       className="border rounded-md p-2 text-black"
                     />
                   ) : (
-                    contrat.prenom
+                    contrat.prenom ? contrat.prenom.toUpperCase() : ''
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
-                      name="date de signature"
+                      name="signatureDate"
                       value={updatedContrat.signatureDate}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
@@ -345,7 +349,7 @@ const handleDeleteClick = async (contratId) => {
                 <td className="px-4 py-3 text-sm text-gray-700">
                  {editContratId === contrat._id ? (
                 <select
-                  name="signatureType2"
+                  name="compagnie"
                   value={updatedContrat.compagnie}
                   onChange={handleSelectChange}
                   className="border rounded-md p-2"
@@ -388,30 +392,48 @@ const handleDeleteClick = async (contratId) => {
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
-                    <input
-                      type="text"
-                      name="cotisation"
-                      value={updatedContrat.cotisation}
-                      onChange={handleInputChange}
-                      className="border rounded-md p-2"
-                    />
-                  ) : (
-                    contrat.cotisation
+                  <input
+                  type="text"
+                  name="cotisation"
+                  value={updatedContrat.cotisation}
+                  onChange={handleInputChange}
+                  className="border rounded-md p-2"
+                  />
+                 ) : (
+                contrat.cotisation
+                 )}
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                 {editContratId === contrat._id ? (
+                <select
+                  name="apporteurAffaire"
+                  value={updatedContrat.apporteurAffaire}
+                  onChange={handleSelectChange}
+                  className="border rounded-md p-2"
+                 >
+                 {apporteurAffaires.map(apporteurAffaire => (
+                 <option key={apporteurAffaire} value={apporteurAffaire}>
+                 {apporteurAffaire}
+                 </option>
+                 ))}
+                 </select>
+                 ) : (
+                 contrat.apporteurAffaire
                   )}
                 </td>
 
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
-                    <input
-                      type="text"
-                      name="num_ancien_contrat"
-                      value={updatedContrat.ancienneMutuelle}
-                      onChange={handleInputChange}
-                      className="border rounded-md p-2"
-                    />
-                  ) : (
-                    contrat.ancienneMutuelle
-                  )}
+                  <input
+                  type="text"
+                  name="ancienneMutuelle"
+                  value={updatedContrat.ancienneMutuelle}
+                  onChange={handleInputChange}
+                  className="border rounded-md p-2"
+                  />
+                 ) : (
+                contrat.ancienneMutuelle
+                 )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">
                  {editContratId === contrat._id ? (
@@ -431,6 +453,7 @@ const handleDeleteClick = async (contratId) => {
                  contrat.typeResiliation
                   )}
                 </td>
+
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input
@@ -457,9 +480,8 @@ const handleDeleteClick = async (contratId) => {
                     contrat.suivieGestion
                   )}
                 </td>
-
-
-                <td className="px-4 py-3 text-sm text-gray-700">
+ 
+                <td className="px-4 py-3 text-sm text-red-700">
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
@@ -470,6 +492,20 @@ const handleDeleteClick = async (contratId) => {
                     />
                   ) : (
                     contrat.remarque
+                  )}
+                </td>
+                
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="comment"
+                      value={updatedContrat.commentaire}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.commentaire
                   )}
                 </td>
 
@@ -486,24 +522,12 @@ const handleDeleteClick = async (contratId) => {
                     contrat.commentaireAgent
                   )}
                 </td>
+             
 
-
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {editContratId === contrat._id ? (
-                    <input
-                      type="text"
-                      name="commentaire"
-                      value={updatedContrat.commentaire}
-                      onChange={handleInputChange}
-                      className="border rounded-md p-2"
-                    />
-                  ) : (
-                    contrat.commentaire
-                  )}
-                </td>
               </tr>
             ))}
           </tbody>
+
           
         </table>
       </div>
@@ -513,8 +537,11 @@ const handleDeleteClick = async (contratId) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
             <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Contrat</h2>
-            <p className="text-left"><strong>Nom :</strong> {selectedContrat.nom}</p>
-            <p className="text-left"><strong>Prénom :</strong> {selectedContrat.prenom}</p>
+            <p className='text-left'><strong>Nom:</strong> {selectedContrat.nom ? selectedContrat.nom.toUpperCase() : ''}</p>
+            <p className='text-left'><strong>Prénom:</strong> {selectedContrat.prenom ? selectedContrat.prenom.toUpperCase() : ''}</p>
+            <p className="text-left"><strong>Adresse :</strong> {selectedContrat.address}</p>
+            <p className="text-left"><strong>Profession :</strong> {selectedContrat.profession}</p>
+            <p className="text-left"><strong>Date de naissance :</strong> {selectedContrat.dob}</p>
             <p className="text-left"><strong>état du dossier :</strong> {selectedContrat.etatDossier}</p>
             <p className="text-left"><strong>Date de signature :</strong> {selectedContrat.signatureDate}</p>
             <p className="text-left"><strong>Email :</strong> {selectedContrat.email}</p>
@@ -530,7 +557,8 @@ const handleDeleteClick = async (contratId) => {
             <p className="text-left"><strong>remarque :</strong> {selectedContrat.remarque}</p>
             <p className="text-left"><strong>Commentaire de l'agent :</strong> {selectedContrat.commentaireAgent}</p>
             <p className="text-left"><strong>Commentaire du gestionnaire :</strong> {selectedContrat.commentaire}</p>
-      
+
+
             {/* ... (autres détails du contrat) */}
             <button
               onClick={closeModal}

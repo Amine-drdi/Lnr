@@ -59,7 +59,7 @@ function Souscription({ setIsAdding }) {
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    if (!nom || !prenom || !telephone || !email || !dob || !address || !profession || !signatureDate || !cotisation || !compagnie || !effetDate || !apporteurAffaire) {
+    if (!nom || !prenom || !telephone || !email || !dob || !address || !profession || !signatureDate || !cotisation || !compagnie || !effetDate || !apporteurAffaire || !fraisEntre || !fraisDossier || !interetClient || !ancienneMutuelle || !typeResiliation ) {
       return Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -68,6 +68,19 @@ function Souscription({ setIsAdding }) {
         timer: 1500,
       });
     }
+
+      // Fonction pour reformater une date en jj/mm/aaaa
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Les mois commencent à 0 en JavaScript
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  // Reformater les dates
+  const formattedSignatureDate = formatDate(signatureDate);
+  const formattedEffetDate = formatDate(effetDate);
 
     // Utilisation de FormData pour envoyer le fichier et les données
     const newContract = {
@@ -78,16 +91,20 @@ function Souscription({ setIsAdding }) {
       dob,
       address,
       profession,
-      signatureDate,
+      signatureDate: formattedSignatureDate,
       cotisation,
       compagnie,
-      effetDate,
+      effetDate: formattedEffetDate,
       fraisEntre,
       fraisDossier,
       interetClient,
       apporteurAffaire,
       Commercial,
-      commentaireAgent
+      commentaireAgent,
+      ancienneMutuelle,
+      typeResiliation,
+     
+
     };
     try {
       const response = await fetch('http://51.83.69.195:5000/api/contrats', {
@@ -218,7 +235,7 @@ function Souscription({ setIsAdding }) {
             <label htmlFor="cotisation" className="block text-sm font-medium text-blue-gray-700">Montant VP/mois</label>
             <input
               id="cotisation"
-              type="text"
+              type="number"
               value={cotisation}
               onChange={(e) => setCotisation(e.target.value)}
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
@@ -234,7 +251,7 @@ function Souscription({ setIsAdding }) {
           className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
         >
           <option value="">Sélectionnez la compagnie</option>
-          <option value="Neolyane">Néoliane</option>
+          <option value="Néolyane">Néoliane</option>
           <option value="Assurema">Assurema</option>
           <option value="Alptis">Alptis</option>
           <option value="April">April</option>

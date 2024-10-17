@@ -164,6 +164,7 @@ function ListeContratsComm() {
         <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Vue</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">État du dossier</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
@@ -179,22 +180,23 @@ function ListeContratsComm() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredContrats.map((contrat) => (
+            {filteredContrats.map((contrat, index) => (
               <tr key={contrat._id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-4 py-3 text-sm text-gray-700 text-center">{index + 1}</td>
                 <td className="px-4 py-3 text-center">
                   <FaEye className="text-blue-500 hover:text-blue-700 cursor-pointer" onClick={() => handleViewContrat(contrat)} />
                 </td>
-                <td className="px-4 py-3 text-center">{contrat.etatDossier}</td>
-                <td className="px-4 py-3 text-center">{contrat.signatureDate}</td>
-                <td className="px-4 py-3 text-center">{contrat.effetDate}</td>
-                <td className="px-4 py-3 text-center">{contrat.nom}</td>
-                <td className="px-4 py-3 text-center">{contrat.prenom}</td>
-                <td className="px-4 py-3 text-center">{contrat.Commercial}</td>
-                <td className="px-4 py-3 text-center">{contrat.compagnie}</td>
-                <td className="px-4 py-3 text-center">{contrat.montantVP}</td>
-                <td className="px-4 py-3 text-center">{contrat.ancienneMutuelle}</td>
-                <td className="px-4 py-3 text-center">{contrat.typeResiliation}</td>
-                <td className="px-4 py-3 text-center">{contrat.commentaire}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.etatDossier}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.signatureDate}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.effetDate}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.nom ? contrat.nom.toUpperCase() : ''}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.prenom ? contrat.prenom.toUpperCase() : '' }</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.Commercial}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.compagnie}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.montantVP}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.ancienneMutuelle}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.typeResiliation}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.commentaire}</td>
               </tr>
             ))}
           </tbody>
@@ -206,8 +208,8 @@ function ListeContratsComm() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
             <h2 className="text-2xl font-semibold mb-4">Détails du contrat</h2>
-            <p><strong>Nom:</strong> {selectedContrat.nom}</p>
-            <p><strong>Prénom:</strong> {selectedContrat.prenom}</p>
+            <p><strong>Nom:</strong> {selectedContrat.nom ? selectedContrat.nom.toUpperCase() : ''}</p>
+            <p><strong>Prénom:</strong> {selectedContrat.prenom ? selectedContrat.prenom.toUpperCase() : ''}</p>
             <p><strong>Date de Signature:</strong> {selectedContrat.signatureDate}</p>
             <p><strong>Date d'Effet:</strong> {selectedContrat.effetDate}</p>
             <p><strong>Commercial:</strong> {selectedContrat.Commercial}</p>

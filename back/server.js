@@ -159,7 +159,9 @@ app.post('/api/contrats',  async (req, res) => {
       interetClient,
       apporteurAffaire,
       Commercial,
-      commentaireAgent
+      commentaireAgent,
+      ancienneMutuelle,
+      typeResiliation,
    
     } = req.body;
 
@@ -182,7 +184,9 @@ app.post('/api/contrats',  async (req, res) => {
       interetClient,
       apporteurAffaire,
       Commercial,
-      commentaireAgent
+      commentaireAgent,
+      ancienneMutuelle,
+      typeResiliation,
 
     });
 
