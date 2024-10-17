@@ -203,9 +203,16 @@ const handleDeleteClick = async (contratId) => {
           <option value="11">Novembre</option>
           <option value="12">Décembre</option>
         </select>
-
+                {/* Displaying the total sum of cotisations */}
+                <div className="mt-4 text-lg font-semibold text-blue-700 pl-52 ">
+    Total Montant VP/Mois: 
+    {filteredContrats.reduce((total, contrat) => {
+      return total + parseFloat(contrat.cotisation || 0);
+    }, 0).toFixed(2)} €
+  </div>
 
       </div>
+
 
       <div className="overflow-x-scroll">
       <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
@@ -530,6 +537,7 @@ const handleDeleteClick = async (contratId) => {
 
           
         </table>
+
       </div>
 
       {/* Modal */}
