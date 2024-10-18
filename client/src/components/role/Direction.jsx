@@ -64,7 +64,7 @@ export function Direction() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://localhost:5000/api/profile', {
+          const response = await axios.get('http://t:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
