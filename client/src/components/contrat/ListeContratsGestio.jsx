@@ -10,12 +10,12 @@ function ListeContratsGestio() {
   const [searchTerm, setSearchTerm] = useState('');
   const [editContratId, setEditContratId] = useState(null);
   const [updatedContrat, setUpdatedContrat] = useState({});
-  const signatureTypes = ["Lead", "RDV", "RDV à chaud"];
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
   const etatDocs = ["" , "Validé", "Non validé","NRP" , "Impayé", "Sans effet", "Rétractation", "Résigné"];
   const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
   const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jabra" , "Rihab Kouki" ,"Leads"];
-  const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
+  const [selectedMonth, setSelectedMonth] = useState(''); //state pour le mois
+  const [selectedDay, setSelectedDay] = useState(''); // State pour le jour
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
   const [showModal, setShowModal] = useState(false); // Contrôle du modal
   const [isEditing, setIsEditing] = useState(false); // État pour suivre si le mode d'édition est activé
@@ -125,29 +125,7 @@ function ListeContratsGestio() {
   
   
   
-     // Fonction pour extraire le mois d'une date sous forme de chaîne
-  const extractMonthFromDateString = (dateString) => {
-    if (!dateString) return null;
-
-    const formats = [
-      { regex: /(\d{4})-(\d{2})-(\d{2})/, groupIndex: 2 }, // yyyy-mm-dd
-      { regex: /(\d{4})\/(\d{2})\/(\d{2})/, groupIndex: 2 }, // yyyy/mm/dd
-      { regex: /(\d{2})-(\d{2})-(\d{4})/, groupIndex: 2 }, // dd-mm-yyyy (mois au milieu)
-      { regex: /(\d{2})\/(\d{2})\/(\d{4})/, groupIndex: 2 }  // dd/mm/yyyy (mois au milieu)
-    ];
-
-    for (const format of formats) {
-      const match = dateString.match(format.regex);
-      if (match) {
-        const month = parseInt(match[format.groupIndex], 10);
-        if (month >= 1 && month <= 12) {
-          return month; // Renvoie le mois sous forme de nombre
-        }
-      }
-    }
-
-    return null; // Aucun mois trouvé
-  };
+   
   
     // Filtrage selon le commercial, la recherche et le mois
     useEffect(() => {
@@ -156,14 +134,12 @@ function ListeContratsGestio() {
     
         const signatureDate = new Date(contrat.signatureDate); // Créer un objet Date à partir de la chaîne de date
         const signatureMonth = signatureDate.getMonth() + 1; // Obtenir le mois de 1 à 12
+
     
-        const isMonthMatch = selectedMonth ? signatureMonth === parseInt(selectedMonth, 10) : true;
-    
-        return isMonthMatch;
       });
     
       setFilteredContrats(filtered);
-    }, [contrats, selectedMonth]);
+    }, [contrats]);
     
 
 
@@ -200,6 +176,32 @@ function ListeContratsGestio() {
     const closeModal = () => {
       setShowModal(false); // Fermer le modal
     };
+
+   // Fonction pour filtrer les contrats par mois et jour
+   useEffect(() => {
+    const filterByDate = () => {
+      if (selectedMonth === '' && selectedDay === '') {
+        setFilteredContrats(contrats); // Afficher tous les contrats si aucun filtre n'est appliqué
+      } else {
+        const filtered = contrats.filter(contrat => {
+          const [day, month, year] = contrat.signatureDate.split('/'); // Extraire le jour, mois, année
+          const formattedMonth = month.length === 1 ? `0${month}` : month; // Formater le mois pour avoir deux chiffres
+          const formattedDay = day.length === 1 ? `0${day}` : day; // Formater le jour pour avoir deux chiffres
+
+          // Comparer à la fois le mois et le jour s'ils sont sélectionnés
+          const monthMatches = selectedMonth ? formattedMonth === selectedMonth : true;
+          const dayMatches = selectedDay ? formattedDay === selectedDay : true;
+
+          return monthMatches && dayMatches;
+        });
+        setFilteredContrats(filtered);
+      }
+    };
+
+    filterByDate();
+  }, [selectedMonth, selectedDay, contrats]);
+
+    
   
 
 
@@ -223,27 +225,45 @@ function ListeContratsGestio() {
           className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
         />
       </div>
-              {/* Filtre par mois */}
-              <div className="mb-4 flex space-x-4">
+    {/* Filtre par Date */}
+    <div className="mb-4 flex space-x-4">
+
+     {/* Sélecteur de jour */}
+
+         <select
+          value={selectedDay}
+          onChange={(e) => setSelectedDay(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
+        >
+          <option value="">Tous les jours</option>
+          {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+            <option key={day} value={day < 10 ? `0${day}` : day}>
+              {day}
+            </option>
+          ))}
+        </select>
+        {/* Filtre par mois */}
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
           className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
         >
           <option value="">Tous les mois</option>
-          <option value="1">Janvier</option>
-          <option value="2">Février</option>
-          <option value="3">Mars</option>
-          <option value="4">Avril</option>
-          <option value="5">Mai</option>
-          <option value="6">Juin</option>
-          <option value="7">Juillet</option>
-          <option value="8">Août</option>
-          <option value="9">Septembre</option>
+          <option value="01">Janvier</option>
+          <option value="02">Février</option>
+          <option value="03">Mars</option>
+          <option value="04">Avril</option>
+          <option value="05">Mai</option>
+          <option value="06">Juin</option>
+          <option value="07">Juillet</option>
+          <option value="08">Août</option>
+          <option value="09">Septembre</option>
           <option value="10">Octobre</option>
           <option value="11">Novembre</option>
           <option value="12">Décembre</option>
         </select>
+
+
       </div>
       <div className="overflow-x-scroll">
       <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">

@@ -19,6 +19,8 @@ function ListeContratsDirec() {
 
   const typeResiliations = ["" , "Infra", "Résiliation à échéance"];
   const [selectedMonth, setSelectedMonth] = useState(''); 
+  const [selectedDay, setSelectedDay] = useState(''); // State pour le jour
+
   const [selectedContrat, setSelectedContrat] = useState(null); 
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // État pour suivre si le mode d'édition est activé
@@ -184,13 +186,13 @@ const handleDeleteClick = async (contratId) => {
   useEffect(() => {
     const filtered = contrats.filter((contrat) => {
       const signatureMonth = extractMonthFromDate(contrat.signatureDate);
-      const isMonthMatch = selectedMonth ? signatureMonth === parseInt(selectedMonth) : true;
+  
       const isCommercialMatch = selectedCommercial ? contrat.Commercial === selectedCommercial : true;
 
-      return isMonthMatch && isCommercialMatch;
+      return  isCommercialMatch;
     });
     setFilteredContrats(filtered);
-  }, [contrats, selectedMonth, selectedCommercial]);
+  }, [contrats,  selectedCommercial]);
 
   const handleInputChange = (e) => {
     setUpdatedContrat({ ...updatedContrat, [e.target.name]: e.target.value });
@@ -199,6 +201,30 @@ const handleDeleteClick = async (contratId) => {
   const handleSelectChange = (e) => {
     setUpdatedContrat({ ...updatedContrat, [e.target.name]: e.target.value });
   };
+
+  // Fonction pour filtrer les contrats par mois et jour
+  useEffect(() => {
+    const filterByDate = () => {
+      if (selectedMonth === '' && selectedDay === '') {
+        setFilteredContrats(contrats); // Afficher tous les contrats si aucun filtre n'est appliqué
+      } else {
+        const filtered = contrats.filter(contrat => {
+          const [day, month, year] = contrat.signatureDate.split('/'); // Extraire le jour, mois, année
+          const formattedMonth = month.length === 1 ? `0${month}` : month; // Formater le mois pour avoir deux chiffres
+          const formattedDay = day.length === 1 ? `0${day}` : day; // Formater le jour pour avoir deux chiffres
+
+          // Comparer à la fois le mois et le jour s'ils sont sélectionnés
+          const monthMatches = selectedMonth ? formattedMonth === selectedMonth : true;
+          const dayMatches = selectedDay ? formattedDay === selectedDay : true;
+
+          return monthMatches && dayMatches;
+        });
+        setFilteredContrats(filtered);
+      }
+    };
+
+    filterByDate();
+  }, [selectedMonth, selectedDay, contrats]);
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen text-gray-600">Chargement des contrats...</div>;
@@ -221,27 +247,46 @@ const handleDeleteClick = async (contratId) => {
         />
       </div>
       
-      {/* Filtre par mois */}
-      <div className="mb-4 flex space-x-4">
+    {/* Filtre par Date */}
+    <div className="mb-4 flex space-x-4">
+
+     {/* Sélecteur de jour */}
+
+         <select
+          value={selectedDay}
+          onChange={(e) => setSelectedDay(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
+        >
+          <option value="">Tous les jours</option>
+          {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+            <option key={day} value={day < 10 ? `0${day}` : day}>
+              {day}
+            </option>
+          ))}
+        </select>
+        {/* Filtre par mois */}
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
           className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
         >
           <option value="">Tous les mois</option>
-          <option value="1">Janvier</option>
-          <option value="2">Février</option>
-          <option value="3">Mars</option>
-          <option value="4">Avril</option>
-          <option value="5">Mai</option>
-          <option value="6">Juin</option>
-          <option value="7">Juillet</option>
-          <option value="8">Août</option>
-          <option value="9">Septembre</option>
+          <option value="01">Janvier</option>
+          <option value="02">Février</option>
+          <option value="03">Mars</option>
+          <option value="04">Avril</option>
+          <option value="05">Mai</option>
+          <option value="06">Juin</option>
+          <option value="07">Juillet</option>
+          <option value="08">Août</option>
+          <option value="09">Septembre</option>
           <option value="10">Octobre</option>
           <option value="11">Novembre</option>
           <option value="12">Décembre</option>
         </select>
+
+
+ 
                 {/* Displaying the total sum of cotisations */}
                 <div className="mt-4 text-lg font-semibold text-blue-700 pl-52 ">
     Total Montant VP/Mois: 
