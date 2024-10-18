@@ -18,11 +18,51 @@ function ListeContratsGestio() {
   const [selectedMonth, setSelectedMonth] = useState(''); // Nouveau state pour le mois
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
   const [showModal, setShowModal] = useState(false); // Contrôle du modal
+  const [isEditing, setIsEditing] = useState(false); // État pour suivre si le mode d'édition est activé
+  const [editedContrat, setEditedContrat] = useState({}); // État pour suivre le contrat modifié
+
+  const handleEditModal = (contrat) => {
+    setIsEditing(true); // Activer le mode d'édition
+    setEditedContrat(contrat); // Charger les données du contrat à modifier
+  };
+
+  const handleSaveModal = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/contrats/${editedContrat._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editedContrat),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la mise à jour du contrat');
+      }
+
+      // Mettre à jour la liste des contrats après modification
+      const updatedList = contrats.map((contrat) =>
+        contrat._id === editedContrat._id ? editedContrat : contrat
+      );
+      setContrats(updatedList);
+      setFilteredContrats(updatedList);
+
+      setIsEditing(false); // Quitter le mode d'édition
+      setShowModal(false); // Fermer le modal
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleInputChangeModal = (e) => {
+    setEditedContrat({ ...editedContrat, [e.target.name]: e.target.value });
+  };
+
   
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -59,7 +99,7 @@ function ListeContratsGestio() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +169,7 @@ function ListeContratsGestio() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -226,7 +266,7 @@ function ListeContratsGestio() {
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Type de résiliation</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Retour compagnie</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Suivie gestion</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Suivi gestion</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Remarque</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire du Gestionnaire</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire de l'Agent</th>
@@ -467,13 +507,13 @@ function ListeContratsGestio() {
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
-                      name="suivieGestion"
-                      value={updatedContrat.suivieGestion}
+                      name="suiviGestion"
+                      value={updatedContrat.suiviGestion}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
                   ) : (
-                    contrat.suivieGestion
+                    contrat.suiviGestion
                   )}
                 </td>
  
@@ -521,7 +561,7 @@ function ListeContratsGestio() {
                 <td className="px-4 py-3 text-sm text-gray-700">
         {contrat.file ? (
           <a 
-            href={`http://51.83.69.195:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
+            href={`http://localhost:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-blue-500 hover:underline"
@@ -540,10 +580,17 @@ function ListeContratsGestio() {
         </table>
       </div>
       {/* Modal */}
-        {showModal && selectedContrat && (
+          {/* Modal */}
+      {showModal && selectedContrat && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
-            <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Contrat</h2>
+          <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 overflow-y-auto max-h-screen">
+            <h2 className="text-2xl text-blue-500 font-semibold mb-4">
+              {isEditing ? "Modifier le Contrat" : "Détails du Contrat"}
+            </h2>
+
+            {!isEditing ? (
+              <>
+
             <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
             <p className='text-left'><strong>Nom:</strong> {selectedContrat.nom ? selectedContrat.nom.toUpperCase() : ''}</p>
             <p className='text-left'><strong>Prénom:</strong> {selectedContrat.prenom ? selectedContrat.prenom.toUpperCase() : ''}</p>
@@ -557,25 +604,216 @@ function ListeContratsGestio() {
             <p className='text-left'><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
             <p className='text-left'><strong>Type de résiliation:</strong> {selectedContrat.typeResiliation}</p>
             <p className='text-left'><strong>Retour compagnie :</strong> {selectedContrat.retourCompagnie}</p>
-            <p className='text-left'><strong>Suivie gestion :</strong> {selectedContrat.suivieGestion}</p>
+            <p className='text-left'><strong>Suivi gestion :</strong> {selectedContrat.suiviGestion}</p>
             <p className='text-left'><strong>Remarque :</strong> {selectedContrat.remarque}</p>
             <p className='text-left'><strong>Commentaire du gestionnaire :</strong> {selectedContrat.commentaire}</p>
             <p className='text-left'><strong>Commentaire de l'agent :</strong> {selectedContrat.commentaireAgent}</p>
-         
+            
+                <button
+                  onClick={() => handleEditModal(selectedContrat)}
+                  className="mt-4 px-4 py-2  bg-blue-500 text-white rounded hover:bg-blue-800 mr-2"
+                >
+                  Modifier
+                </button>
+           
+              </>
+            ) : (
+              <>
+                <div className="flex flex-col">
+                <label className='font-semibold '>État du dossier : </label>
+                <select
+                 value={updatedContrat.etatDossier || selectedContrat.etatDossier} // Initialisation avec la valeur existante
+                 name="etatDossier"
+                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 className="w-full border border-gray-300 rounded p-2"
+                >
+                  <option value="Validé">Validé</option>
+                  <option value="Non validé">Non validé</option>
+                </select>
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Nom :</label>
+                  <input
+                    type="text"
+                    name="nom"
+                    value={editedContrat.nom}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Prénom :</label>
+                  <input
+                    type="text"
+                    name="prenom"
+                    value={editedContrat.prenom}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Date de signature :</label>
+                  <input
+                    type="text"
+                    name="signatureDate"
+                    value={editedContrat.signatureDate}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Email :</label>
+                  <input
+                    type="text"
+                    name="email"
+                    value={editedContrat.email}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Téléphone :</label>
+                  <input
+                    type="text"
+                    name="telephone"
+                    value={editedContrat.telephone}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Compagnie :</label>
+                  <select
+                 value={updatedContrat.compagnie || selectedContrat.compagnie} // Initialisation avec la valeur existante
+                 name="compagnie"
+                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 className="w-full border border-gray-300 rounded p-2"
+                >
+                  <option value="Néoliane">Néoliane</option>
+                  <option value="Assurema">Assurema</option>
+                  <option value="Alptis">Alptis</option>
+                  <option value="April">April</option>
+                  <option value="Malakoff Humanis">Malakoff Humanis</option>
+                  <option value="Cegema">Cegema</option>
+                  <option value="Swisslife">Swisslife</option>
+                  <option value="Soly Azar">Soly Azar</option>
+                  <option value="Zenio">Zenio</option>
+                </select>
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Commercial :</label>
+                  <input
+                    type="text"
+                    name="commercial"
+                    value={editedContrat.Commercial}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Date d'Effet :</label>
+                  <input
+                    type="num"
+                    name="effetDate"
+                    value={editedContrat.effetDate}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Montant VP/mois :</label>
+                  <input
+                    type="num"
+                    name="cotisation"
+                    value={editedContrat.cotisation}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Ancienne mutuelle :</label>
+                  <input
+                    type="text"
+                    name="ancienneMutuelle"
+                    value={editedContrat.ancienneMutuelle}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Type de résiliation :</label>
+                  <select
+                 value={updatedContrat.typeResiliation || selectedContrat.typeResiliation} // Initialisation avec la valeur existante
+                 name="typeResiliation"
+                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 className="w-full border border-gray-300 rounded p-2"
+                >
+                  <option value=""></option>
+                  <option value="Infra">Infra</option>
+                  <option value="Résiliation à échéance">Résiliation à échéance</option>
 
-            {selectedContrat.file && (
-        <p className='text-left'>
-          <strong>Fichier :</strong> 
-          <a 
-            href={`http://51.83.69.195:5000/${selectedContrat.file}`} // Assurez-vous que le chemin est correct
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-blue-500 hover:underline"
-          >
-            Voir le fichier
-          </a>
-        </p>
-      )}
+                </select>
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Retour compagnie :</label>
+                  <input
+                    type="text"
+                    name="retourComagnie"
+                    value={editedContrat.retourCompagnie}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Suivi gestion :</label>
+                  <input
+                    type="text"
+                    name="suiviGestion"
+                    value={editedContrat.suiviGestion}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Remarque :</label>
+                  <input
+                    type="text"
+                    name="remarque"
+                    value={editedContrat.remarque}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Commentaire du gestionnaire :</label>
+                  <input
+                    type="text"
+                    name="commentaire"
+                    value={editedContrat.commentaire}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Commentaire de l'agent :</label>
+                  <input
+                    type="text"
+                    name="commentaireAgent"
+                    value={editedContrat.commentaireAgent}
+                    onChange={handleInputChangeModal}
+                    className="border p-2 rounded mb-2"
+                  />
+                </div>
+                {/* Autres champs éditables */}
+                <button
+                  onClick={handleSaveModal}
+                  className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                >
+                  Sauvegarder
+                </button>
+              </>
+            )}
+
             <button
               onClick={closeModal}
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"

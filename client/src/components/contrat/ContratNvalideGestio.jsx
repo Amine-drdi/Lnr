@@ -19,7 +19,7 @@ function ContratNvalideGestio() {
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -54,7 +54,7 @@ function ContratNvalideGestio() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ function ContratNvalideGestio() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -151,7 +151,7 @@ function ContratNvalideGestio() {
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type de résiliation</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Retour compagnie</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">suivie gestion</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">suivi gestion</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Remarque gestionnaire</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
 
@@ -370,13 +370,13 @@ function ContratNvalideGestio() {
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
-                      name="suivieGestion"
-                      value={updatedContrat.suivieGestion}
+                      name="suiviGestion"
+                      value={updatedContrat.suiviGestion}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
                   ) : (
-                    contrat.suivieGestion
+                    contrat.suiviGestion
                   )}
                 </td>
 

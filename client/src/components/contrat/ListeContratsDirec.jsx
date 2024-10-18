@@ -13,7 +13,7 @@ function ListeContratsDirec() {
   const [updatedContrat, setUpdatedContrat] = useState({});
   const [selectedCommercial, setSelectedCommercial] = useState('');  // État pour le commercial sélectionné
   const [commercials, setCommercials] = useState([]);  // Pour stocker la liste des commerciaux
-  const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
+  const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife" ,"Soly Azar" , "Zenio"];
   const etatDocs = ["" , "Validé", "Non validé", "NRP" , "Impayé", "Sans effet", "Rétractation", "Résigné"];
   const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jabra" , "Rihab Kouki" ,"Leads"];
 
@@ -26,7 +26,7 @@ function ListeContratsDirec() {
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -81,7 +81,7 @@ const handleEditClick = (contrat) => {
 // Fonction pour sauvegarder les modifications
 const handleSaveClick = async (contratId) => {
   try {
-    const response = await fetch(`http://51.83.69.195:5000/api/contrats/${contratId}`, {
+    const response = await fetch(`http://localhost:5000/api/contrats/${contratId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ const closeModal = () => {
 const handleDeleteClick = async (contratId) => {
   if (window.confirm('Êtes-vous sûr de vouloir supprimer ce contrat ?')) {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${contratId}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${contratId}`, {
         method: 'DELETE',
       });
 
@@ -478,13 +478,13 @@ const handleDeleteClick = async (contratId) => {
                   {editContratId === contrat._id ? (
                     <input
                       type="text"
-                      name="suivieGestion"
-                      value={updatedContrat.suivieGestion}
+                      name="suiviGestion"
+                      value={updatedContrat.suiviGestion}
                       onChange={handleInputChange}
                       className="border rounded-md p-2"
                     />
                   ) : (
-                    contrat.suivieGestion
+                    contrat.suiviGestion
                   )}
                 </td>
  
@@ -561,7 +561,7 @@ const handleDeleteClick = async (contratId) => {
             <p className="text-left"><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
             <p className="text-left"><strong>Type de résiliation :</strong> {selectedContrat.typeResiliation}</p>
             <p className="text-left"><strong>Retour compagnie :</strong> {selectedContrat.retourCompagnie}</p>
-            <p className="text-left"><strong>Suivi gestion :</strong> {selectedContrat.suivieGestion}</p>
+            <p className="text-left"><strong>Suivi gestion :</strong> {selectedContrat.suiviGestion}</p>
             <p className="text-left"><strong>remarque :</strong> {selectedContrat.remarque}</p>
             <p className="text-left"><strong>Commentaire de l'agent :</strong> {selectedContrat.commentaireAgent}</p>
             <p className="text-left"><strong>Commentaire du gestionnaire :</strong> {selectedContrat.commentaire}</p>

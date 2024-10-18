@@ -36,7 +36,7 @@ function Souscription({ setIsAdding }) {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -107,7 +107,7 @@ function Souscription({ setIsAdding }) {
 
     };
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/contrats', {
+      const response = await fetch('http://localhost:5000/api/contrats', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // Ajout du header pour JSON
@@ -343,7 +343,7 @@ function Souscription({ setIsAdding }) {
           <option value="Hajer Askri">Hajer Askri</option>
           <option value="Rim Dabebi ">Rim Dabebi </option>
           <option value="Eya Ben Jabra">Eya Ben Jabra</option>
-          <option value="Eya Ben Jabra">Rihab Kouki</option>
+          <option value="Rihab Kouki">Rihab Kouki</option>
           <option value="Leads">Leads </option>
          
         </select>

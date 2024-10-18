@@ -27,7 +27,7 @@ const contratSchema = new mongoose.Schema({
   commentaireAgent:  String,
   remarque:  String,
   retourCompagnie : String,
-  suivieGestion :String ,
+  suiviGestion :String ,
   typeResiliation :  String ,
   ancienneMutuelle: String,
   createdAt: { type: Date, default: Date.now },
