@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react';
 function CommercialsToday() {
   const [commercials, setCommercials] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); // État de chargement
 
   useEffect(() => {
     const fetchCommercials = async () => {
+      setLoading(true); // Indiquer que le chargement a commencé
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats/commercials-today');
+        const response = await fetch('http://localhost:5000/api/contrats/commercials-today');
         
         if (!response.ok) {
           const text = await response.text();
@@ -19,6 +21,8 @@ function CommercialsToday() {
       } catch (error) {
         setError('Erreur lors de la récupération des données'); // Gérer les erreurs
         console.error(error);
+      } finally {
+        setLoading(false); // Indiquer que le chargement est terminé
       }
     };
 
@@ -28,7 +32,9 @@ function CommercialsToday() {
   return (
     <div>
       <h3 className="text-xl font-semibold mb-4">Liste des commerciaux ayant ajouté des contrats aujourd'hui</h3>
-      {error ? (
+      {loading ? ( // Afficher le message de chargement
+        <p>Chargement...</p>
+      ) : error ? (
         <p>{error}</p>
       ) : commercials.length === 0 ? (
         <p>Aucun commercial n'a ajouté de contrat aujourd'hui.</p>

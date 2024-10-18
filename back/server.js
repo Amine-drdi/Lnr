@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb://mongodb:27017/mydatabase')
+mongoose.connect('mongodb://localhost:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
@@ -437,11 +437,16 @@ app.get('/api/contrats/today', async (req, res) => {
   // compter les contrats ajouter aujourd'hui
 app.get('/api/contrats/commercials-today', async (req, res) => {
   try {
-    const today = new Date().toISOString().split('T')[0];
+    // Récupérer la date actuelle au format "dd/mm/yyyy"
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Les mois sont indexés à partir de 0
+    const year = today.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`; // Format "dd/mm/yyyy"
 
     // Récupérer les commerciaux ayant signé des contrats aujourd'hui
     const commercials = await Contrat.aggregate([
-      { $match: { signatureDate: today } }, // Filtrer les contrats du jour
+      { $match: { signatureDate: formattedDate } }, // Filtrer les contrats du jour
       { $group: { _id: '$Commercial', count: { $sum: 1 } } }, // Grouper par Commercial
       { $project: { Commercial: '$_id', count: 1, _id: 0 } } // Projeter le champ Commercial
     ]);
@@ -451,6 +456,8 @@ app.get('/api/contrats/commercials-today', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération des commerciaux' });
   }
 });
+
+
 
  // afficher le chart graphique mensuel 
 
