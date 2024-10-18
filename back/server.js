@@ -420,19 +420,27 @@ app.delete('/api/evenements/:id', async (req, res) => {
 // Récupérer les contrats ajoutés aujourd'hui et hier
 app.get('/api/contrats/today', async (req, res) => {
   try {
-    const today = new Date().toISOString().split('T')[0]; // Date d'aujourd'hui (format YYYY-MM-DD)
-    const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0]; // Hier
+    // Obtenir la date actuelle
+    const today = new Date();
+    const todayString = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+    const yesterday = new Date(today.setDate(today.getDate() - 1));
+    const yesterdayString = `${yesterday.getDate().toString().padStart(2, '0')}/${(yesterday.getMonth() + 1).toString().padStart(2, '0')}/${yesterday.getFullYear()}`;
+
+    // Convertir les dates au format ISO (YYYY-MM-DD)
+    const todayISO = todayString.split('/').reverse().join('-'); // Format YYYY-MM-DD
+    const yesterdayISO = yesterdayString.split('/').reverse().join('-'); // Format YYYY-MM-DD
 
     // Compter les contrats signés aujourd'hui
-    const todayCount = await Contrat.countDocuments({ signatureDate: today });
+    const todayCount = await Contrat.countDocuments({ signatureDate: todayISO });
     // Compter les contrats signés hier
-    const yesterdayCount = await Contrat.countDocuments({ signatureDate: yesterday });
+    const yesterdayCount = await Contrat.countDocuments({ signatureDate: yesterdayISO });
 
     res.status(200).json({ todayCount, yesterdayCount });
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la récupération des données' });
   }
 });
+
 
   // compter les contrats ajouter aujourd'hui
 app.get('/api/contrats/commercials-today', async (req, res) => {
