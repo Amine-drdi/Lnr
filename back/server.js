@@ -431,9 +431,9 @@ app.get('/api/contrats/today', async (req, res) => {
     const yesterdayISO = yesterdayString.split('/').reverse().join('-'); // Format YYYY-MM-DD
 
     // Compter les contrats signés aujourd'hui
-    const todayCount = await Contrat.countDocuments({ signatureDate: todayISO });
+    const todayCount = await Contrat.countDocuments({ signatureDate: todayString });
     // Compter les contrats signés hier
-    const yesterdayCount = await Contrat.countDocuments({ signatureDate: yesterdayISO });
+    const yesterdayCount = await Contrat.countDocuments({ signatureDate: yesterdayString });
 
     res.status(200).json({ todayCount, yesterdayCount });
   } catch (error) {
