@@ -28,7 +28,7 @@ function ListeContratsGestio() {
 
   const handleSaveModal = async () => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${editedContrat._id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${editedContrat._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ function ListeContratsGestio() {
   useEffect(() => {
     const fetchContrats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -99,7 +99,7 @@ function ListeContratsGestio() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ function ListeContratsGestio() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -298,7 +298,7 @@ function ListeContratsGestio() {
               <tr key={contrat._id} className="hover:bg-gray-50 transition-colors">
                <td className="px-4 py-3 text-sm text-gray-700 text-center">{index + 1}</td>
                   <td className="px-4 py-3 text-sm text-gray-700">
-                  {editContratId === contrat._id ? (
+                {editContratId === contrat._id ? (
                     <button onClick={() => handleSaveClick(contrat._id)} className="text-blue-500">
                       Sauvegarder
                     </button>
@@ -309,11 +309,11 @@ function ListeContratsGestio() {
                       onClick={() => handleViewContrat(contrat)}
                       />
 
-                      <FontAwesomeIcon
+                     <FontAwesomeIcon
                         icon={faEdit}
                         className="text-indigo-700 cursor-pointer mr-2 w-4 h-4" 
                         onClick={() => handleEditClick(contrat)}
-                      />
+                      /> 
 
                     </div>
                   )}
@@ -581,7 +581,7 @@ function ListeContratsGestio() {
                 <td className="px-4 py-3 text-sm text-gray-700">
         {contrat.file ? (
           <a 
-            href={`http://51.83.69.195:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
+            href={`http://localhost:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-blue-500 hover:underline"
@@ -642,7 +642,7 @@ function ListeContratsGestio() {
                 <div className="flex flex-col">
                 <label className='font-semibold '>État du dossier : </label>
                 <select
-                 value={updatedContrat.etatDossier || selectedContrat.etatDossier} // Initialisation avec la valeur existante
+                 value={updatedContrat.etatDossier && selectedContrat.etatDossier} // Initialisation avec la valeur existante
                  name="etatDossier"
                  onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
@@ -656,7 +656,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="nom"
-                    value={editedContrat.nom}
+                    value={updatedContrat.nom && selectedContrat.nom}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -666,7 +666,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="prenom"
-                    value={editedContrat.prenom}
+                    value={updatedContrat.prenom && selectedContrat.prenom}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -676,7 +676,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="signatureDate"
-                    value={editedContrat.signatureDate}
+                    value={updatedContrat.signatureDate && selectedContrat.signatureDate}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -686,7 +686,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="email"
-                    value={editedContrat.email}
+                    value={updatedContrat.email && selectedContrat.email}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -696,7 +696,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="telephone"
-                    value={editedContrat.telephone}
+                    value={updatedContrat.telephone && selectedContrat.telephone}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -704,7 +704,7 @@ function ListeContratsGestio() {
                 <div className="flex flex-col">
                   <label className='font-semibold '>Compagnie :</label>
                   <select
-                 value={updatedContrat.compagnie || selectedContrat.compagnie} // Initialisation avec la valeur existante
+                 value={updatedContrat.compagnie && selectedContrat.compagnie} // Initialisation avec la valeur existante
                  name="compagnie"
                  onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
@@ -725,7 +725,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="commercial"
-                    value={editedContrat.Commercial}
+                    value={updatedContrat.Commercial && selectedContrat.Commercial}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -735,7 +735,7 @@ function ListeContratsGestio() {
                   <input
                     type="num"
                     name="effetDate"
-                    value={editedContrat.effetDate}
+                    value={updatedContrat.effetDate && selectedContrat.effetDate}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -745,7 +745,7 @@ function ListeContratsGestio() {
                   <input
                     type="num"
                     name="cotisation"
-                    value={editedContrat.cotisation}
+                    value={updatedContrat.cotisation && selectedContrat.cotisation}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -755,7 +755,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="ancienneMutuelle"
-                    value={editedContrat.ancienneMutuelle}
+                    value={updatedContrat.ancienneMutuelle && selectedContrat.ancienneMutuelle}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -763,7 +763,7 @@ function ListeContratsGestio() {
                 <div className="flex flex-col">
                   <label className='font-semibold '>Type de résiliation :</label>
                   <select
-                 value={updatedContrat.typeResiliation || selectedContrat.typeResiliation} // Initialisation avec la valeur existante
+                 value={updatedContrat.typeResiliation && selectedContrat.typeResiliation} // Initialisation avec la valeur existante
                  name="typeResiliation"
                  onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
@@ -779,7 +779,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="retourComagnie"
-                    value={editedContrat.retourCompagnie}
+                    value={updatedContrat.retourCompagnie && selectedContrat.retourCompagnie}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -789,7 +789,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="suiviGestion"
-                    value={editedContrat.suiviGestion}
+                    value={updatedContrat.suiviGestion && selectedContrat.suiviGestion}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -799,7 +799,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="remarque"
-                    value={editedContrat.remarque}
+                    value={updatedContrat.remarque && selectedContrat.remarque}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -809,7 +809,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="commentaire"
-                    value={editedContrat.commentaire}
+                    value={updatedContrat.commentaire && selectedContrat.commentaire}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
@@ -819,7 +819,7 @@ function ListeContratsGestio() {
                   <input
                     type="text"
                     name="commentaireAgent"
-                    value={editedContrat.commentaireAgent}
+                    value={updatedContrat.commentaireAgent && selectedContrat.commentaireAgent}
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />

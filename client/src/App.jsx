@@ -23,6 +23,11 @@ import ProgressionChart from './components/ProgressionChart';
 import Chart from './components/Chart';
 import CommercialChart from './components/CommercialChart';
 import AddAgent from './components/AddAgent';
+import SouscriptionOPCO from './components/Opco/SouscriptionOPCO';
+import ManagerOPCO from './components/Opco/ManagerOPCO';
+import CommercialOPCO from './components/Opco/CommercialOPCO';
+import ListeRdv from './components/Opco/ListeRdv';
+import ListeRdvManager from './components/Opco/ListeRdvManager';
 
 
 
@@ -49,6 +54,9 @@ function App() {
         <Route path="/profile-settings" element={<ProfileSetting/>} />
         <Route path="/contrats-non-valide" element={<ContratNonValide />} />
         <Route path="/contrats-non-valideGestio" element={<ContratNvalideGestio />} />
+        <Route path="/souscription-OPCO" element={<SouscriptionOPCO />} />
+        <Route path="/liste-RDV" element={<ListeRdv />} />
+        <Route path="/liste-RDV-manager" element={<ListeRdvManager />} />
         {/* Routes protégées */}
         <Route 
           path="/gestionnaire" 
@@ -59,13 +67,21 @@ function App() {
           path="/commerciale" 
           element={<PrivateRoute element={<Commercial />} allowedRoles={['Commerciale']} />} 
         />
-         <Route 
+        <Route 
           path="/direction" 
           element={<PrivateRoute element={<Direction/>} allowedRoles={['Direction']} />} 
         />
-                 <Route 
+        <Route 
           path="/manager" 
           element={<PrivateRoute element={<Manager/>} allowedRoles={['Manager']} />} 
+        />
+        <Route 
+          path="/manager-OPCO" 
+          element={<PrivateRoute element={<ManagerOPCO/>} allowedRoles={['ManagerOPCO']} />} 
+        />d
+        <Route 
+          path="/Commercial-OPCO" 
+          element={<PrivateRoute element={<CommercialOPCO/>} allowedRoles={['CommercialeOPCO']} />} 
         />
       </Routes>
     </Router>

@@ -1,0 +1,54 @@
+// models/RDV.js
+
+const mongoose = require('mongoose');
+
+const RDVSchema = new mongoose.Schema({
+
+    nom: {
+        type: String,
+        required: true
+      },
+      prenom: {
+        type: String,
+        required: true
+      },
+      entreprise: {
+        type: String,
+        required: true
+      },
+      adresse: {
+        type: String,
+        required: true
+      },
+      codePostal: {
+        type: String,
+        required: true
+      },
+      ville: {
+        type: String,
+        required: true
+      },
+      formation: {
+        type: String,
+        required: true
+      },
+      datePriseRDV: {
+        type: Date,
+        required: true
+      },
+      dateRDV: {
+        type: Date,
+        required: true
+      },
+      heureRDV: {
+        type: String, // Optionnel, vous pouvez utiliser "Date" si vous gérez l'heure avec précision
+        required: true
+      },
+      dateInsertion: {
+        type: Date,
+        default: Date.now // La date et l'heure de l'insertion sont automatiquement générées ici
+      }
+});
+
+const RDV = mongoose.model('RDV', RDVSchema);
+module.exports = RDV;

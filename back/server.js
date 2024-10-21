@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const User = require('./models/User'); // Importer le modèle User
 const Contrat = require('./models/Contrat');
+const RDV = require('./models/RDV');
 const ContratUpdate = require('./models/ContratUpdate') ;
 const moment = require('moment');
 const app = express();
@@ -12,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb://mongodb:27017/mydatabase')
+mongoose.connect('mongodb://localhost:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
@@ -150,7 +151,7 @@ app.post('/api/contrats',  async (req, res) => {
       dob,
       address,
       profession,
-      signatureDate,
+     signatureDate,
       cotisation,
       compagnie,
       effetDate,
@@ -198,11 +199,57 @@ app.post('/api/contrats',  async (req, res) => {
   }
 });
 
+// Route pour ajouter un nouveau RDV
+app.post('/api/rdvs', async (req, res) => {
+  try {
+    const {
+      nom,
+      prenom,
+      entreprise,
+      adresse,
+      codePostal,
+      ville,
+      formation,
+      datePriseRDV,
+      dateRDV,
+      heureRDV,
+    } = req.body;
+
+    const newRDV = new RDV({
+      nom,
+      prenom,
+      entreprise,
+      adresse,
+      codePostal,
+      ville,
+      formation,
+      datePriseRDV,
+      dateRDV,
+      heureRDV,
+    });
+
+    await newRDV.save();
+    res.status(201).json({ message: 'RDV ajouté avec succès', RDV: newRDV });
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout du RDV', error);
+    res.status(500).json({ message: 'Erreur du serveur' });
+  }
+});
 // Route pour récupérer tous les contrats
 app.get('/api/contrats', async (req, res) => {
   try {
     const contrats = await Contrat.find();
     res.status(200).json({ contrats });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des contrats' });
+  }
+});
+// Route pour récupérer tous les RDV
+app.get('/api/rdvs', async (req, res) => {
+  try {
+    const rdvs = await RDV.find();
+    res.status(200).json({ rdvs });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur lors de la récupération des contrats' });
@@ -247,6 +294,19 @@ app.put('/api/contrats/:id', async (req, res) => {
   }
 });
 
+
+// Mettre à jour un rendez-vous
+app.put('/api/rdvs/:id', async (req, res) => {
+  try {
+    const updatedRdv = await Rdv.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedRdv) {
+      return res.status(404).json({ message: 'Rendez-vous non trouvé' });
+    }
+    res.status(200).json({ message: 'Rendez-vous mis à jour avec succès', updatedRdv });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la mise à jour du rendez-vous' });
+  }
+});
 
 // Route pour supprimer un contrat
 app.delete('/api/contrats/:id', async (req, res) => {

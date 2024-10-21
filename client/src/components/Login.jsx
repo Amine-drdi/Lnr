@@ -24,7 +24,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post('http://51.83.69.195:5000/api/login', { matricule, password });
+      const response = await axios.post('http://localhost:5000/api/login', { matricule, password });
       const { token, user } = response.data;
 
       localStorage.setItem('authToken', token);
@@ -38,7 +38,12 @@ const Login = () => {
         navigate('/commerciale');
       } else if (user.role === 'Direction') {
         navigate('/direction');
+      } else if (user.role === 'ManagerOPCO') {
+        navigate('/manager-OPCO');
+      } else if (user.role === 'CommercialeOPCO') {
+        navigate('/Commercial-OPCO');
       }
+      
     } catch (error) {
       console.error('Erreur lors de la connexion', error.response?.data || error.message);
       setError('Erreur de connexion. Vérifiez vos identifiants.');

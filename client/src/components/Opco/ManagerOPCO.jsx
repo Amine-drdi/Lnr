@@ -8,14 +8,15 @@ import {
   ListItem,
   ListItemPrefix,
 } from "@material-tailwind/react";
-import { FaFileContract, FaFileSignature } from "react-icons/fa6";
+import { IoCalendarNumber } from "react-icons/io5";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import logo from "../../assets/logo.png";
 import img from "../../assets/manager.png";
-import Souscription from '../contrat/Souscription';
-import ListeContratsManager from '../contrat/ListeContratsManager';
 import { CiBoxList } from "react-icons/ci";
-function Manager() {
+import SouscriptionOPCO from './SouscriptionOPCO';
+import ListeRdv from './ListeRdv';
+import ListeRdvManager from './ListeRdvManager';
+function ManagerOPCO() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
   const navigate = useNavigate();
@@ -54,17 +55,17 @@ function Manager() {
   // Function to render the correct component based on state
   const renderComponent = () => {
     switch (activeComponent) {
-      case 'listeContrats':
-        return <ListeContratsManager />;
-      case 'AjoutContrat':
-        return <Souscription />;
+      case 'listeRdv':
+        return <ListeRdvManager />;
+      case 'AjoutRDV':
+        return <SouscriptionOPCO />;
       default:
-        return <Souscription />;
+        return <ListeRdvManager />;
     }
   };
 
   return (
-    <div className="flex bg-blue-gray-100">
+    <div className="flex ">
       {/* Sidebar */}
       <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">        {/* Logo */}
         <img
@@ -83,23 +84,23 @@ function Manager() {
         {/* Menu List */}
         <List>
           <ListItem
-            onClick={() => setActiveComponent('listeContrats')}
+            onClick={() => setActiveComponent('listeRdv')}
             className="hover:bg-blue-600 text-white"
           >
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
             </ListItemPrefix>
-            Consulter la liste des contrats
+           liste des Rendez-vous
           </ListItem>
 
           <ListItem
-            onClick={() => setActiveComponent('AjoutContrat')}
+            onClick={() => setActiveComponent('AjoutRDV')}
             className="hover:bg-blue-600 text-white"
           >
             <ListItemPrefix>
-              <FaFileSignature className="h-5 w-5" />
+              <IoCalendarNumber className="h-5 w-5" />
             </ListItemPrefix>
-            Ajouter un Contrat
+            Ajouter UN RDV
           </ListItem>
 
           <ListItem
@@ -122,4 +123,4 @@ function Manager() {
   );
 }
 
-export default Manager;
+export default ManagerOPCO;

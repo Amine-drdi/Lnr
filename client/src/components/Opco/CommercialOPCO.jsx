@@ -17,15 +17,16 @@ import {
   Badge,
 } from "@material-tailwind/react";
 import { IoIosNotifications } from "react-icons/io";
+import { IoCalendarNumber } from "react-icons/io5";
 import { CiBoxList } from "react-icons/ci";
-import { FaFileContract, FaFileSignature } from "react-icons/fa6";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import logo from "../../assets/logo.png";
 import img from "../../assets/user.png";
-import ListeContratsComm from '../contrat/ListeContratsComm';
-import Souscription from '../contrat/Souscription';
 
-function Commercial() {
+import SouscriptionOPCO from './SouscriptionOPCO';
+import ListeRdv from './ListeRdv';
+
+function CommercialOPCO() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
   const [contratUpdates, setContratUpdates] = useState([]);
@@ -109,17 +110,17 @@ function Commercial() {
   const renderComponent = () => {
     switch (activeComponent) {
       case 'listeContrats':
-        return <ListeContratsComm />;
+        return <ListeRdv />;
       case 'AjoutContrat':
-        return <Souscription />;
+        return <SouscriptionOPCO />;
       default:
-        return <Souscription />;
+        return <SouscriptionOPCO />;
     }
   };
 
   return (
     
-    <div className="flex bg-blue-gray-100">
+    <div className="flex">
       {/* Barre latérale */}
 
       <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
@@ -150,7 +151,7 @@ function Commercial() {
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
             </ListItemPrefix>
-            Consulter la liste des contrats
+             la liste des rendez-vous
           </ListItem>
 
           <ListItem
@@ -158,9 +159,9 @@ function Commercial() {
             className="hover:bg-blue-600 text-white"
           >
             <ListItemPrefix>
-              <FaFileSignature className="h-5 w-5" />
+              <IoCalendarNumber className="h-5 w-5" />
             </ListItemPrefix>
-            Souscription 
+            Ajouter un rendez-vous 
           </ListItem>
 
           <ListItem
@@ -213,4 +214,4 @@ function Commercial() {
   );
 }
 
-export default Commercial;
+export default CommercialOPCO;
