@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb://localhost:27017/mydatabase')
+mongoose.connect('mongodb://mongodb:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
@@ -295,18 +295,44 @@ app.put('/api/contrats/:id', async (req, res) => {
 });
 
 
-// Mettre à jour un rendez-vous
+// Route pour mettre à jour un RDV
 app.put('/api/rdvs/:id', async (req, res) => {
   try {
-    const updatedRdv = await Rdv.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedRdv) {
-      return res.status(404).json({ message: 'Rendez-vous non trouvé' });
+    // Vérifier si l'ID est valide
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'ID de contrat invalide' });
     }
-    res.status(200).json({ message: 'Rendez-vous mis à jour avec succès', updatedRdv });
+
+    const currentContrat = await Contrat.findById(req.params.id);
+    if (!currentContrat) {
+      return res.status(404).json({ message: 'Contrat non trouvé' });
+    }
+
+    const updatedContrat = await Contrat.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+    const updatedFields = {};
+    Object.keys(req.body).forEach(key => {
+      if (currentContrat[key] !== req.body[key]) {
+        updatedFields[key] = { old: currentContrat[key], new: req.body[key] };
+      }
+    });
+
+    if (Object.keys(updatedFields).length > 0) {
+      const contratUpdate = new ContratUpdate({
+        contratId: req.params.id,
+        modifiedBy: req.user ? req.user.name : 'Anonyme',
+        updatedFields,
+      });
+      await contratUpdate.save();
+    }
+
+    res.status(200).json({ message: 'Contrat mis à jour avec succès', contrat: updatedContrat });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la mise à jour du rendez-vous' });
+    console.error('Erreur détaillée :', error);  // Log détaillé pour débogage
+    res.status(500).json({ message: 'Erreur lors de la mise à jour du contrat' });
   }
 });
+
 
 // Route pour supprimer un contrat
 app.delete('/api/contrats/:id', async (req, res) => {
