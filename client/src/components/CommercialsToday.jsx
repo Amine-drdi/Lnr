@@ -9,7 +9,7 @@ function CommercialsToday() {
     const fetchCommercials = async () => {
       setLoading(true); // Indiquer que le chargement a commencé
       try {
-        const response = await fetch('http://localhost:5000/api/contrats/commercials-today');
+        const response = await fetch('http://51.83.69.195:5000/api/contrats/commercials-today');
         
         if (!response.ok) {
           const text = await response.text();
