@@ -123,7 +123,7 @@ function App() {
         />
         <Route 
           path="/commerciale" 
-          element={<PrivateRoute element={<Commercial />} allowedRoles={['Commercial']} />} 
+          element={<PrivateRoute element={<Commercial />} allowedRoles={['Commerciale']} />} 
         />
         <Route 
           path="/direction" 
