@@ -33,17 +33,18 @@ const RDVSchema = new mongoose.Schema({
         required: true
       },
       datePriseRDV: {
-        type: Date,
+        type: String,
         required: true
       },
       dateRDV: {
-        type: Date,
+        type: String,
         required: true
       },
       heureRDV: {
         type: String, // Optionnel, vous pouvez utiliser "Date" si vous gérez l'heure avec précision
         required: true
       },
+      commentaireManager : String ,
       dateInsertion: {
         type: Date,
         default: Date.now // La date et l'heure de l'insertion sont automatiquement générées ici

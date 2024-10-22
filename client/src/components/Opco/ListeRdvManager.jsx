@@ -15,7 +15,7 @@ function ListeRdvManager() {
   useEffect(() => {
     const fetchRdvs = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/rdvs');
+        const response = await fetch('http://localhost:5000/api/rdvs');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des rendez-vous');
         }
@@ -65,7 +65,7 @@ function ListeRdvManager() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/rdvs/${selectedRdv._id}`, {
+      const response = await fetch(`http://localhost:5000/api/rdvs/${selectedRdv._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -124,6 +124,8 @@ function ListeRdvManager() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date Prise RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure RDV</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Manager</th>
+
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -142,6 +144,7 @@ function ListeRdvManager() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.datePriseRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.dateRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.heureRDV}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireManager}</td>
               </tr>
             ))}
           </tbody>
@@ -165,6 +168,7 @@ function ListeRdvManager() {
                 <p className="text-left"><strong>Date prise RDV:</strong> {selectedRdv.datePriseRDV}</p>
                 <p className="text-left"><strong>Date RDV :</strong> {selectedRdv.dateRDV}</p>
                 <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>
+                <p className="text-left"><strong>Commentaire manager :</strong> {selectedRdv.commentaireManager}</p>
 
 
                 
@@ -269,7 +273,25 @@ function ListeRdvManager() {
                       className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
                     />
                   </label>
-                  {/* Other form fields */}
+                
+                  <label className="block mb-2">
+                    <span className="text-gray-700">Commentaire manager:</span>
+                    <select
+                     name="commentaireManager"
+                     value={formData.commentaireManager}
+                     onChange={handleInputChange}
+                     className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
+                    >
+                      <option value=""></option>
+                       <option value="Validé">Validé</option>
+                       <option value="non Validé">non Validé</option>
+                       <option value="R2">R2</option>
+                       <option value="R3">R3</option>
+                       <option value="Pas intéressé">Pas intéressé</option>
+                       <option value="Déjà engagé">Déjà engagé</option>
+                    </select>
+
+                  </label>
                   <button
                     onClick={handleSubmit}
                     className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"

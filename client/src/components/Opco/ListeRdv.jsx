@@ -13,7 +13,7 @@ function ListeRdv() {
   useEffect(() => {
     const fetchRdvs = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/rdvs');
+        const response = await fetch('http://localhost:5000/api/rdvs');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des rendez-vous');
         }
@@ -83,6 +83,8 @@ function ListeRdv() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date Prise RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure RDV</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Manager</th>
+
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -104,6 +106,8 @@ function ListeRdv() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.datePriseRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.dateRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.heureRDV}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireManager}</td>
+                
               </tr>
             ))}
           </tbody>
@@ -124,8 +128,10 @@ function ListeRdv() {
             <p className="text-left"><strong>Date Prise RDV :</strong> {selectedRdv.datePriseRDV}</p>
             <p className="text-left"><strong>Date RDV :</strong> {selectedRdv.dateRDV}</p>
             <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>
+            <p className="text-left"><strong>Commentaire Manager :</strong> {selectedRdv.commentaireManager}</p>
 
-            <button
+
+            <button   
               onClick={closeModal}
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
             >
