@@ -177,13 +177,30 @@ function SouscriptionOPCO({ setIsAdding }) {
           </div>
           <div>
             <label htmlFor="formation" className="block text-sm font-medium text-blue-gray-700">Formation demandée</label>
-            <input
-              id="formation"
-              type="text"
-              value={formation}
-              onChange={(e) => setFormation(e.target.value)}
-              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
-            />
+            <select
+             id="formation"
+             value={formation}
+             onChange={(e) => setFormation([...e.target.selectedOptions].map(option => option.value))}
+             className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
+             multiple
+            >
+           <option value="Transformation numérique">Transformation numérique</option>
+           <option value="échafaudage fixe">échafaudage fixe</option>
+           <option value="Habilitations Électriques B0">Habilitations Électriques B0</option>
+           <option value="La cybersécurité">La cybersécurité</option>
+           <option value="développement durable">développement durable</option>
+           <option value="Autocad">Autocad</option>
+           <option value="CACES R482">CACES R482</option>
+           <option value="CACES R486">CACES R486</option>
+           <option value="CACES R489">CACES R489</option>
+           <option value="Echafaudage roulant">Echafaudage roulant</option>
+           <option value="Habilitations électriques">Habilitations électriques</option>
+           <option value="Revit">Revit</option>
+           <option value="RGE">RGE</option>
+           <option value="Sketchup">Sketchup</option>
+           <option value="SST initial">SST initial</option>
+           <option value="Travail en hauteur">Travail en hauteur</option>
+           </select>
           </div>
           <div>
             <label htmlFor="datePriseRDV" className="block text-sm font-medium text-blue-gray-700">Date de prise de rendez-vous</label>

@@ -173,6 +173,7 @@ function ListeRdvCommVente() {
             <p className="text-left"><strong>Adresse :</strong> {selectedRdv.adresse}</p>
             <p className="text-left"><strong>Code Postal :</strong> {selectedRdv.codePostal}</p>
             <p className="text-left"><strong>Ville :</strong> {selectedRdv.ville}</p>
+            <p className="text-left"><strong>Formation :</strong> {selectedRdv.formation}</p>
             <p className="text-left"><strong>Date Prise RDV :</strong> {selectedRdv.datePriseRDV}</p>
             <p className="text-left"><strong>Date RDV :</strong> {selectedRdv.dateRDV}</p>
             <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>
