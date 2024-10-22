@@ -1,12 +1,12 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
-import  Gestionnaire  from './components/role/Gestionnaire';
+import Gestionnaire from './components/role/Gestionnaire';
 import Commercial from './components/role/Commercial';
 import Signup from './components/Signup';
 import ListeEmp from './components/ListeEmp';
 import Calend from './components/Calend';
-import PrivateRoute from './components/PrivateRoute'; // Importez le composant PrivateRoute
+import PrivateRoute from './components/PrivateRoute'; 
 import { Direction } from './components/role/Direction';
 import ListeContratsGestio from './components/contrat/ListeContratsGestio';
 import ListeContratsComm from './components/contrat/ListeContratsComm';
@@ -28,8 +28,8 @@ import ManagerOPCO from './components/Opco/ManagerOPCO';
 import CommercialOPCO from './components/Opco/CommercialOPCO';
 import ListeRdv from './components/Opco/ListeRdv';
 import ListeRdvManager from './components/Opco/ListeRdvManager';
-
-
+import CommercialVente from './components/Opco/CommercialVente';
+import ListeRdvCommVente from './components/Opco/ListeRdvCommVente';
 
 function App() {
   return (
@@ -37,51 +37,113 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Signup />} />
-        <Route path="/contratsGest" element={<ListeContratsGestio />} />
-        <Route path="/contratsComm" element={<ListeContratsComm />} />
-        <Route path="/contratsDire" element={<ListeContratsDirec/>} />
-        <Route path="/contratsManager" element={<ListeContratsManager />} />
-        <Route path="/ajouter-contrat" element={<Souscription />} />
-        <Route path="/Liste-employe" element={<ListeEmp />} />
-        <Route path="/ajout-employe" element={<AddAgent/>} />
-       {/* <Route path="/gestionnaire-contrats" element={<ContratsGestionnaire />} />*/}
-        <Route path="/dashboard" element={<Dashboard/>} />
-        <Route path="/commToday" element={<CommercialsToday />} />
-        <Route path="/commClassement" element={<CommercialChart />} />
-     {/*   <Route path="/chartContrat" element={<ProgressionChart />} />   */}
-     <Route path="/chart" element={<Chart/>} />
-        <Route path="/calendrier" element={<Calend />} />
-        <Route path="/profile-settings" element={<ProfileSetting/>} />
-        <Route path="/contrats-non-valide" element={<ContratNonValide />} />
-        <Route path="/contrats-non-valideGestio" element={<ContratNvalideGestio />} />
-        <Route path="/souscription-OPCO" element={<SouscriptionOPCO />} />
-        <Route path="/liste-RDV" element={<ListeRdv />} />
-        <Route path="/liste-RDV-manager" element={<ListeRdvManager />} />
+        
         {/* Routes protégées */}
+        <Route 
+          path="/contratsGest" 
+          element={<PrivateRoute element={<ListeContratsGestio />} allowedRoles={['Gestionnaire']} />} 
+        />
+        <Route 
+          path="/contratsComm" 
+          element={<PrivateRoute element={<ListeContratsComm />} allowedRoles={['Commercial']} />} 
+        />
+        <Route 
+          path="/contratsDire" 
+          element={<PrivateRoute element={<ListeContratsDirec />} allowedRoles={['Direction']} />} 
+        />
+        <Route 
+          path="/contratsManager" 
+          element={<PrivateRoute element={<ListeContratsManager />} allowedRoles={['Manager']} />} 
+        />
+        <Route 
+          path="/ajouter-contrat" 
+          element={<PrivateRoute element={<Souscription />} allowedRoles={['Gestionnaire', 'Commercial']} />} 
+        />
+        <Route 
+          path="/Liste-employe" 
+          element={<PrivateRoute element={<ListeEmp />} allowedRoles={['Manager']} />} 
+        />
+        <Route 
+          path="/ajout-employe" 
+          element={<PrivateRoute element={<AddAgent />} allowedRoles={['Manager']} />} 
+        />
+        <Route 
+          path="/dashboard" 
+          element={<PrivateRoute element={<Dashboard />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
+        />
+        <Route 
+          path="/commToday" 
+          element={<PrivateRoute element={<CommercialsToday />} allowedRoles={['Commercial', 'Manager']} />} 
+        />
+        <Route 
+          path="/commClassement" 
+          element={<PrivateRoute element={<CommercialChart />} allowedRoles={['Commercial', 'Manager']} />} 
+        />
+        <Route 
+          path="/chart" 
+          element={<PrivateRoute element={<Chart />} allowedRoles={['Gestionnaire', 'Direction', 'Manager']} />} 
+        />
+        <Route 
+          path="/calendrier" 
+          element={<PrivateRoute element={<Calend />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
+        />
+        <Route 
+          path="/profile-settings" 
+          element={<PrivateRoute element={<ProfileSetting />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
+        />
+        <Route 
+          path="/contrats-non-valide" 
+          element={<PrivateRoute element={<ContratNonValide />} allowedRoles={['Direction', 'Manager']} />} 
+        />
+        <Route 
+          path="/contrats-non-valideGestio" 
+          element={<PrivateRoute element={<ContratNvalideGestio />} allowedRoles={['Gestionnaire']} />} 
+        />
+        <Route 
+          path="/souscription-OPCO" 
+          element={<PrivateRoute element={<SouscriptionOPCO />} allowedRoles={['Gestionnaire', 'ManagerOPCO']} />} 
+        />
+        <Route 
+          path="/liste-RDV" 
+          element={<PrivateRoute element={<ListeRdv />} allowedRoles={['CommercialeOPCO', 'ManagerOPCO']} />} 
+        />
+        <Route 
+          path="/liste-RDV-manager" 
+          element={<PrivateRoute element={<ListeRdvManager />} allowedRoles={['ManagerOPCO']} />} 
+        />
+        <Route 
+          path="/liste-RDV-commercial" 
+          element={<PrivateRoute element={<ListeRdvCommVente />} allowedRoles={['ManagerOPCO' ,'CommercialeVente']} />} 
+        />
+
+        {/* Rôles spécifiques */}
         <Route 
           path="/gestionnaire" 
           element={<PrivateRoute element={<Gestionnaire />} allowedRoles={['Gestionnaire']} />} 
         />
-
         <Route 
           path="/commerciale" 
-          element={<PrivateRoute element={<Commercial />} allowedRoles={['Commerciale']} />} 
+          element={<PrivateRoute element={<Commercial />} allowedRoles={['Commercial']} />} 
         />
         <Route 
           path="/direction" 
-          element={<PrivateRoute element={<Direction/>} allowedRoles={['Direction']} />} 
+          element={<PrivateRoute element={<Direction />} allowedRoles={['Direction']} />} 
         />
         <Route 
           path="/manager" 
-          element={<PrivateRoute element={<Manager/>} allowedRoles={['Manager']} />} 
+          element={<PrivateRoute element={<Manager />} allowedRoles={['Manager']} />} 
         />
         <Route 
           path="/manager-OPCO" 
-          element={<PrivateRoute element={<ManagerOPCO/>} allowedRoles={['ManagerOPCO']} />} 
-        />d
+          element={<PrivateRoute element={<ManagerOPCO />} allowedRoles={['ManagerOPCO']} />} 
+        />
         <Route 
           path="/Commercial-OPCO" 
-          element={<PrivateRoute element={<CommercialOPCO/>} allowedRoles={['CommercialeOPCO']} />} 
+          element={<PrivateRoute element={<CommercialOPCO />} allowedRoles={['CommercialeOPCO']} />} 
+        />
+                <Route 
+          path="/Commercial-Vente" 
+          element={<PrivateRoute element={<CommercialVente />} allowedRoles={['CommercialeVente']} />} 
         />
       </Routes>
     </Router>

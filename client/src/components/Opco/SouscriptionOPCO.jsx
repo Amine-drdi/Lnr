@@ -14,6 +14,7 @@ function SouscriptionOPCO({ setIsAdding }) {
   const [datePriseRDV, setDatePriseRDV] = useState('');
   const [dateRDV, setDateRDV] = useState('');
   const [heureRDV, setHeureRDV] = useState('');
+  const [userName, setUserName] = useState('');
 
   const textInput = useRef(null);
   const navigate = useNavigate(); 
@@ -27,11 +28,12 @@ function SouscriptionOPCO({ setIsAdding }) {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
+          setUserName(response.data.user.name);
         } else {
           navigate('/');
         }
@@ -43,6 +45,9 @@ function SouscriptionOPCO({ setIsAdding }) {
 
     fetchProfile();
   }, [navigate]);
+
+
+
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -68,10 +73,11 @@ function SouscriptionOPCO({ setIsAdding }) {
       datePriseRDV,
       dateRDV,
       heureRDV,
+      userName
     };
 
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/rdvs', {
+      const response = await fetch('http://localhost:5000/api/rdvs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

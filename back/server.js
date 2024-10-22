@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb://mongodb:27017/mydatabase')
+mongoose.connect('mongodb://localhost:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
@@ -213,6 +213,7 @@ app.post('/api/rdvs', async (req, res) => {
       datePriseRDV,
       dateRDV,
       heureRDV,
+      userName
     } = req.body;
 
     const newRDV = new RDV({
@@ -226,6 +227,7 @@ app.post('/api/rdvs', async (req, res) => {
       datePriseRDV,
       dateRDV,
       heureRDV,
+      userName
     });
 
     await newRDV.save();

@@ -2,23 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@material-tailwind/react";
+import {
   Card,
   Typography,
   List,
   ListItem,
   ListItemPrefix,
+  Badge,
 } from "@material-tailwind/react";
-import { FaFileContract, FaFileSignature } from "react-icons/fa6";
+import { IoIosNotifications } from "react-icons/io";
+import { IoCalendarNumber } from "react-icons/io5";
+import { CiBoxList } from "react-icons/ci";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import logo from "../../assets/logo.png";
-import img from "../../assets/manager.png";
-import Souscription from '../contrat/Souscription';
-import ListeContratsManager from '../contrat/ListeContratsManager';
-import { CiBoxList } from "react-icons/ci";
-function Manager() {
+import img from "../../assets/user.png";
+import ListeRdvCommVente from './ListeRdvCommVente';
+
+function CommercialVente() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
+  const [contratUpdates, setContratUpdates] = useState([]);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleOpen = () => setOpen(!open);
 
   useEffect(() => {
     // Fonction pour récupérer les informations du profil
@@ -41,46 +54,72 @@ function Manager() {
       }
     };
 
+    // Fonction pour récupérer les modifications des contrats
+    const fetchContratUpdates = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/contrat-updates');
+        setContratUpdates(response.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des mises à jour :", error);
+      }
+    };
+
     fetchProfile();
+    fetchContratUpdates();
+
+    // Configurer l'intervalle de polling
+    const intervalId = setInterval(() => {
+      fetchContratUpdates();
+    }, 5000); // Actualiser toutes les 5 secondes
+
+    // Nettoyer l'intervalle lorsqu'on démonte le composant
+    return () => clearInterval(intervalId);
   }, [navigate]);
 
-  // Logout function
+  
+
+  // Fonction pour se déconnecter
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userInfo');
     navigate('/');
   };
 
-  // Function to render the correct component based on state
+  // Fonction pour rendre le bon composant selon l'état
   const renderComponent = () => {
     switch (activeComponent) {
       case 'listeContrats':
-        return <ListeContratsManager />;
-      case 'AjoutContrat':
-        return <Souscription />;
+        return <ListeRdvCommVente />;
       default:
-        return <Souscription />;
+        return <ListeRdvCommVente />;
     }
   };
 
   return (
-    <div className="flex bg-blue-gray-100">
-      {/* Sidebar */}
-      <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">        {/* Logo */}
+    
+    <div className="flex">
+      {/* Barre latérale */}
+
+      <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
+        {/* Logo */}
         <img
           className="object-cover w-auto h-24"
           src={logo}
           alt="Company Logo"
         />
 
-          <div className="text-light-blue-900 pl-5 mb-4 pt-8 flex items-center space-x-2">
+        <div className="text-light-blue-900 pl-5 mb-4 pt-8 flex items-center space-x-2">
           <Typography variant="h6" className="flex items-center">
-            <img className="object-cover w-auto h-12" src={img} alt="User" />
+            {/*<Badge content={contratUpdates.length} overlap="circular">
+              <button onClick={handleOpen}>*/}
+                <img className="object-cover w-auto h-12" src={img} alt="User" />
+              {/*</button>
+            </Badge>*/}
             {userName}
           </Typography>
         </div>
 
-        {/* Menu List */}
+        {/* Liste de menus */}
         <List>
           <ListItem
             onClick={() => setActiveComponent('listeContrats')}
@@ -89,17 +128,7 @@ function Manager() {
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
             </ListItemPrefix>
-            Consulter la liste des contrats
-          </ListItem>
-
-          <ListItem
-            onClick={() => setActiveComponent('AjoutContrat')}
-            className="hover:bg-blue-600 text-white"
-          >
-            <ListItemPrefix>
-              <FaFileSignature className="h-5 w-5" />
-            </ListItemPrefix>
-            Ajouter un Contrat
+             la liste des rendez-vous
           </ListItem>
 
           <ListItem
@@ -112,14 +141,22 @@ function Manager() {
             Se déconnecter
           </ListItem>
         </List>
-      </Card>
 
-      {/* Content Area */}
+      </Card>
+      
+
+
+
       <div className="flex-1 p-6">
+
+        
         {renderComponent()}
+              {/* Zone de contenu */}
+
+      
       </div>
     </div>
   );
 }
 
-export default Manager;
+export default CommercialVente;

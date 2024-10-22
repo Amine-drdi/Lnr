@@ -15,7 +15,7 @@ function ListeRdvManager() {
   useEffect(() => {
     const fetchRdvs = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/rdvs');
+        const response = await fetch('http://localhost:5000/api/rdvs');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des rendez-vous');
         }
@@ -65,7 +65,7 @@ function ListeRdvManager() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/rdvs/${selectedRdv._id}`, {
+      const response = await fetch(`http://localhost:5000/api/rdvs/${selectedRdv._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -114,6 +114,7 @@ function ListeRdvManager() {
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Entreprise</th>
@@ -124,7 +125,9 @@ function ListeRdvManager() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date Prise RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure RDV</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Manager</th>
+
 
             </tr>
           </thead>
@@ -134,6 +137,7 @@ function ListeRdvManager() {
                 <td className="px-4 py-3 text-sm text-gray-700">
                   <FaEye className="text-blue-500 cursor-pointer w-4 h-4" onClick={() => handleViewRdv(RDV)} />
                 </td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.userName}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.nom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.prenom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.entreprise}</td>
@@ -144,6 +148,7 @@ function ListeRdvManager() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.datePriseRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.dateRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.heureRDV}</td>
+                <td className="px-4 py-3 text-sm text-red-500">{RDV.commentaireCommercial}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireManager}</td>
               </tr>
             ))}
@@ -158,6 +163,7 @@ function ListeRdvManager() {
             {!isEditing ? (
               <>
                 <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Rendez-vous</h2>
+                <p className="text-left"><strong>Agent :</strong> {selectedRdv.userName}</p>
                 <p className="text-left"><strong>Nom :</strong> {selectedRdv.nom}</p>
                 <p className="text-left"><strong>Prénom :</strong> {selectedRdv.prenom}</p>
                 <p className="text-left"><strong>Nom du l'entreprise :</strong> {selectedRdv.entreprise}</p>
@@ -169,7 +175,7 @@ function ListeRdvManager() {
                 <p className="text-left"><strong>Date RDV :</strong> {selectedRdv.dateRDV}</p>
                 <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>
                 <p className="text-left"><strong>Commentaire manager :</strong> {selectedRdv.commentaireManager}</p>
-
+                <p className="text-left"><strong>Commentaire Commercial :</strong><span className="text-red-500"> {selectedRdv.commentaireCommercial}</span></p>
 
                 
                 <button
@@ -183,6 +189,15 @@ function ListeRdvManager() {
               <>
                 <h2 className="text-2xl text-blue-500 font-semibold mb-4">Modifier le Rendez-vous</h2>
                 <form>
+                <label className="block mb-2">
+                    <span className="text-gray-700">Agent :</span>
+                    <input
+                      name="userName"
+                      value={formData.userName}
+                      onChange={handleInputChange}
+                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
+                    />
+                  </label>
                   <label className="block mb-2">
                     <span className="text-gray-700">Nom :</span>
                     <input
@@ -282,7 +297,7 @@ function ListeRdvManager() {
                      onChange={handleInputChange}
                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
                     >
-                      <option value=""></option>
+                      <option value="">choisissez une option </option>
                        <option value="Validé">Validé</option>
                        <option value="non Validé">non Validé</option>
                        <option value="R2">R2</option>

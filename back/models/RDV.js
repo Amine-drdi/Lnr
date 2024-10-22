@@ -45,10 +45,12 @@ const RDVSchema = new mongoose.Schema({
         required: true
       },
       commentaireManager : String ,
+      commentaireCommercial : String ,
       dateInsertion: {
         type: Date,
         default: Date.now // La date et l'heure de l'insertion sont automatiquement générées ici
-      }
+      },
+      userName : String ,
 });
 
 const RDV = mongoose.model('RDV', RDVSchema);

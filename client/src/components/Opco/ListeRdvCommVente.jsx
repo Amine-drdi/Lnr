@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
 
-function ListeRdv() {
+function ListeRdvCommVente() {
   const [rdvs, setRdvs] = useState([]);
   const [filteredRdvs, setFilteredRdvs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,6 +9,7 @@ function ListeRdv() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRdv, setSelectedRdv] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [commentaireCommercial, setCommentaireCommercial] = useState('');
 
   useEffect(() => {
     const fetchRdvs = async () => {
@@ -29,22 +30,71 @@ function ListeRdv() {
     fetchRdvs();
   }, []);
 
+  // Fonction pour formater la date en 'yyyy-mm-dd'
+  const formatDate = (date) => {
+    return date.toISOString().split('T')[0];
+  };
+
   useEffect(() => {
-    if (rdvs && Array.isArray(rdvs)) {  // Vérifie si rdvs est défini et est un tableau
-      const results = rdvs.filter((rdv) =>
-        `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+    if (rdvs && Array.isArray(rdvs)) {
+      const now = new Date();
+      const today = formatDate(now); // Obtenir la date du jour au format 'yyyy-mm-dd'
+      const currentTime = now.getHours() * 60 + now.getMinutes(); // Convertir l'heure actuelle en minutes
+
+      // Filtrer les RDV par date et recherche
+      const results = rdvs.filter((rdv) => {
+        const rdvDate = rdv.dateRDV; // 'yyyy-mm-dd'
+        const [rdvHour, rdvMinute] = rdv.heureRDV.split(':').map(Number); // Convertir l'heure de RDV en heures et minutes
+        const rdvTime = rdvHour * 60 + rdvMinute; // Convertir l'heure de RDV en minutes
+
+        // Comparer les dates et s'assurer que RDV n'est pas passé
+        if (rdvDate === today) {
+          return rdvTime >= currentTime && `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase());
+        }
+        return rdvDate > today && `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+
       setFilteredRdvs(results);
     }
   }, [searchTerm, rdvs]);
-  
 
   const closeModal = () => {
     setShowModal(false);
+    setSelectedRdv(null);
   };
+
   const handleViewRdv = (RDV) => {
     setSelectedRdv(RDV);
+    setCommentaireCommercial(RDV.commentaireCommercial || '');
     setShowModal(true);
+  };
+
+  const handleSaveComment = async () => {
+    if (selectedRdv) {
+      try {
+        const response = await fetch(`http://localhost:5000/api/rdvs/${selectedRdv._id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ commentaireCommercial }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur lors de la mise à jour du commentaire');
+        }
+
+        const updatedRdv = { ...selectedRdv, commentaireCommercial };
+        setRdvs((prevRdvs) =>
+          prevRdvs.map((rdv) =>
+            rdv._id === selectedRdv._id ? updatedRdv : rdv
+          )
+        );
+        closeModal();
+      } catch (error) {
+        setError(error.message);
+      }
+    }
   };
 
   if (loading) {
@@ -57,7 +107,7 @@ function ListeRdv() {
 
   return (
     <div className="max-w-full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-semibold text-left  text-blue-gray-700 mb-6 border-b pb-4 ">Liste des Rendez-vous</h1>
+      <h1 className="text-3xl font-semibold text-left text-blue-gray-700 mb-6 border-b pb-4">Liste des Rendez-vous</h1>
       <div className="mb-4">
         <input
           type="text"
@@ -73,7 +123,6 @@ function ListeRdv() {
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Entreprise</th>
@@ -84,9 +133,7 @@ function ListeRdv() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date Prise RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure RDV</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Manager</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Commercial</th>
-
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire commercial</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -97,7 +144,7 @@ function ListeRdv() {
                     className="text-blue-500 cursor-pointer w-4 h-4"
                     onClick={() => handleViewRdv(RDV)}
                   />
-                </td><td className="px-4 py-3 text-sm text-gray-700">{RDV.userName}</td>
+                </td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.nom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.prenom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.entreprise}</td>
@@ -108,10 +155,7 @@ function ListeRdv() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.datePriseRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.dateRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.heureRDV}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireManager}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireCommercial}</td>
-
-                
               </tr>
             ))}
           </tbody>
@@ -123,7 +167,6 @@ function ListeRdv() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
             <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Rendez-vous</h2>
-            <p className="text-left"><strong>Agent :</strong> {selectedRdv.userName}</p>
             <p className="text-left"><strong>Nom :</strong> {selectedRdv.nom}</p>
             <p className="text-left"><strong>Prénom :</strong> {selectedRdv.prenom}</p>
             <p className="text-left"><strong>Entreprise :</strong> {selectedRdv.entreprise}</p>
@@ -133,15 +176,28 @@ function ListeRdv() {
             <p className="text-left"><strong>Date Prise RDV :</strong> {selectedRdv.datePriseRDV}</p>
             <p className="text-left"><strong>Date RDV :</strong> {selectedRdv.dateRDV}</p>
             <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>
-            <p className="text-left"><strong>Commentaire Commercial :</strong> {selectedRdv.commentaireCommercial}</p>
 
+            <label className="block mb-2 text-left"><strong>Commentaire Commercial :</strong></label>
+            <textarea
+              value={commentaireCommercial}
+              onChange={(e) => setCommentaireCommercial(e.target.value)}
+              className="w-full px-3 py-2 border rounded"
+            />
 
-            <button   
-              onClick={closeModal}
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            >
-              Fermer
-            </button>
+            <div className="mt-4 flex justify-between">
+              <button
+                onClick={handleSaveComment}
+                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              >
+                Enregistrer
+              </button>
+              <button
+                onClick={closeModal}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Fermer
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -149,4 +205,4 @@ function ListeRdv() {
   );
 }
 
-export default ListeRdv;
+export default ListeRdvCommVente;
