@@ -21,6 +21,7 @@ import { FaHeartbeat } from "react-icons/fa";
 import { GiDiploma } from "react-icons/gi";
 import { IoSettingsSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
+import { FaListCheck } from "react-icons/fa6";
 import logo from "../../assets/logo.png";
 import img from "../../assets/direction.png";
 import ListeContratsDirec from "../contrat/ListeContratsDirec";
@@ -128,7 +129,7 @@ export function Direction() {
                 
                 <ListItem onClick={() => setActiveComponent('listeContrats')} className="hover:bg-blue-600 text-white pl-10">
                   <ListItemPrefix>
-                    <FaFileContract className="h-5 w-5 text-white" />
+                    <FaListCheck className="h-5 w-5 text-white" />
                   </ListItemPrefix>
                   Consulter la liste des contrats
                 </ListItem>
@@ -163,7 +164,7 @@ export function Direction() {
               <List className="p-0">
                 <ListItem onClick={() => setActiveComponent('RDV')} className="hover:bg-blue-600 text-white pl-10">
                   <ListItemPrefix>
-                    <PresentationChartBarIcon className="h-5 w-5 text-white " />
+                    <FaListCheck className="h-5 w-5 text-white " />
                   </ListItemPrefix>
                   Liste des RDV opco
                 </ListItem>
