@@ -30,6 +30,7 @@ import ListeRdv from './components/Opco/ListeRdv';
 import ListeRdvManager from './components/Opco/ListeRdvManager';
 import CommercialVente from './components/Opco/CommercialVente';
 import ListeRdvCommVente from './components/Opco/ListeRdvCommVente';
+import Formation from './components/Opco/Formation';
 
 function App() {
   return (
@@ -115,7 +116,10 @@ function App() {
           path="/liste-RDV-commercial" 
           element={<PrivateRoute element={<ListeRdvCommVente />} allowedRoles={['ManagerOPCO' ,'CommercialeVente']} />} 
         />
-
+        <Route 
+          path="/formation" 
+          element={<PrivateRoute element={<Formation />} allowedRoles={['SouscriptionOPCO']} />} 
+        />
         {/* Rôles spécifiques */}
         <Route 
           path="/gestionnaire" 

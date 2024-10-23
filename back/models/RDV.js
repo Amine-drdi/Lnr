@@ -29,7 +29,7 @@ const RDVSchema = new mongoose.Schema({
         required: true
       },
       formation: {
-        type: String,
+        type: Array,
         required: true
       },
       datePriseRDV: {

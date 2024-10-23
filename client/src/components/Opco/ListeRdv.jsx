@@ -13,7 +13,7 @@ function ListeRdv() {
   useEffect(() => {
     const fetchRdvs = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/rdvs');
+        const response = await fetch('http://localhost:5000/api/rdvs');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des rendez-vous');
         }
@@ -130,6 +130,7 @@ function ListeRdv() {
             <p className="text-left"><strong>Adresse :</strong> {selectedRdv.adresse}</p>
             <p className="text-left"><strong>Code Postal :</strong> {selectedRdv.codePostal}</p>
             <p className="text-left"><strong>Ville :</strong> {selectedRdv.ville}</p>
+            <p className="text-left"><strong>Formation :</strong> {selectedRdv.formation}</p>
             <p className="text-left"><strong>Date Prise RDV :</strong> {selectedRdv.datePriseRDV}</p>
             <p className="text-left"><strong>Date RDV :</strong> {selectedRdv.dateRDV}</p>
             <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>

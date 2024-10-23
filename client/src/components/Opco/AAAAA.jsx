@@ -2,7 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox, List, ListItem, ListItemPrefix, Typography, Card } from '@material-tailwind/react';
+import {
+  Checkbox,
+  Card,
+  List,
+  ListItem,
+  ListItemPrefix,
+  Typography,
+} from '@material-tailwind/react';
 
 function SouscriptionOPCO({ setIsAdding }) {
   const [nom, setNom] = useState('');
@@ -16,9 +23,19 @@ function SouscriptionOPCO({ setIsAdding }) {
   const [dateRDV, setDateRDV] = useState('');
   const [heureRDV, setHeureRDV] = useState('');
   const [userName, setUserName] = useState('');
-
   const textInput = useRef(null);
   const navigate = useNavigate();
+
+  
+
+  const handleCheckboxChange = (value) => {
+    if (formation.includes(value)) {
+      setFormation(formation.filter((option) => option !== value));
+    } else {
+      setFormation([...formation, value]);
+    }
+  };
+  
 
   useEffect(() => {
     if (textInput.current) {
@@ -50,7 +67,7 @@ function SouscriptionOPCO({ setIsAdding }) {
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    if (!nom || !prenom || !entreprise || !adresse || !codePostal || !ville || !formation || !datePriseRDV || !dateRDV || !heureRDV) {
+    if (!nom || !prenom || !entreprise || !adresse || !codePostal || !ville || !formation.length || !datePriseRDV || !dateRDV || !heureRDV) {
       return Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -107,19 +124,12 @@ function SouscriptionOPCO({ setIsAdding }) {
     }
   };
 
-  const handleCheckboxChange = (option) => {
-    if (formation.includes(option)) {
-      setFormation(formation.filter((item) => item !== option));
-    } else {
-      setFormation([...formation, option]);
-    }
-  };
-
   return (
     <div className="w-full max-w-4xl mx-auto p-8 bg-blue-gray-50 shadow-lg rounded-lg border border-blue-gray-200">
       <form onSubmit={handleAdd} className="space-y-6">
         <h2 className="text-2xl font-bold text-blue-gray-800 mb-4">Formulaire de Rendez-vous</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Input fields */}
           <div>
             <label htmlFor="nom" className="block text-sm font-medium text-blue-gray-700">Nom</label>
             <input
@@ -127,7 +137,7 @@ function SouscriptionOPCO({ setIsAdding }) {
               type="text"
               value={nom}
               onChange={(e) => setNom(e.target.value)}
-              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
+              className="border border-blue-gray-300 rounded-md p-3 w-full"
             />
           </div>
           <div>
@@ -180,6 +190,9 @@ function SouscriptionOPCO({ setIsAdding }) {
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
             />
           </div>
+
+         
+
           <div>
             <label htmlFor="datePriseRDV" className="block text-sm font-medium text-blue-gray-700">Date de prise de rendez-vous</label>
             <input
@@ -210,46 +223,46 @@ function SouscriptionOPCO({ setIsAdding }) {
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
             />
           </div>
-        </div>
-                  {/* Formations Checkbox Grid */}
-                  <div>
-            <label className="block text-sm font-medium text-blue-gray-700">Formations</label>
-            <Card className="w-full border border-blue-gray-300">
-              <List className="flex flex-wrap">
-                {[
-                  ["Transformation numérique ", "Échafaudage fixe ", "Habilitations Électriques B0 "],
-                  ["La cybersécurité ", "Développement durable ", "Autocad "],
-                  ["CACES R482 ", "CACES R486 ", "CACES R489 "],
-                  ["Échafaudage roulant ", "Habilitations électriques ", "Revit "],
-                  ["RGE ", "Sketchup ", "SST initial "],
-                  ["Travail en hauteur "]
-                ].map((row, rowIndex) => (
-                  <div key={rowIndex} className="flex w-full">
-                    {row.map((option, index) => (
-                      <ListItem key={index} className="p-0 w-1/3">
-                        <label className="flex w-full cursor-pointer items-center px-3 py-2">
-                          <ListItemPrefix className="mr-3">
-                            <Checkbox
-                              id={`horizontal-list-${rowIndex}-${index}`}
-                              ripple={false}
-                              checked={formation.includes(option)}
-                              onChange={() => handleCheckboxChange(option)}
-                              value={formation}
-                            />
-                          </ListItemPrefix>
-                          <Typography color="blue-gray" className="font-medium">
-                            {option}
-                          </Typography>
-                        </label>
-                      </ListItem>
-                    ))}
-                  </div>
-                ))}
-              </List>
-            </Card>
           </div>
+          <div>
+  <label className="block text-sm font-medium text-blue-gray-700">Formations</label>
+  <Card className="w-full border border-blue-gray-300">
+    <List className="flex flex-wrap">
+      {[
+        ["Transformation numérique", "Échafaudage fixe", "Habilitations Électriques B0"],
+        ["La cybersécurité", "Développement durable", "Autocad"],
+        ["CACES R482", "CACES R486", "CACES R489"],
+        ["Échafaudage roulant", "Habilitations électriques", "Revit"],
+        ["RGE", "Sketchup", "SST initial"],
+        ["Travail en hauteur"]
+      ].map((row, rowIndex) => (
+        <div key={rowIndex} className="flex w-full">
+          {row.map((option, index) => (
+            <ListItem key={index} className="p-0 w-1/3">
+              <label className="flex w-full cursor-pointer items-center px-3 py-2">
+                <ListItemPrefix className="mr-3">
+                  <Checkbox
+                    id={`horizontal-list-${rowIndex}-${index}`}
+                    ripple={false}
+                    checked={formation.includes(option)}
+                    onChange={() => handleCheckboxChange(option)}
+                  />
+                </ListItemPrefix>
+                <Typography color="blue-gray" className="font-medium">
+                  {option}
+                </Typography>
+              </label>
+            </ListItem>
+          ))}
+        </div>
+      ))}
+    </List>
+  </Card>
+</div>
 
-        <button type="submit" className="bg-blue-gray-600 text-white py-2 px-6 rounded-lg hover:bg-blue-gray-700 transition duration-150">
+
+
+        <button type="submit" className="bg-blue-gray-600 text-white py-2 px-6 rounded-lg">
           Enregistrer le rendez-vous
         </button>
       </form>
