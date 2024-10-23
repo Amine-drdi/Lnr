@@ -81,28 +81,32 @@ function CommercialsToday() {
     </div>
         <div className='pt-10'>
         <h3 className="text-xl font-semibold mb-4">OPCO</h3>
-        {Array.isArray(rdvCounts) && rdvCounts.length === 0 ? (
-  <p>Aucun RDV trouvé pour aujourd'hui.</p>
-) : (
-  Array.isArray(rdvCounts) && (
-    <table className="w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
-      <thead className="bg-blue-gray-500 border-b w-full">
-        <tr>
-          <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
-          <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nombre de RDV</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-gray-200">
-        {rdvCounts.map((rdv) => (
-          <tr className="hover:bg-gray-50 transition-colors" key={rdv._id}>
-            <td className="px-4 py-3 text-center">{rdv._id ? rdv._id : "Utilisateur inconnu"}</td>
-            <td className="px-4 py-3 text-center">{rdv.count}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )
-)}
+        
+        {loading ? ( // Afficher le message de chargement
+        <p>Chargement...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) :
+        rdvCounts.length === 0 ? (
+          <p>Aucun RDV trouvé pour aujourd'hui.</p>
+        ) : (
+          <table className="w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
+            <thead className="bg-blue-gray-500 border-b w-full">
+              <tr>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nombre de RDV</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {rdvCounts.map((rdv) => (
+                <tr className="hover:bg-gray-50 transition-colors" key={rdv._id}>
+                  <td  className="px-4 py-3 text-center">{rdv._id ? rdv._id : "Utilisateur inconnu"}</td> {/* Si userName est vide */}
+                  <td className="px-4 py-3 text-center">{rdv.count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
       </div>
   );
