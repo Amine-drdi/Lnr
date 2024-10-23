@@ -220,7 +220,7 @@ function SouscriptionOPCO({ setIsAdding }) {
                   ["Transformation numérique ", "Échafaudage fixe ", "Habilitations Électriques B0 "],
                   ["La cybersécurité ", "Développement durable ", "Autocad "],
                   ["CACES R482 ", "CACES R486 ", "CACES R489 "],
-                  ["Échafaudage roulant ", "Habilitations électriques ", "Revit "],
+                  ["Échafaudage roulant ", "Habilitations électriques B1V ", "Revit "],
                   ["RGE ", "Sketchup ", "SST initial "],
                   ["Travail en hauteur "]
                 ].map((row, rowIndex) => (
