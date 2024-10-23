@@ -206,6 +206,7 @@ app.post('/api/rdvs', async (req, res) => {
       nom,
       prenom,
       entreprise,
+      nbrempl,
       adresse,
       codePostal,
       ville,
@@ -220,6 +221,7 @@ app.post('/api/rdvs', async (req, res) => {
       nom,
       prenom,
       entreprise,
+      nbrempl,
       adresse,
       codePostal,
       ville,
@@ -319,6 +321,19 @@ app.put('/api/rdvs/:id', async (req, res) => {
   }
 });
 
+// Route pour supprimer un RDV 
+app.delete('/api/rdvs/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await RDV.findByIdAndDelete(id);
+    if (!result) {
+      return res.status(404).send('Rendez-vous non trouvé');
+    }
+    res.status(204).send(); // No content
+  } catch (error) {
+    res.status(500).send('Erreur lors de la suppression du rendez-vous');
+  }
+});
 
 
 // Route pour supprimer un contrat

@@ -16,6 +16,10 @@ const RDVSchema = new mongoose.Schema({
         type: String,
         required: true
       },
+      nbrempl: {
+        type: Number,
+        required: true
+      },
       adresse: {
         type: String,
         required: true

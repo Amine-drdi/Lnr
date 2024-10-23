@@ -31,6 +31,7 @@ import ListeRdvManager from './components/Opco/ListeRdvManager';
 import CommercialVente from './components/Opco/CommercialVente';
 import ListeRdvCommVente from './components/Opco/ListeRdvCommVente';
 import Formation from './components/Opco/Formation';
+import ListeRdvDirection from './components/Opco/ListRdvDirection';
 
 function App() {
   return (
@@ -111,6 +112,10 @@ function App() {
         <Route 
           path="/liste-RDV-manager" 
           element={<PrivateRoute element={<ListeRdvManager />} allowedRoles={['ManagerOPCO']} />} 
+        />
+          <Route 
+          path="/liste-RDV-direction" 
+          element={<PrivateRoute element={<ListeRdvDirection />} allowedRoles={['Direction']} />} 
         />
         <Route 
           path="/liste-RDV-commercial" 

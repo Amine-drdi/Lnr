@@ -8,6 +8,7 @@ function SouscriptionOPCO({ setIsAdding }) {
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
   const [entreprise, setEntreprise] = useState('');
+  const [nbrempl, setNbrempl] = useState('');
   const [adresse, setAdresse] = useState('');
   const [codePostal, setCodePostal] = useState('');
   const [ville, setVille] = useState('');
@@ -50,7 +51,7 @@ function SouscriptionOPCO({ setIsAdding }) {
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    if (!nom || !prenom || !entreprise || !adresse || !codePostal || !ville || !formation || !datePriseRDV || !dateRDV || !heureRDV) {
+    if (!nom || !prenom || !entreprise || !nbrempl || !adresse || !codePostal || !ville || !formation || !datePriseRDV || !dateRDV || !heureRDV) {
       return Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -147,6 +148,16 @@ function SouscriptionOPCO({ setIsAdding }) {
               type="text"
               value={entreprise}
               onChange={(e) => setEntreprise(e.target.value)}
+              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="entreprise" className="block text-sm font-medium text-blue-gray-700">Nombre de salariés</label>
+            <input
+              id="nbrempl"
+              type="number"
+              value={nbrempl}
+              onChange={(e) => setNbrempl(e.target.value)}
               className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
             />
           </div>

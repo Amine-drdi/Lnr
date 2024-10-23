@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
+import { IoIosRefresh } from "react-icons/io";
 
 function ListeRdvCommVente() {
   const [rdvs, setRdvs] = useState([]);
@@ -11,23 +12,24 @@ function ListeRdvCommVente() {
   const [showModal, setShowModal] = useState(false);
   const [commentaireCommercial, setCommentaireCommercial] = useState('');
 
-  useEffect(() => {
-    const fetchRdvs = async () => {
-      try {
-        const response = await fetch('http://51.83.69.195:5000/api/rdvs');
-        if (!response.ok) {
-          throw new Error('Erreur lors de la récupération des rendez-vous');
-        }
-        const data = await response.json();
-        setRdvs(data.rdvs);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+  const fetchRdvs = async () => {
+    setLoading(true); // Show loading before fetching
+    try {
+      const response = await fetch('http://51.83.69.195:5000/api/rdvs');
+      if (!response.ok) {
+        throw new Error('Erreur lors de la récupération des rendez-vous');
       }
-    };
+      const data = await response.json();
+      setRdvs(data.rdvs);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchRdvs();
+  useEffect(() => {
+    fetchRdvs(); // Fetch data on component mount
   }, []);
 
   // Fonction pour formater la date en 'yyyy-mm-dd'
@@ -97,6 +99,10 @@ function ListeRdvCommVente() {
     }
   };
 
+  const handleRefresh = () => {
+    fetchRdvs(); // Fetch the RDVs again when the button is clicked
+  };
+
   if (loading) {
     return <div className="flex justify-center items-center h-screen text-gray-600">Chargement des rendez-vous...</div>;
   }
@@ -108,6 +114,15 @@ function ListeRdvCommVente() {
   return (
     <div className="max-w-full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
       <h1 className="text-3xl font-semibold text-left text-blue-gray-700 mb-6 border-b pb-4">Liste des Rendez-vous</h1>
+      
+      {/* Refresh Button */}
+      <button 
+        onClick={handleRefresh} 
+        className="mb-4 px-4 py-2 bg-transparent text-blue-gray-700 rounded  flex items-center"
+      >
+        <IoIosRefresh className="mr-2" /> Actualiser
+      </button>
+      
       <div className="mb-4">
         <input
           type="text"
@@ -126,6 +141,7 @@ function ListeRdvCommVente() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Entreprise</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nombre de salariés</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Adresse</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Code Postal</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Ville</th>
@@ -149,6 +165,7 @@ function ListeRdvCommVente() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.prenom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.entreprise}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.adresse}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.nbrempl}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.codePostal}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.ville}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.formation}</td>
@@ -170,6 +187,7 @@ function ListeRdvCommVente() {
             <p className="text-left"><strong>Nom :</strong> {selectedRdv.nom}</p>
             <p className="text-left"><strong>Prénom :</strong> {selectedRdv.prenom}</p>
             <p className="text-left"><strong>Entreprise :</strong> {selectedRdv.entreprise}</p>
+            <p className="text-left"><strong>Nombre de salariés :</strong> {selectedRdv.nbrempl}</p>
             <p className="text-left"><strong>Adresse :</strong> {selectedRdv.adresse}</p>
             <p className="text-left"><strong>Code Postal :</strong> {selectedRdv.codePostal}</p>
             <p className="text-left"><strong>Ville :</strong> {selectedRdv.ville}</p>
