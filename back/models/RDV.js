@@ -12,6 +12,14 @@ const RDVSchema = new mongoose.Schema({
         type: String,
         required: true
       },
+      email: {
+        type: String,
+        required: true
+      },
+      telephone: {
+        type: String,
+        required: true
+      },
       entreprise: {
         type: String,
         required: true

@@ -7,6 +7,8 @@ import { Checkbox, List, ListItem, ListItemPrefix, Typography, Card } from '@mat
 function SouscriptionOPCO({ setIsAdding }) {
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
+  const [telephone, setTelephone] = useState('');
+  const [email, setEmail] = useState('');
   const [entreprise, setEntreprise] = useState('');
   const [nbrempl, setNbrempl] = useState('');
   const [adresse, setAdresse] = useState('');
@@ -51,7 +53,7 @@ function SouscriptionOPCO({ setIsAdding }) {
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    if (!nom || !prenom || !entreprise || !nbrempl || !adresse || !codePostal || !ville || !formation || !datePriseRDV || !dateRDV || !heureRDV) {
+    if (!nom || !prenom || !email || !telephone || !entreprise || !nbrempl || !adresse || !codePostal || !ville || !formation || !datePriseRDV || !dateRDV || !heureRDV) {
       return Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -64,7 +66,10 @@ function SouscriptionOPCO({ setIsAdding }) {
     const newRDV = {
       nom,
       prenom,
+      email,
+      telephone,
       entreprise,
+      nbrempl,
       adresse,
       codePostal,
       ville,
@@ -142,6 +147,26 @@ function SouscriptionOPCO({ setIsAdding }) {
             />
           </div>
           <div>
+            <label htmlFor="telephone" className="block text-sm font-medium text-blue-gray-700">Téléphone</label>
+            <input
+              id="telephone"
+              type="text"
+              value={telephone}
+              onChange={(e) => setTelephone(e.target.value)}
+              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-blue-gray-700">Email</label>
+            <input
+              id="email"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
+            />
+          </div>
+          <div>
             <label htmlFor="entreprise" className="block text-sm font-medium text-blue-gray-700">Nom de l’entreprise</label>
             <input
               id="entreprise"
@@ -152,7 +177,7 @@ function SouscriptionOPCO({ setIsAdding }) {
             />
           </div>
           <div>
-            <label htmlFor="entreprise" className="block text-sm font-medium text-blue-gray-700">Nombre de salariés</label>
+            <label htmlFor="nbrempl" className="block text-sm font-medium text-blue-gray-700">Nombre de salariés</label>
             <input
               id="nbrempl"
               type="number"

@@ -205,6 +205,8 @@ app.post('/api/rdvs', async (req, res) => {
     const {
       nom,
       prenom,
+      telephone,
+      email,
       entreprise,
       nbrempl,
       adresse,
@@ -220,6 +222,8 @@ app.post('/api/rdvs', async (req, res) => {
     const newRDV = new RDV({
       nom,
       prenom,
+      telephone,
+      email,
       entreprise,
       nbrempl,
       adresse,
