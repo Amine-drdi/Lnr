@@ -7,6 +7,7 @@ import CommercialsToday from './CommercialsToday';
 import ProgressionChart from './ProgressionChart';
 import Chart from './Chart';
 import CommercialChart from './CommercialChart';
+import RdvToday from './Opco/RdvToday';
 
 function Dashboard() {
   const [contratsAujourdHui, setContratsAujourdHui] = useState(0);
@@ -72,6 +73,8 @@ function Dashboard() {
       {table === 1 && <div className='flex justify-center items-center h-full'><CommercialsToday /></div>}
       {table === 2 && <div className='flex justify-center items-center h-full'><Chart /></div>}
       {table === 3 && <div className='flex justify-center items-center h-full'><CommercialChart/></div>}
+
+      
     </div>
   );
 }

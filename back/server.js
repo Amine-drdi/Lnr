@@ -594,7 +594,38 @@ app.get('/api/contrats/commercials-total', async (req, res) => {
   }
 });
 
+// RDV today
+app.get('/api/rdvs/count-today', async (req, res) => {
+  try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);  // Début de la journée
 
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);  // Fin de la journée
+
+    const rdvsToday = await RDV.aggregate([
+      { 
+        $match: { 
+          dateInsertion: { $gte: startOfDay, $lt: endOfDay } 
+        }
+      },
+      {
+        $group: {
+          _id: "$userName", // Grouper par userName
+          count: { $sum: 1 } // Compter le nombre de RDV par userName
+        }
+      },
+      {
+        $sort: { count: -1 } // Trier par ordre décroissant du nombre de RDV
+      }
+    ]);
+
+    res.status(200).json(rdvsToday);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des RDVs du jour par utilisateur:', error);
+    res.status(500).json({ message: 'Erreur du serveur' });
+  }
+});
 
 
 

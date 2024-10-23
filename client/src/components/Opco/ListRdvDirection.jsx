@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+
 import { FaEye } from 'react-icons/fa';
 import { RiDeleteBin6Line } from "react-icons/ri";
 function ListeRdvDirection() {
@@ -88,24 +90,43 @@ function ListeRdvDirection() {
     }
   };
    // supprimer un RDV
-  const handleDeleteRdv = async (rdvId) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce rendez-vous ?")) {
-      try {
-        const response = await fetch(`http://51.83.69.195:5000/api/rdvs/${rdvId}`, {
-          method: 'DELETE',
-        });
+   const handleDeleteRdv = async (rdvId) => {
+    Swal.fire({
+      title: 'Êtes-vous sûr ?',
+      text: "Cette action est irréversible !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Oui, supprimer !',
+      cancelButtonText: 'Annuler'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`http://51.83.69.195:5000/api/rdvs/${rdvId}`, {
+            method: 'DELETE',
+          });
+    
+          if (!response.ok) {
+            throw new Error('Erreur lors de la suppression du rendez-vous');
+          }
   
-        if (!response.ok) {
-          throw new Error('Erreur lors de la suppression du rendez-vous');
+          // Mise à jour de la liste des rendez-vous après suppression
+          setRdvs((prevRdvs) => prevRdvs.filter((rdv) => rdv._id !== rdvId));
+  
+          // Affiche un message de succès
+          Swal.fire(
+            'Supprimé!',
+            'Le rendez-vous a été supprimé avec succès.',
+            'success'
+          );
+        } catch (error) {
+          setError(error.message);
         }
-  
-        // Met à jour la liste des rendez-vous en filtrant celui supprimé
-        setRdvs((prevRdvs) => prevRdvs.filter((rdv) => rdv._id !== rdvId));
-      } catch (error) {
-        setError(error.message);
       }
-    }
+    });
   };
+  
   
   
     
@@ -164,7 +185,7 @@ function ListeRdvDirection() {
                   onClick={() => handleViewRdv(RDV)} 
                   />
                   <RiDeleteBin6Line
-                  className="text-blue-500 cursor-pointer w-4 h-4" 
+                  className="text-red-500 cursor-pointer w-4 h-4" 
                   onClick={() => handleDeleteRdv(RDV._id)}
                   />
                 </div>

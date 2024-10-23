@@ -22,6 +22,7 @@ import { GiDiploma } from "react-icons/gi";
 import { IoSettingsSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import logo from "../../assets/logo.png";
+import img from "../../assets/direction.png";
 import ListeContratsDirec from "../contrat/ListeContratsDirec";
 import Souscription from "../contrat/Souscription";
 import ContratNonValide from "../contrat/ContratNonValide";
@@ -91,8 +92,26 @@ export function Direction() {
   return (
     <div className="flex">
       <Card className="h-screen min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
-        <img className="object-cover w-auto h-24" src={logo} alt="Logo" />
+      <img
+          className="object-cover w-auto h-24"
+          src={logo}
+          alt="Company Logo"
+        />
+                <div className="text-light-blue-900 pl-5 mb-4 pt-8 flex items-center space-x-2">
+          <Typography variant="h6" className="flex items-center">
+            
+                <img className="object-cover w-auto h-12" src={img} alt="User" />
+            {userName}
+          </Typography>
+        </div>
+  
         <List>
+        <ListItem onClick={() => setActiveComponent('dashboard')} className="hover:bg-blue-600 text-white ">
+                  <ListItemPrefix>
+                    <PresentationChartBarIcon className="h-5 w-5 text-white" />
+                  </ListItemPrefix>
+                  Tableau de Bord
+                </ListItem>
           <Accordion open={open === 1} icon={<RiArrowDropDownLine  className="h-7 w-7 text-white " />}>
             <ListItem className="p-0">
               <AccordionHeader onClick={() => handleAccordionOpen(1)} className="border-b-0 p-3">
@@ -106,12 +125,7 @@ export function Direction() {
             </ListItem>
             <AccordionBody className="py-1">
               <List className="p-0">
-                <ListItem onClick={() => setActiveComponent('dashboard')} className="hover:bg-blue-600 text-white pl-10">
-                  <ListItemPrefix>
-                    <PresentationChartBarIcon className="h-5 w-5 text-white" />
-                  </ListItemPrefix>
-                  Tableau de Bord
-                </ListItem>
+                
                 <ListItem onClick={() => setActiveComponent('listeContrats')} className="hover:bg-blue-600 text-white pl-10">
                   <ListItemPrefix>
                     <FaFileContract className="h-5 w-5 text-white" />

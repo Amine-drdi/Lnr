@@ -42,23 +42,32 @@ function ListeRdvCommVente() {
       const now = new Date();
       const today = formatDate(now); // Obtenir la date du jour au format 'yyyy-mm-dd'
       const currentTime = now.getHours() * 60 + now.getMinutes(); // Convertir l'heure actuelle en minutes
-
-      // Filtrer les RDV par date et recherche
+  
+      // Filtrer les RDV par date, recherche, et nbrempl > 2
       const results = rdvs.filter((rdv) => {
         const rdvDate = rdv.dateRDV; // 'yyyy-mm-dd'
         const [rdvHour, rdvMinute] = rdv.heureRDV.split(':').map(Number); // Convertir l'heure de RDV en heures et minutes
         const rdvTime = rdvHour * 60 + rdvMinute; // Convertir l'heure de RDV en minutes
-
-        // Comparer les dates et s'assurer que RDV n'est pas passé
+  
+        // Comparer les dates, s'assurer que RDV n'est pas passé, et que nbrempl > 2
         if (rdvDate === today) {
-          return rdvTime >= currentTime && `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase());
+          return (
+            rdvTime >= currentTime &&
+            rdv.nbrempl > 2 &&
+            `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
+          );
         }
-        return rdvDate > today && `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase());
+        return (
+          rdvDate > today &&
+          rdv.nbrempl > 2 &&
+          `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
+        );
       });
-
+  
       setFilteredRdvs(results);
     }
   }, [searchTerm, rdvs]);
+  
 
   const closeModal = () => {
     setShowModal(false);
