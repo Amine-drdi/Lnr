@@ -130,16 +130,7 @@ function Commercial() {
           alt="Company Logo"
         />
 
-        <div className="text-light-blue-900 pl-5 mb-4 pt-8 flex items-center space-x-2">
-          <Typography variant="h6" className="flex items-center">
-            <Badge content={contratUpdates.length} overlap="circular">
-              <button onClick={handleOpen}>
-                <img className="object-cover w-auto h-12" src={img} alt="User" />
-              </button>
-            </Badge>
-            {userName}
-          </Typography>
-        </div>
+
 
         {/* Liste de menus */}
         <List>
