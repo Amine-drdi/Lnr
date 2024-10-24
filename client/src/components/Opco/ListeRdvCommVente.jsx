@@ -177,7 +177,7 @@ function ListeRdvCommVente() {
                 </td>
                 <td
                    className={`px-4 py-3 text-sm ${
-                   RDV.rdvType === 'Physique' ? 'text-green-500' : RDV.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'
+                   RDV.rdvType === 'Physique' ? 'text-green-500' : RDV.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'
                    }`}
                 >
                  {RDV.rdvType}
@@ -208,7 +208,7 @@ function ListeRdvCommVente() {
           <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
             <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Rendez-vous</h2>
             <p className="text-left"><strong>Type Rendez-vous :</strong>
-              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'}`}>
+              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'}`}>
                {selectedRdv.rdvType}
               </span>
               </p>           

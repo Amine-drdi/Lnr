@@ -59,7 +59,8 @@ const RDVSchema = new mongoose.Schema({
         type: String, // Optionnel, vous pouvez utiliser "Date" si vous gérez l'heure avec précision
         required: true
       },
-      commentaireManager : String ,
+      etatDossier : String ,
+      commentaireManager : String,
       commentaireCommercial : String ,
       dateInsertion: {
         type: Date,

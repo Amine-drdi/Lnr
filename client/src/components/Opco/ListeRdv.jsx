@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
-
+import axios from 'axios';
 function ListeRdv() {
   const [rdvs, setRdvs] = useState([]);
   const [filteredRdvs, setFilteredRdvs] = useState([]);
@@ -9,6 +9,7 @@ function ListeRdv() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRdv, setSelectedRdv] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [user, setUser] = useState(false);
 
   useEffect(() => {
     const fetchRdvs = async () => {
@@ -28,6 +29,28 @@ function ListeRdv() {
 
     fetchRdvs();
   }, []);
+  useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUser(response.data.user.name);
+      } else {
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération du profil:', error);
+      navigate('/');
+    }
+  };
+
+  fetchProfile();
+}, []);
 
   useEffect(() => {
     if (rdvs && Array.isArray(rdvs)) {  // Vérifie si rdvs est défini et est un tableau
@@ -47,6 +70,17 @@ function ListeRdv() {
     setShowModal(true);
   };
 
+  useEffect(() => {
+    if (rdvs && Array.isArray(rdvs)) {
+      const results = rdvs.filter(
+        (rdv) =>
+          rdv.userName === user && // Filtre les rendez-vous de l'utilisateur
+          `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase()) // Filtre par nom ou prénom
+      );
+      setFilteredRdvs(results);
+    }
+  }, [searchTerm, rdvs, user]);
+
   if (loading) {
     return <div className="flex justify-center items-center h-screen text-gray-600">Chargement des rendez-vous...</div>;
   }
@@ -57,7 +91,7 @@ function ListeRdv() {
 
   return (
     <div className="max-w-full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-semibold text-left  text-blue-gray-700 mb-6 border-b pb-4 ">Liste des Rendez-vous</h1>
+      <h1 className="text-3xl font-semibold text-left  text-blue-gray-700 mb-6 border-b pb-4 "> Liste des Rendez-vous</h1>
       <div className="mb-4">
         <input
           type="text"
@@ -88,7 +122,6 @@ function ListeRdv() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date Prise RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure RDV</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Manager</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Commercial</th>
 
             </tr>
@@ -105,7 +138,7 @@ function ListeRdv() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.userName}</td>
                 <td
                    className={`px-4 py-3 text-sm ${
-                   RDV.rdvType === 'Physique' ? 'text-green-500' : RDV.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'
+                   RDV.rdvType === 'Physique' ? 'text-green-500' : RDV.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'
                    }`}
                 >
                  {RDV.rdvType}
@@ -123,7 +156,6 @@ function ListeRdv() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.datePriseRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.dateRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.heureRDV}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireManager}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireCommercial}</td>
 
                 
@@ -140,7 +172,7 @@ function ListeRdv() {
             <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Rendez-vous</h2>
             <p className="text-left"><strong>Agent :</strong> {selectedRdv.userName}</p>
             <p className="text-left"><strong>Type Rendez-vous :</strong>
-              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'}`}>
+              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'}`}>
                {selectedRdv.rdvType}
               </span>
               </p>

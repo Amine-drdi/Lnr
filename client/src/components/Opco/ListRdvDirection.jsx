@@ -173,6 +173,7 @@ function ListeRdvDirection() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Commercial</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Manager</th>
 
 
@@ -196,7 +197,7 @@ function ListeRdvDirection() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.userName}</td>
                 <td
                    className={`px-4 py-3 text-sm ${
-                   RDV.rdvType === 'Physique' ? 'text-green-500' : RDV.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'
+                   RDV.rdvType === 'Physique' ? 'text-green-500' : RDV.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'
                    }`}
                 >
                  {RDV.rdvType}
@@ -215,6 +216,7 @@ function ListeRdvDirection() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.dateRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.heureRDV}</td>
                 <td className="px-4 py-3 text-sm text-red-500">{RDV.commentaireCommercial}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.etatDossier}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireManager}</td>
               </tr>
             ))}
@@ -231,7 +233,7 @@ function ListeRdvDirection() {
                 <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Rendez-vous</h2>
                 <p className="text-left"><strong>Agent :</strong> {selectedRdv.userName}</p>
                 <p className="text-left"><strong>Type Rendez-vous :</strong>
-              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'}`}>
+              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'}`}>
                {selectedRdv.rdvType}
               </span>
               </p>
@@ -248,6 +250,7 @@ function ListeRdvDirection() {
                 <p className="text-left"><strong>Date prise RDV:</strong> {selectedRdv.datePriseRDV}</p>
                 <p className="text-left"><strong>Date RDV :</strong> {selectedRdv.dateRDV}</p>
                 <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>
+                <p className="text-left"><strong>état du dossier :</strong><span className="text-red-500"> {selectedRdv.etatDossier}</span></p>
                 <p className="text-left"><strong>Commentaire manager :</strong> {selectedRdv.commentaireManager}</p>
                 <p className="text-left"><strong>Commentaire Commercial :</strong><span className="text-red-500"> {selectedRdv.commentaireCommercial}</span></p>
 
@@ -284,7 +287,7 @@ function ListeRdvDirection() {
                   >
                      <option value="" disabled>Choisissez un type de rendez-vous</option>
                      <option value="Physique" className="text-green-500">Physique</option>
-                     <option value="Téléphonique" className="text-red-500">Téléphonique</option>
+                     <option value="Téléphonique" className="text-blue-700">Téléphonique</option>
                   </select>
                   </label>
                   <label className="block mb-2">
@@ -406,22 +409,31 @@ function ListeRdvDirection() {
                   </label>
                 
                   <label className="block mb-2">
-                    <span className="text-gray-700">Commentaire manager:</span>
+                    <span className="text-gray-700">état du dossier:</span>
                     <select
-                     name="commentaireManager"
-                     value={formData.commentaireManager}
+                     name="etatDossier"
+                     value={formData.etatDossier}
                      onChange={handleInputChange}
                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
                     >
                       <option value="">choisissez une option </option>
-                       <option value="Validé">Validé</option>
-                       <option value="non Validé">non Validé</option>
+                       <option className='text-green-700' value="Validé">Validé</option>
+                       <option className='text-red-700' value="non Validé">non Validé</option>
                        <option value="R2">R2</option>
                        <option value="R3">R3</option>
                        <option value="Pas intéressé">Pas intéressé</option>
                        <option value="Déjà engagé">Déjà engagé</option>
                     </select>
 
+                  </label>
+                  <label className="block mb-2">
+                    <span className="text-gray-700">Commentaire Manager :</span>
+                    <input
+                      name="commentaireManager"
+                      value={formData.commentaireManager}
+                      onChange={handleInputChange}
+                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
+                    />
                   </label>
                   <button
                     onClick={handleSubmit}
