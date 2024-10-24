@@ -158,6 +158,7 @@ function ListeRdvDirection() {
             <tr>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type Rendez-vous</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Téléphone</th>
@@ -193,6 +194,13 @@ function ListeRdvDirection() {
                 </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.userName}</td>
+                <td
+                   className={`px-4 py-3 text-sm ${
+                   RDV.rdvType === 'Physique' ? 'text-green-500' : RDV.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'
+                   }`}
+                >
+                 {RDV.rdvType}
+                </td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.nom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.prenom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.telephone}</td>
@@ -222,6 +230,11 @@ function ListeRdvDirection() {
               <>
                 <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Rendez-vous</h2>
                 <p className="text-left"><strong>Agent :</strong> {selectedRdv.userName}</p>
+                <p className="text-left"><strong>Type Rendez-vous :</strong>
+              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'}`}>
+               {selectedRdv.rdvType}
+              </span>
+              </p>
                 <p className="text-left"><strong>Nom :</strong> {selectedRdv.nom}</p>
                 <p className="text-left"><strong>Prénom :</strong> {selectedRdv.prenom}</p>
                 <p className="text-left"><strong>Téléphone :</strong> {selectedRdv.telephone}</p>
@@ -258,6 +271,21 @@ function ListeRdvDirection() {
                       onChange={handleInputChange}
                       className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
                     />
+                  </label>
+                  <label className="block mb-2">
+                  <span className="text-gray-700">Type rendez-vous :</span>
+                  <select
+                    name="rdvType"
+                    value={formData.rdvType}
+                    onChange={handleInputChange}
+                    className={`block w-full mt-1 border-gray-300 rounded-md shadow-sm ${
+                    formData.rdvType === 'Physique' ? 'text-green-500' : formData.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'
+                    }`}
+                  >
+                     <option value="" disabled>Choisissez un type de rendez-vous</option>
+                     <option value="physique" className="text-green-500">Physique</option>
+                     <option value="téléphonique" className="text-red-500">Téléphonique</option>
+                  </select>
                   </label>
                   <label className="block mb-2">
                     <span className="text-gray-700">Nom :</span>

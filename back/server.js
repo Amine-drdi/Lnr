@@ -216,7 +216,8 @@ app.post('/api/rdvs', async (req, res) => {
       datePriseRDV,
       dateRDV,
       heureRDV,
-      userName
+      userName,
+      rdvType
     } = req.body;
 
     const newRDV = new RDV({
@@ -233,7 +234,8 @@ app.post('/api/rdvs', async (req, res) => {
       datePriseRDV,
       dateRDV,
       heureRDV,
-      userName
+      userName,
+      rdvType
     });
 
     await newRDV.save();

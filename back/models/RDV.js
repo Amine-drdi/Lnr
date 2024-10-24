@@ -3,7 +3,10 @@
 const mongoose = require('mongoose');
 
 const RDVSchema = new mongoose.Schema({
-
+    rdvType:{
+      type: String,
+      required: true
+    },
     nom: {
         type: String,
         required: true

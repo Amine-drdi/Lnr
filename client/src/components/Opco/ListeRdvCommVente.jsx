@@ -43,23 +43,23 @@ function ListeRdvCommVente() {
       const today = formatDate(now); // Obtenir la date du jour au format 'yyyy-mm-dd'
       const currentTime = now.getHours() * 60 + now.getMinutes(); // Convertir l'heure actuelle en minutes
   
-      // Filtrer les RDV par date, recherche, et nbrempl > 2
+      // Filtrer les RDV par date, recherche et rdvType différent de "Téléphonique"
       const results = rdvs.filter((rdv) => {
         const rdvDate = rdv.dateRDV; // 'yyyy-mm-dd'
         const [rdvHour, rdvMinute] = rdv.heureRDV.split(':').map(Number); // Convertir l'heure de RDV en heures et minutes
         const rdvTime = rdvHour * 60 + rdvMinute; // Convertir l'heure de RDV en minutes
   
-        // Comparer les dates, s'assurer que RDV n'est pas passé, et que nbrempl > 2
+        // Comparer les dates, s'assurer que le RDV n'est pas passé et exclure les RDV "Téléphonique"
         if (rdvDate === today) {
           return (
             rdvTime >= currentTime &&
-            rdv.nbrempl > 2 &&
+            rdv.rdvType !== 'Téléphonique' && // Exclure les RDV téléphoniques
             `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
           );
         }
         return (
           rdvDate > today &&
-          rdv.nbrempl > 2 &&
+          rdv.rdvType !== 'Téléphonique' && // Exclure les RDV téléphoniques
           `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
         );
       });
@@ -67,6 +67,8 @@ function ListeRdvCommVente() {
       setFilteredRdvs(results);
     }
   }, [searchTerm, rdvs]);
+  
+  
   
 
   const closeModal = () => {
@@ -147,6 +149,7 @@ function ListeRdvCommVente() {
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider"></th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Téléphone</th>
@@ -171,6 +174,13 @@ function ListeRdvCommVente() {
                     className="text-blue-500 cursor-pointer w-4 h-4"
                     onClick={() => handleViewRdv(RDV)}
                   />
+                </td>
+                <td
+                   className={`px-4 py-3 text-sm ${
+                   RDV.rdvType === 'Physique' ? 'text-green-500' : RDV.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'
+                   }`}
+                >
+                 {RDV.rdvType}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.nom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.prenom}</td>
@@ -197,7 +207,12 @@ function ListeRdvCommVente() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
             <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Rendez-vous</h2>
-            <p className="text-left"><strong>Nom :</strong> {selectedRdv.nom}</p>
+            <p className="text-left"><strong>Type Rendez-vous :</strong>
+              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'}`}>
+               {selectedRdv.rdvType}
+              </span>
+              </p>           
+             <p className="text-left"><strong>Nom :</strong> {selectedRdv.nom}</p>
             <p className="text-left"><strong>Prénom :</strong> {selectedRdv.prenom}</p>
             <p className="text-left"><strong>Téléphone :</strong> {selectedRdv.telephone}</p>
             <p className="text-left"><strong>Email :</strong> {selectedRdv.email}</p>

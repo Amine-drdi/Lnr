@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox, List, ListItem, ListItemPrefix, Typography, Card } from '@material-tailwind/react';
+import { Radio, Checkbox, List, ListItem, ListItemPrefix, Typography, Card } from '@material-tailwind/react';
 
 function SouscriptionOPCO({ setIsAdding }) {
   const [nom, setNom] = useState('');
@@ -19,7 +19,7 @@ function SouscriptionOPCO({ setIsAdding }) {
   const [dateRDV, setDateRDV] = useState('');
   const [heureRDV, setHeureRDV] = useState('');
   const [userName, setUserName] = useState('');
-
+  const [rdvType, setRdvType] = useState('');
   const textInput = useRef(null);
   const navigate = useNavigate();
 
@@ -53,7 +53,7 @@ function SouscriptionOPCO({ setIsAdding }) {
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    if (!nom || !prenom || !email || !telephone || !entreprise || !nbrempl || !adresse || !codePostal || !ville || !formation || !datePriseRDV || !dateRDV || !heureRDV) {
+    if (!nom || !prenom || !email || !telephone || !entreprise || !nbrempl || !adresse || !codePostal || !ville || !formation || !datePriseRDV || !dateRDV || !heureRDV || !rdvType) {
       return Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -78,6 +78,7 @@ function SouscriptionOPCO({ setIsAdding }) {
       dateRDV,
       heureRDV,
       userName,
+      rdvType,
     };
 
     try {
@@ -125,6 +126,65 @@ function SouscriptionOPCO({ setIsAdding }) {
     <div className="w-full max-w-4xl mx-auto p-8 bg-blue-gray-50 shadow-lg rounded-lg border border-blue-gray-200">
       <form onSubmit={handleAdd} className="space-y-6">
         <h2 className="text-2xl font-bold text-blue-gray-800 mb-4">Formulaire de Rendez-vous</h2>
+        {/* Card with Radio buttons */}
+        <div className="flex justify-center">
+            <Card className="w-full max-w-[25rem] border border-blue-gray-300 rounded-md p-3 focus:ring-blue-gray-500 focus:border-blue-gray-500">
+              <List className="flex-row">
+                <ListItem className="p-0">
+                  <label
+                    htmlFor="horizontal-list-physique"
+                    className="flex w-full cursor-pointer items-center px-3 py-2"
+                  >
+                    <ListItemPrefix className="mr-3">
+                      <Radio
+                        name="rdvType"
+                        id="horizontal-list-physique"
+                        ripple={false}
+                        className="hover:before:opacity-0"
+                        containerProps={{
+                          className: "p-0",
+                        }}
+                        checked={rdvType === 'Physique'}
+                        onChange={() => setRdvType('Physique')}
+                      />
+                    </ListItemPrefix>
+                    <Typography
+                      color="blue-gray"
+                      className="font-medium text-blue-gray-700"
+                    >
+                      RDV physique 
+                    </Typography>
+                  </label>
+                </ListItem>
+                <ListItem className="p-0">
+                  <label
+                    htmlFor="horizontal-list-telephone"
+                    className="flex w-full cursor-pointer items-center px-3 py-2"
+                  >
+                    <ListItemPrefix className="mr-3">
+                      <Radio
+                        name="rdvType"
+                        id="horizontal-list-telephone"
+                        ripple={false}
+                        className="hover:before:opacity-0"
+                        containerProps={{
+                          className: "p-0",
+                        }}
+                        checked={rdvType === 'Téléphonique'}
+                        onChange={() => setRdvType('Téléphonique')}
+                      />
+                    </ListItemPrefix>
+                    <Typography
+                      color="blue-gray"
+                      className="font-medium text-blue-gray-700"
+                    >
+                      RDV téléphonique
+                    </Typography>
+                  </label>
+                </ListItem>
+              </List>
+            </Card>
+          </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="nom" className="block text-sm font-medium text-blue-gray-700">Nom</label>
