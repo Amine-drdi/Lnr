@@ -157,7 +157,7 @@ export function Direction() {
                   <ListItemPrefix>
                     <FaListCheck className="h-5 w-5 text-white" />
                   </ListItemPrefix>
-                  Liste des contrats
+                  Liste des Devis
                 </ListItem>
                
                 <ListItem onClick={() => setActiveComponent('NonValide')} className="hover:bg-blue-600 text-white pl-10">
