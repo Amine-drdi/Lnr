@@ -231,8 +231,8 @@ function ListeRdvManager() {
                     }`}
                   >
                      <option value="" disabled>Choisissez un type de rendez-vous</option>
-                     <option value="physique" className="text-green-500">Physique</option>
-                     <option value="téléphonique" className="text-red-500">Téléphonique</option>
+                     <option value="Physique" className="text-green-500">Physique</option>
+                     <option value="Téléphonique" className="text-red-500">Téléphonique</option>
                   </select>
                   </label>
 

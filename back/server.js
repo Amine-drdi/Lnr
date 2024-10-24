@@ -600,39 +600,33 @@ app.get('/api/contrats/commercials-total', async (req, res) => {
   }
 });
 
-// RDV today
-app.get('/api/rdvs/count-today', async (req, res) => {
+// route pour calculer les rdv ajouté aujourd'hui 
+
+app.get('/api/rdvs/users-today', async (req, res) => {
   try {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);  // Début de la journée
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0)); // Début de la journée
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999)); // Fin de la journée
 
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);  // Fin de la journée
-
-    const rdvsToday = await RDV.aggregate([
+    // Récupérer les RDVs du jour groupés par userName
+    const rdvs = await RDV.aggregate([
       { 
         $match: { 
-          dateInsertion: { $gte: startOfDay, $lt: endOfDay } 
-        }
+          dateInsertion: { 
+            $gte: startOfDay, 
+            $lt: endOfDay 
+          } 
+        } 
       },
-      {
-        $group: {
-          _id: "$userName", // Grouper par userName
-          count: { $sum: 1 } // Compter le nombre de RDV par userName
-        }
-      },
-      {
-        $sort: { count: -1 } // Trier par ordre décroissant du nombre de RDV
-      }
+      { $group: { _id: '$userName', count: { $sum: 1 } } }, // Grouper par userName et compter les RDVs
+      { $project: { userName: '$_id', count: 1, _id: 0 } } // Projeter les résultats
     ]);
 
-    res.status(200).json(rdvsToday);
+    res.status(200).json(rdvs);
   } catch (error) {
-    console.error('Erreur lors de la récupération des RDVs du jour par utilisateur:', error);
-    res.status(500).json({ message: 'Erreur du serveur' });
+    res.status(500).json({ message: 'Erreur lors de la récupération des RDVs' });
   }
 });
-
 
 
 // Démarrer le serveur

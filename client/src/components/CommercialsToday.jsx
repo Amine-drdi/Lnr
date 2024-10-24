@@ -4,7 +4,7 @@ function CommercialsToday() {
   const [commercials, setCommercials] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // État de chargement
-  const [rdvCounts, setRdvCounts] = useState([]);
+  const [rdvs, setRdvs] = useState([]);
 
 
   useEffect(() => {
@@ -30,21 +30,33 @@ function CommercialsToday() {
 
     fetchCommercials();
   }, []);
+
+
   useEffect(() => {
-    const fetchRdvCounts = async () => {
+    const fetchusers = async () => {
+      setLoading(true); // Indiquer que le chargement a commencé
       try {
-        const response = await axios.get('/api/rdvs/count-today');
-        setRdvCounts(response.data);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des comptes de RDVs:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchRdvCounts();
-  }, []);
+   // Récupérer les RDVs
+   const responseRdvs = await fetch('http://51.83.69.195:5000/api/rdvs/users-today');
+   if (!responseRdvs.ok) {
+     throw new Error(await responseRdvs.text());
+   }
+   const dataRdvs = await responseRdvs.json();
+   setRdvs(dataRdvs);
 
+ } catch (error) {
+   setError('Erreur lors de la récupération des données');
+   console.error(error);
+ } finally {
+   setLoading(false);
+ }
+};
+
+fetchusers();
+}, []);
+
+  
   if (loading) {
     return <p>Chargement des données...</p>;
   }
@@ -62,9 +74,9 @@ function CommercialsToday() {
         <p>Aucun commercial n'a ajouté de contrat aujourd'hui.</p>
       ) : (
         <table className="w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
-          <thead className="bg-blue-gray-500 border-b w-full">
+          <thead className="bg-green-500 border-b w-full">
             <tr>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commercial</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nombre de contrats</th>
             </tr>
           </thead>
@@ -79,30 +91,28 @@ function CommercialsToday() {
         </table>
       )}
     </div>
-        <div className='pt-10'>
+    <div className="mt-8">
         <h3 className="text-xl font-semibold mb-4">OPCO</h3>
-        {Array.isArray(rdvCounts) && rdvCounts.length === 0 ? (
-  <p>Aucun RDV trouvé pour aujourd'hui.</p>
-) : (
-  Array.isArray(rdvCounts) && (
-    <table className="w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
-      <thead className="bg-blue-gray-500 border-b w-full">
-        <tr>
-          <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
-          <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nombre de RDV</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-gray-200">
-        {rdvCounts.map((rdv) => (
-          <tr className="hover:bg-gray-50 transition-colors" key={rdv._id}>
-            <td className="px-4 py-3 text-center">{rdv._id ? rdv._id : "Utilisateur inconnu"}</td>
-            <td className="px-4 py-3 text-center">{rdv.count}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )
-)}
+        {rdvs.length === 0 ? (
+          <p>Aucun utilisateur n'a ajouté de RDV aujourd'hui.</p>
+        ) : (
+          <table className="w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
+            <thead className="bg-green-500 border-b w-full">
+              <tr>
+                <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
+                <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nombre de RDVs</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {rdvs.map((rdv, index) => (
+                <tr className="hover:bg-gray-50 transition-colors" key={index}>
+                  <td className="px-4 py-3 text-center">{rdv.userName || 'N/A'}</td>
+                  <td className="px-4 py-3 text-center">{rdv.count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
       </div>
   );
