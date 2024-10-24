@@ -33,6 +33,10 @@ import ListeRdvCommVente from './components/Opco/ListeRdvCommVente';
 import Formation from './components/Opco/Formation';
 import ListeRdvDirection from './components/Opco/ListRdvDirection';
 import RdvToday from './components/Opco/RdvToday';
+import Devis from './components/contrat/Devis';
+import ListeDevisComm from './components/contrat/ListeDevisComm';
+import ListeDevisGestio from './components/contrat/ListeDevisGestio';
+import ListeDevisDirec from './components/contrat/ListeDevisDirec';
 
 function App() {
   return (
@@ -61,6 +65,10 @@ function App() {
         <Route 
           path="/ajouter-contrat" 
           element={<PrivateRoute element={<Souscription />} allowedRoles={['Gestionnaire', 'Commercial']} />} 
+        />
+                <Route 
+          path="/ajouter-devis" 
+          element={<PrivateRoute element={<Devis />} allowedRoles={['Gestionnaire', 'Commercial']} />} 
         />
         <Route 
           path="/Liste-employe" 
@@ -129,6 +137,19 @@ function App() {
         <Route 
           path="/rdv-today" 
           element={<PrivateRoute element={<RdvToday />} allowedRoles={['Direction']} />} 
+        />
+         <Route 
+          path="/devis-Comm" 
+          element={<PrivateRoute element={<ListeDevisComm />} allowedRoles={['Commercial']} />} 
+        />
+
+          <Route 
+          path="/devis-Gest" 
+          element={<PrivateRoute element={<ListeDevisGestio />} allowedRoles={['Gestionnaire']} />} 
+        />
+                <Route 
+          path="/devi-Direction" 
+          element={<PrivateRoute element={<ListeDevisDirec />} allowedRoles={['Direction']} />} 
         />
         {/* Rôles spécifiques */}
         <Route 

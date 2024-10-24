@@ -18,12 +18,15 @@ import {
 } from "@material-tailwind/react";
 import { IoIosNotifications } from "react-icons/io";
 import { CiBoxList } from "react-icons/ci";
-import { FaFileContract, FaFileSignature } from "react-icons/fa6";
+import {  FaFileSignature } from "react-icons/fa6";
 import { PowerIcon } from "@heroicons/react/24/solid";
+import { MdOutlinePriceChange } from "react-icons/md";
 import logo from "../../assets/logo.png";
 import img from "../../assets/user.png";
 import ListeContratsComm from '../contrat/ListeContratsComm';
 import Souscription from '../contrat/Souscription';
+import Devis from '../contrat/Devis';
+import ListeDevisComm from '../contrat/ListeDevisComm';
 
 function Commercial() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
@@ -112,6 +115,10 @@ function Commercial() {
         return <ListeContratsComm />;
       case 'AjoutContrat':
         return <Souscription />;
+        case 'AjoutDevis':
+          return <Devis />;
+          case 'listeDevis':
+            return <ListeDevisComm />;
       default:
         return <Souscription />;
     }
@@ -119,7 +126,7 @@ function Commercial() {
 
   return (
     
-    <div className="flex bg-blue-gray-100">
+    <div className="flex ">
       {/* Barre latérale */}
 
       <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
@@ -129,7 +136,16 @@ function Commercial() {
           src={logo}
           alt="Company Logo"
         />
-
+      <div className="text-light-blue-900 pl-5 mb-4 pt-8 flex items-center space-x-2">
+          <Typography variant="h6" className="flex items-center">
+            <Badge content={contratUpdates.length} overlap="circular">
+              <button onClick={handleOpen}>
+                <img className="object-cover w-auto h-12" src={img} alt="User" />
+              </button>
+            </Badge>
+            {userName}
+          </Typography>
+        </div>
 
 
         {/* Liste de menus */}
@@ -141,7 +157,7 @@ function Commercial() {
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
             </ListItemPrefix>
-            Consulter la liste des contrats
+            Liste des contrats
           </ListItem>
 
           <ListItem
@@ -152,6 +168,26 @@ function Commercial() {
               <FaFileSignature className="h-5 w-5" />
             </ListItemPrefix>
             Souscription 
+          </ListItem>
+
+          <ListItem
+            onClick={() => setActiveComponent('AjoutDevis')}
+            className="hover:bg-blue-600 text-white"
+          >
+            <ListItemPrefix>
+              <MdOutlinePriceChange className="h-5 w-5" />
+            </ListItemPrefix>
+            Devis
+          </ListItem>
+
+          <ListItem
+            onClick={() => setActiveComponent('listeDevis')}
+            className="hover:bg-blue-600 text-white"
+          >
+            <ListItemPrefix>
+              <CiBoxList className="h-5 w-5" />
+            </ListItemPrefix>
+             Liste des deviss
           </ListItem>
 
           <ListItem

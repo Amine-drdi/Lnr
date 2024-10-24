@@ -285,7 +285,7 @@ function ListeRdvDirection() {
                     formData.rdvType === 'Physique' ? 'text-green-500' : formData.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'
                     }`}
                   >
-                     <option value="" disabled>Choisissez un type de rendez-vous</option>
+                     <option value="" >Choisissez un type de rendez-vous</option>
                      <option value="Physique" className="text-green-500">Physique</option>
                      <option value="Téléphonique" className="text-blue-700">Téléphonique</option>
                   </select>

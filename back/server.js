@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const User = require('./models/User'); // Importer le modèle User
 const Contrat = require('./models/Contrat');
+const Devis = require('./models/Devis');
 const RDV = require('./models/RDV');
 const ContratUpdate = require('./models/ContratUpdate') ;
 const moment = require('moment');
@@ -199,6 +200,67 @@ app.post('/api/contrats',  async (req, res) => {
   }
 });
 
+
+// Route pour ajouter un nouveau Devis
+app.post('/api/devis',  async (req, res) => {
+  try {
+
+    const {
+      nom,
+      prenom,
+      telephone,
+      email,
+      dob,
+      address,
+      profession,
+      devisDate,
+      cotisation,
+      compagnie,
+      effetDate,
+      formulePropose,
+      fraisDossier,
+      niveauPropose,
+      apporteurAffaire,
+      Commercial,
+      commentaireAgent,
+      ancienneMutuelle,
+      
+   
+    } = req.body;
+
+   
+
+    const newDevis = new Devis({
+      nom,
+      prenom,
+      telephone,
+      email,
+      dob,
+      address,
+      profession,
+      devisDate,
+      cotisation,
+      compagnie,
+      effetDate,
+      formulePropose,
+      fraisDossier,
+      niveauPropose,
+      apporteurAffaire,
+      Commercial,
+      commentaireAgent,
+      ancienneMutuelle,
+      
+
+    });
+
+    await newDevis.save();
+    res.status(201).json({ message: 'Devis ajouté avec succès', devis: newDevis });
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout du devis', error);
+    res.status(500).json({ message: 'Erreur du serveur' });
+  }
+});
+
 // Route pour ajouter un nouveau RDV
 app.post('/api/rdvs', async (req, res) => {
   try {
@@ -257,6 +319,16 @@ app.get('/api/contrats', async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la récupération des contrats' });
   }
 });
+// Route pour récupérer tous les devis
+app.get('/api/devis', async (req, res) => {
+  try {
+    const devis = await Devis.find();
+    res.status(200).json({ devis });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des devis' });
+  }
+});
 // Route pour récupérer tous les RDV
 app.get('/api/rdvs', async (req, res) => {
   try {
@@ -303,6 +375,30 @@ app.put('/api/contrats/:id', async (req, res) => {
   } catch (error) {
     console.error('Erreur détaillée :', error);  // Log détaillé pour débogage
     res.status(500).json({ message: 'Erreur lors de la mise à jour du contrat' });
+  }
+});
+
+// Route PUT pour mettre à jour un devis
+app.put('/api/devis/:id', async (req, res) => {
+  const { id } = req.params; // Récupérer l'ID du devis à mettre à jour
+  const updateData = req.body; // Les nouvelles données du devis à partir de la requête
+
+  try {
+    // Trouver le devis par ID et mettre à jour avec les nouvelles données
+    const updatedDevis = await Devis.findByIdAndUpdate(id, updateData, {
+      new: true, // Renvoie le devis mis à jour après modification
+      runValidators: true, // Appliquer les validations du modèle
+    });
+
+    if (!updatedDevis) {
+      return res.status(404).json({ message: 'Devis non trouvé' });
+    }
+
+    // Répondre avec le devis mis à jour
+    res.json(updatedDevis);
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du devis:', error);
+    res.status(500).json({ message: 'Erreur serveur' });
   }
 });
 
@@ -629,6 +725,28 @@ app.get('/api/rdvs/users-today', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération des RDVs' });
   }
 });
+
+
+// DELETE handler function (method)
+const deleteDevisById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedDevis = await Devis.findByIdAndDelete(id);
+
+    if (!deletedDevis) {
+      return res.status(404).json({ message: 'Devis not found' });
+    }
+
+    res.status(200).json({ message: 'Devis deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting devis:', error);
+    res.status(500).json({ message: 'An error occurred while deleting the devis' });
+  }
+};
+
+// DELETE route using the separate function
+app.delete('/api/devis/:id', deleteDevisById);
 
 
 // Démarrer le serveur

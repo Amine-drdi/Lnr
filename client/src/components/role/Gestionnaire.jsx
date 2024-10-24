@@ -11,6 +11,7 @@ import {
   PresentationChartBarIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
+import { MdOutlinePriceChange } from "react-icons/md";
 import { VscError } from "react-icons/vsc";
 import { FaFileContract} from "react-icons/fa6";
 import { IoSettingsSharp } from "react-icons/io5";
@@ -25,6 +26,9 @@ import ProfileSetting from "../ProfileSetting";
 import ContratNvalideGestio from "../contrat/ContratNvalideGestio";
 import Dashboard from "../Dashboard";
 import { CiBoxList } from "react-icons/ci";
+import Devis from "../contrat/Devis";
+
+import ListeDevisGestio from "../contrat/ListeDevisGestio";
 
 
 
@@ -102,6 +106,10 @@ export default function Gestionnaire() {
         return <ListeContrats />;
         case 'AjoutContrat':
           return <Souscription />;
+          case 'AjoutDevis':
+            return <Devis />;
+            case 'listeDevis':
+        return <ListeDevisGestio />;
 
         case 'NonValide':
           return <ContratNvalideGestio />;
@@ -141,13 +149,26 @@ export default function Gestionnaire() {
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5 text-white" />
             </ListItemPrefix>
-            Consulter la liste des contrats
+           Liste des contrats
           </ListItem>
           <ListItem onClick={() => setActiveComponent('AjoutContrat')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <FaFileContract className="h-5 w-5 text-white" />
             </ListItemPrefix>
             Souscription
+          </ListItem>
+
+          <ListItem onClick={() => setActiveComponent('AjoutDevis')} className="hover:bg-blue-600 text-white">
+            <ListItemPrefix>
+              <MdOutlinePriceChange className="h-5 w-5" />
+            </ListItemPrefix>
+            Devis
+          </ListItem>
+          <ListItem onClick={() => setActiveComponent('listeDevis')} className="hover:bg-blue-600 text-white">
+            <ListItemPrefix>
+              <CiBoxList className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+           Liste des Devis
           </ListItem>
 
           <ListItem onClick={() => setActiveComponent('NonValide')}  className="hover:bg-blue-600 text-white">
@@ -157,12 +178,12 @@ export default function Gestionnaire() {
             Contrats non finalisé
           </ListItem>
 
-          <ListItem onClick={() => setActiveComponent('profile')} className="hover:bg-blue-600 text-white">
+          {/*<ListItem onClick={() => setActiveComponent('profile')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <IoSettingsSharp className="h-5 w-5 text-white" />
             </ListItemPrefix>
             Paramètres du profil
-          </ListItem>
+          </ListItem>*/}
           
           <ListItem onClick={handleLogout} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>

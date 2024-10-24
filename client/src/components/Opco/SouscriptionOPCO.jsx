@@ -178,7 +178,7 @@ function SouscriptionOPCO({ setIsAdding }) {
                       color="blue-gray"
                       className="font-medium text-blue-gray-700"
                     >
-                      RDV téléphonique
+                      TEL RGE
                     </Typography>
                   </label>
                 </ListItem>

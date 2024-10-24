@@ -21,6 +21,7 @@ function ListeRdvCommVente() {
       }
       const data = await response.json();
       setRdvs(data.rdvs);
+      setFilteredRdvs(data.rdvs); // Initialiser filteredRdvs avec tous les RDVs
     } catch (error) {
       setError(error.message);
     } finally {
@@ -32,44 +33,15 @@ function ListeRdvCommVente() {
     fetchRdvs(); // Fetch data on component mount
   }, []);
 
-  // Fonction pour formater la date en 'yyyy-mm-dd'
-  const formatDate = (date) => {
-    return date.toISOString().split('T')[0];
-  };
-
   useEffect(() => {
     if (rdvs && Array.isArray(rdvs)) {
-      const now = new Date();
-      const today = formatDate(now); // Obtenir la date du jour au format 'yyyy-mm-dd'
-      const currentTime = now.getHours() * 60 + now.getMinutes(); // Convertir l'heure actuelle en minutes
-  
-      // Filtrer les RDV par date, recherche et rdvType différent de "Téléphonique"
-      const results = rdvs.filter((rdv) => {
-        const rdvDate = rdv.dateRDV; // 'yyyy-mm-dd'
-        const [rdvHour, rdvMinute] = rdv.heureRDV.split(':').map(Number); // Convertir l'heure de RDV en heures et minutes
-        const rdvTime = rdvHour * 60 + rdvMinute; // Convertir l'heure de RDV en minutes
-  
-        // Comparer les dates, s'assurer que le RDV n'est pas passé et exclure les RDV "Téléphonique"
-        if (rdvDate === today) {
-          return (
-            rdvTime >= currentTime &&
-            rdv.rdvType !== 'Téléphonique' && // Exclure les RDV téléphoniques
-            `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
-          );
-        }
-        return (
-          rdvDate > today &&
-          rdv.rdvType !== 'Téléphonique' && // Exclure les RDV téléphoniques
-          `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      });
-  
+      // Filtrer uniquement par le terme de recherche
+      const results = rdvs.filter((rdv) =>
+        `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
+      );
       setFilteredRdvs(results);
     }
   }, [searchTerm, rdvs]);
-  
-  
-  
 
   const closeModal = () => {
     setShowModal(false);
@@ -202,49 +174,28 @@ function ListeRdvCommVente() {
         </table>
       </div>
 
-      {/* Modal */}
-      {showModal && selectedRdv && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
-            <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Rendez-vous</h2>
-            <p className="text-left"><strong>Type Rendez-vous :</strong>
-              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'}`}>
-               {selectedRdv.rdvType}
-              </span>
-              </p>           
-             <p className="text-left"><strong>Nom :</strong> {selectedRdv.nom}</p>
-            <p className="text-left"><strong>Prénom :</strong> {selectedRdv.prenom}</p>
-            <p className="text-left"><strong>Téléphone :</strong> {selectedRdv.telephone}</p>
-            <p className="text-left"><strong>Email :</strong> {selectedRdv.email}</p>
-            <p className="text-left"><strong>Entreprise :</strong> {selectedRdv.entreprise}</p>
-            <p className="text-left"><strong>Nombre de salariés :</strong> {selectedRdv.nbrempl}</p>
-            <p className="text-left"><strong>Adresse :</strong> {selectedRdv.adresse}</p>
-            <p className="text-left"><strong>Code Postal :</strong> {selectedRdv.codePostal}</p>
-            <p className="text-left"><strong>Ville :</strong> {selectedRdv.ville}</p>
-            <p className="text-left"><strong>Formation :</strong> {selectedRdv.formation}</p>
-            <p className="text-left"><strong>Date Prise RDV :</strong> {selectedRdv.datePriseRDV}</p>
-            <p className="text-left"><strong>Date RDV :</strong> {selectedRdv.dateRDV}</p>
-            <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>
-
-            <label className="block mb-2 text-left"><strong>Commentaire Commercial :</strong></label>
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
+            <h2 className="text-xl font-semibold mb-4">Commentaire Commercial</h2>
             <textarea
               value={commentaireCommercial}
               onChange={(e) => setCommentaireCommercial(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              rows="5"
             />
-
-            <div className="mt-4 flex justify-between">
+            <div className="flex justify-end mt-4">
               <button
                 onClick={handleSaveComment}
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
               >
                 Enregistrer
               </button>
               <button
                 onClick={closeModal}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                className="ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
               >
-                Fermer
+                Annuler
               </button>
             </div>
           </div>

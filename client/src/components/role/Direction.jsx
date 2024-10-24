@@ -14,6 +14,7 @@ import {
   PresentationChartBarIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
+import { MdOutlinePriceChange } from "react-icons/md";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { VscError } from "react-icons/vsc";
 import { FaFileContract, FaUsers } from "react-icons/fa6";
@@ -29,6 +30,8 @@ import Souscription from "../contrat/Souscription";
 import ContratNonValide from "../contrat/ContratNonValide";
 import ListeRdvDirection from "../Opco/ListRdvDirection";
 import Dashboard from "../Dashboard";
+import Devis from "../contrat/Devis";
+import ListeDevisDirec from "../contrat/ListeDevisDirec";
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -69,8 +72,12 @@ export function Direction() {
         return <Dashboard />;
       case 'listeContrats':
         return <ListeContratsDirec/>;
+        case 'listeDevis':
+          return <ListeDevisDirec/>;
       case 'AjoutContrat':
         return <Souscription />;
+        case 'AjoutDevis':
+          return <Devis />;
       case 'listeEmployes':
         return <ListeEmployes />;
       case 'Addcomm':
@@ -92,7 +99,7 @@ export function Direction() {
 
   return (
     <div className="flex">
-      <Card className="h-screen min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
+      <Card className="h-full min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
       <img
           className="object-cover w-auto h-24"
           src={logo}
@@ -139,6 +146,20 @@ export function Direction() {
                   </ListItemPrefix>
                   Souscription
                 </ListItem>
+
+                <ListItem onClick={() => setActiveComponent('AjoutDevis')} className="hover:bg-blue-600 text-white pl-10" >
+                <ListItemPrefix>
+                <MdOutlinePriceChange className="h-5 w-5" />
+                </ListItemPrefix>
+                Devis
+               </ListItem>
+               <ListItem onClick={() => setActiveComponent('listeDevis')} className="hover:bg-blue-600 text-white pl-10">
+                  <ListItemPrefix>
+                    <FaListCheck className="h-5 w-5 text-white" />
+                  </ListItemPrefix>
+                  Liste des contrats
+                </ListItem>
+               
                 <ListItem onClick={() => setActiveComponent('NonValide')} className="hover:bg-blue-600 text-white pl-10">
                   <ListItemPrefix>
                     <VscError className="h-5 w-5 text-white" />
