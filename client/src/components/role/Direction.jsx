@@ -14,6 +14,7 @@ import {
   PresentationChartBarIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
+import { ImUsers } from "react-icons/im";
 import { MdOutlinePriceChange } from "react-icons/md";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { VscError } from "react-icons/vsc";
@@ -32,6 +33,7 @@ import ListeRdvDirection from "../Opco/ListRdvDirection";
 import Dashboard from "../Dashboard";
 import Devis from "../contrat/Devis";
 import ListeDevisDirec from "../contrat/ListeDevisDirec";
+import ProfileSetting from "../ProfileSetting";
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -87,7 +89,7 @@ export function Direction() {
       case 'RDV':
         return <ListeRdvDirection />;
       case 'profile':
-        return <ProfileSetting />;
+        return <ProfileSetting/>;
       default:
         return <DashboardContent />;
     }
@@ -196,6 +198,12 @@ export function Direction() {
 
         {/* Paramètres et déconnexion */}
         <List>
+        <ListItem onClick={() => setActiveComponent('listeEmployes')} className="hover:bg-blue-600 text-white">
+            <ListItemPrefix>
+              <ImUsers className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            Liste employés
+          </ListItem>
           <ListItem onClick={() => setActiveComponent('profile')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <IoSettingsSharp className="h-5 w-5 text-white" />
