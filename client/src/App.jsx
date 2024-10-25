@@ -5,7 +5,6 @@ import Gestionnaire from './components/role/Gestionnaire';
 import Commercial from './components/role/Commercial';
 import Signup from './components/Signup';
 import ListeEmp from './components/ListeEmp';
-import Calend from './components/Calend';
 import PrivateRoute from './components/PrivateRoute'; 
 import { Direction } from './components/role/Direction';
 import ListeContratsGestio from './components/contrat/ListeContratsGestio';
@@ -37,6 +36,9 @@ import Devis from './components/contrat/Devis';
 import ListeDevisComm from './components/contrat/ListeDevisComm';
 import ListeDevisGestio from './components/contrat/ListeDevisGestio';
 import ListeDevisDirec from './components/contrat/ListeDevisDirec';
+import Agenda from './components/Agenda';
+
+
 
 function App() {
   return (
@@ -44,7 +46,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Signup />} />
-        
+        <Route path="/Agenda" element={<Agenda/>} />
         {/* Routes protégées */}
         <Route 
           path="/contratsGest" 
@@ -94,10 +96,10 @@ function App() {
           path="/chart" 
           element={<PrivateRoute element={<Chart />} allowedRoles={['Gestionnaire', 'Direction', 'Manager']} />} 
         />
-        <Route 
-          path="/calendrier" 
-          element={<PrivateRoute element={<Calend />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
-        />
+       {/* <Route 
+          path="/Agenda" 
+          element={<PrivateRoute element={<Agenda />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
+        />*/}
         <Route 
           path="/profile-settings" 
           element={<PrivateRoute element={<ProfileSetting />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 

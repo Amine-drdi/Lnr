@@ -3,6 +3,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
 import { IoIosRefresh } from "react-icons/io";
+
 function ListeContratsGestio() {
   const [contrats, setContrats] = useState([]);
   const [filteredContrats, setFilteredContrats] = useState([]);
@@ -29,7 +30,7 @@ function ListeContratsGestio() {
 
   const handleSaveModal = async () => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${editedContrat._id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${editedContrat._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -60,10 +61,10 @@ function ListeContratsGestio() {
   };
 
   
-  useEffect(() => {
     const fetchContrats = async () => {
+      setLoading(true);
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -80,6 +81,8 @@ function ListeContratsGestio() {
         setLoading(false);
       }
     };
+    useEffect(() => {
+
   
     fetchContrats();
   }, []);
@@ -100,7 +103,7 @@ function ListeContratsGestio() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -146,7 +149,7 @@ function ListeContratsGestio() {
 
   const handleDeleteClick = async (id) => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
         method: 'DELETE',
       });
 
@@ -202,7 +205,9 @@ function ListeContratsGestio() {
     filterByDate();
   }, [selectedMonth, selectedDay, contrats]);
 
-    
+  const handleRefresh = () => {
+    fetchContrats(); // Fetch the RDVs again when the button is clicked
+  };
   
 
 
@@ -217,7 +222,13 @@ function ListeContratsGestio() {
   return (
     <div className="max-w-full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
       <h1 className="text-3xl font-semibold text-left  text-blue-gray-700 mb-6 border-b pb-4 ">Liste des Contrats</h1>
-
+      {/* Refresh Button */}
+      <button 
+        onClick={handleRefresh} 
+        className="mb-4 px-4 py-2 bg-transparent text-blue-gray-700 rounded  flex items-center"
+      >
+        <IoIosRefresh className="mr-2" /> Actualiser
+      </button>
       <div className="mb-4">
         <input
           type="text"
@@ -583,7 +594,7 @@ function ListeContratsGestio() {
                 <td className="px-4 py-3 text-sm text-gray-700">
         {contrat.file ? (
           <a 
-            href={`http://51.83.69.195:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
+            href={`http://localhost:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-blue-500 hover:underline"

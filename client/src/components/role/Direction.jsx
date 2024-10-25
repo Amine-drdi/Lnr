@@ -30,10 +30,13 @@ import ListeContratsDirec from "../contrat/ListeContratsDirec";
 import Souscription from "../contrat/Souscription";
 import ContratNonValide from "../contrat/ContratNonValide";
 import ListeRdvDirection from "../Opco/ListRdvDirection";
+import ListeEmp from "../ListeEmp";
 import Dashboard from "../Dashboard";
 import Devis from "../contrat/Devis";
 import ListeDevisDirec from "../contrat/ListeDevisDirec";
 import ProfileSetting from "../ProfileSetting";
+import SouscriptionOPCO from '../Opco/SouscriptionOPCO';
+import { FaPlusCircle } from "react-icons/fa";
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -45,7 +48,7 @@ export function Direction() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -81,7 +84,7 @@ export function Direction() {
         case 'AjoutDevis':
           return <Devis />;
       case 'listeEmployes':
-        return <ListeEmployes />;
+        return <ListeEmp/>;
       case 'Addcomm':
         return <AddAgent />;
       case 'NonValide':
@@ -90,6 +93,8 @@ export function Direction() {
         return <ListeRdvDirection />;
       case 'profile':
         return <ProfileSetting/>;
+        case 'AjoutRDV':
+          return <SouscriptionOPCO />;
       default:
         return <DashboardContent />;
     }
@@ -190,6 +195,12 @@ export function Direction() {
                     <FaListCheck className="h-5 w-5 text-white " />
                   </ListItemPrefix>
                   Liste des RDV opco
+                </ListItem>
+                <ListItem onClick={() => setActiveComponent('AjoutRDV')} className="hover:bg-blue-600 text-white pl-10">
+                  <ListItemPrefix>
+                    <FaPlusCircle className="h-5 w-5 text-white " />
+                  </ListItemPrefix>
+                  ajouter un RDV
                 </ListItem>
               </List>
             </AccordionBody>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
 import { IoIosRefresh } from "react-icons/io";
-
+import { FaRegCommentDots } from "react-icons/fa6";
 function ListeRdvCommVente() {
   const [rdvs, setRdvs] = useState([]);
   const [filteredRdvs, setFilteredRdvs] = useState([]);
@@ -15,7 +15,7 @@ function ListeRdvCommVente() {
   const fetchRdvs = async () => {
     setLoading(true); // Show loading before fetching
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/rdvs');
+      const response = await fetch('http://localhost:5000/api/rdvs');
       if (!response.ok) {
         throw new Error('Erreur lors de la récupération des rendez-vous');
       }
@@ -57,7 +57,7 @@ function ListeRdvCommVente() {
   const handleSaveComment = async () => {
     if (selectedRdv) {
       try {
-        const response = await fetch(`http://51.83.69.195:5000/api/rdvs/${selectedRdv._id}`, {
+        const response = await fetch(`http://localhost:5000/api/rdvs/${selectedRdv._id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -95,8 +95,8 @@ function ListeRdvCommVente() {
   }
 
   return (
-    <div className="max-w-full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-semibold text-left text-blue-gray-700 mb-6 border-b pb-4">Liste des Rendez-vous</h1>
+    <div className="full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
+      <h1 className="text-3xl font-semibold text-left text-blue-gray-700 mb-6 border-b pb-4 ">Liste des Rendez-vous</h1>
       
       {/* Refresh Button */}
       <button 
@@ -116,12 +116,12 @@ function ListeRdvCommVente() {
         />
       </div>
 
+      
       <div className="overflow-x-scroll">
-        <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
-          <thead className="bg-blue-gray-500 border-b w-full">
+      <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">          <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider"></th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Téléphone</th>
@@ -142,7 +142,7 @@ function ListeRdvCommVente() {
             {filteredRdvs.map((RDV) => (
               <tr key={RDV._id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-4 py-3 text-sm text-gray-700">
-                  <FaEye
+                  <FaRegCommentDots
                     className="text-blue-500 cursor-pointer w-4 h-4"
                     onClick={() => handleViewRdv(RDV)}
                   />
@@ -172,7 +172,8 @@ function ListeRdvCommVente() {
             ))}
           </tbody>
         </table>
-      </div>
+        </div>
+      
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50">

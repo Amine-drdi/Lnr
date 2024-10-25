@@ -34,12 +34,12 @@ function CommercialVente() {
   const handleOpen = () => setOpen(!open);
 
   useEffect(() => {
-    // Fonction pour récupérer les informations du profil
+    // Fetch profile info
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -54,10 +54,10 @@ function CommercialVente() {
       }
     };
 
-    // Fonction pour récupérer les modifications des contrats
+    // Fetch contract updates
     const fetchContratUpdates = async () => {
       try {
-        const response = await axios.get('http://51.83.69.195:5000/api/contrat-updates');
+        const response = await axios.get('http://localhost:5000/api/contrat-updates');
         setContratUpdates(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des mises à jour :", error);
@@ -67,25 +67,19 @@ function CommercialVente() {
     fetchProfile();
     fetchContratUpdates();
 
-    // Configurer l'intervalle de polling
     const intervalId = setInterval(() => {
       fetchContratUpdates();
-    }, 5000); // Actualiser toutes les 5 secondes
+    }, 5000);
 
-    // Nettoyer l'intervalle lorsqu'on démonte le composant
     return () => clearInterval(intervalId);
   }, [navigate]);
 
-  
-
-  // Fonction pour se déconnecter
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userInfo');
     navigate('/');
   };
 
-  // Fonction pour rendre le bon composant selon l'état
   const renderComponent = () => {
     switch (activeComponent) {
       case 'listeContrats':
@@ -96,30 +90,23 @@ function CommercialVente() {
   };
 
   return (
-    
-    <div className="flex">
-      {/* Barre latérale */}
-
-      <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
-        {/* Logo */}
+    <div className="flex flex-col md:flex-row">
+      {/* Sidebar */}
+      <Card className="md:h-[calc(100vh-2rem)] h-auto md:min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white w-full md:w-auto md:flex-shrink-0">
         <img
-          className="object-cover w-auto h-24"
+          className="object-cover w-auto h-24 mx-auto md:mx-0"
           src={logo}
           alt="Company Logo"
         />
 
         <div className="text-light-blue-900 pl-5 mb-4 pt-8 flex items-center space-x-2">
           <Typography variant="h6" className="flex items-center">
-            {/*<Badge content={contratUpdates.length} overlap="circular">
-              <button onClick={handleOpen}>*/}
-                <img className="object-cover w-auto h-12" src={img} alt="User" />
-              {/*</button>
-            </Badge>*/}
+            <img className="object-cover w-auto h-12" src={img} alt="User" />
             {userName}
           </Typography>
         </div>
 
-        {/* Liste de menus */}
+        {/* Menu List */}
         <List>
           <ListItem
             onClick={() => setActiveComponent('listeContrats')}
@@ -128,7 +115,7 @@ function CommercialVente() {
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
             </ListItemPrefix>
-             la liste des rendez-vous
+            la liste des rendez-vous
           </ListItem>
 
           <ListItem
@@ -141,19 +128,11 @@ function CommercialVente() {
             Se déconnecter
           </ListItem>
         </List>
-
       </Card>
-      
 
-
-
-      <div className="flex-1 p-6">
-
-        
+      {/* Content Area */}
+      <div className="flex-1 p-6 w-full">
         {renderComponent()}
-              {/* Zone de contenu */}
-
-      
       </div>
     </div>
   );

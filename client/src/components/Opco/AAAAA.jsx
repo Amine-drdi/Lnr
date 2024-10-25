@@ -1,281 +1,275 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Swal from 'sweetalert2';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import {
-  Checkbox,
-  Card,
-  List,
-  ListItem,
-  ListItemPrefix,
-  Typography,
-} from '@material-tailwind/react';
+import 'tailwindcss/tailwind.css';
 
-function SouscriptionOPCO({ setIsAdding }) {
-  const [nom, setNom] = useState('');
-  const [prenom, setPrenom] = useState('');
-  const [entreprise, setEntreprise] = useState('');
-  const [adresse, setAdresse] = useState('');
-  const [codePostal, setCodePostal] = useState('');
-  const [ville, setVille] = useState('');
-  const [formation, setFormation] = useState([]);
-  const [datePriseRDV, setDatePriseRDV] = useState('');
-  const [dateRDV, setDateRDV] = useState('');
-  const [heureRDV, setHeureRDV] = useState('');
-  const [userName, setUserName] = useState('');
-  const textInput = useRef(null);
-  const navigate = useNavigate();
+const calend = () => {
+  const NOMS_MOIS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+  const JOURS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
-  
-
-  const handleCheckboxChange = (value) => {
-    if (formation.includes(value)) {
-      setFormation(formation.filter((option) => option !== value));
-    } else {
-      setFormation([...formation, value]);
-    }
-  };
-  
+  const [mois, setMois] = useState(new Date().getMonth());
+  const [annee, setAnnee] = useState(new Date().getFullYear());
+  const [nombreDeJours, setNombreDeJours] = useState([]);
+  const [joursVides, setJoursVides] = useState([]);
+  const [evenements, setEvenements] = useState([]);
+  const [titreEvenement, setTitreEvenement] = useState('');
+  const [dateEvenement, setDateEvenement] = useState('');
+  const [themeEvenement, setThemeEvenement] = useState('bleu');
+  const [ouvrirModalEvenement, setOuvrirModalEvenement] = useState(false);
+  const [modifierEvenementId, setModifierEvenementId] = useState(null);
 
   useEffect(() => {
-    if (textInput.current) {
-      textInput.current.focus();
-    }
+    obtenirNombreDeJours();
+    obtenirEvenements();
+  }, [mois, annee]);
 
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem('authToken');
-        if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setUserName(response.data.user.name);
-        } else {
-          navigate('/');
-        }
-      } catch (error) {
-        console.error('Erreur lors de la récupération du profil:', error);
-        navigate('/');
-      }
-    };
+  const estAujourdHui = (date) => {
+    const aujourdHui = new Date();
+    const d = new Date(annee, mois, date);
+    return aujourdHui.toDateString() === d.toDateString();
+  };
 
-    fetchProfile();
-  }, [navigate]);
+  const afficherModalEvenement = (date) => {
+    setOuvrirModalEvenement(true);
+    setDateEvenement(new Date(annee, mois, date).toDateString());
+    setModifierEvenementId(null);
+  };
 
-  const handleAdd = async (e) => {
-    e.preventDefault();
+  const afficherModalModification = (evenement) => {
+    setOuvrirModalEvenement(true);
+    setTitreEvenement(evenement.titre_evenement);
+    setDateEvenement(evenement.date_evenement);
+    setThemeEvenement(evenement.theme_evenement);
+    setModifierEvenementId(evenement._id);
+  };
 
-    if (!nom || !prenom || !entreprise || !adresse || !codePostal || !ville || !formation.length || !datePriseRDV || !dateRDV || !heureRDV) {
-      return Swal.fire({
-        icon: 'error',
-        title: 'Erreur',
-        text: 'Tous les champs sont obligatoires.',
-        showConfirmButton: true,
-        timer: 1500,
-      });
-    }
-
-    const newRDV = {
-      nom,
-      prenom,
-      entreprise,
-      adresse,
-      codePostal,
-      ville,
-      formation,
-      datePriseRDV,
-      dateRDV,
-      heureRDV,
-      userName,
-    };
-
+  const ajouterOuModifierEvenement = async () => {
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/rdvs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newRDV),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        Swal.fire({
-          icon: 'success',
-          title: 'Ajouté',
-          text: `Le rendez-vous de ${nom} ${prenom} a été ajouté.`,
-          showConfirmButton: false,
-          timer: 3000,
+      if (modifierEvenementId) {
+        // Modifier un événement existant
+        const response = await axios.put(`http://localhost:5000/api/evenements/${modifierEvenementId}`, {
+          date_evenement: dateEvenement,
+          titre_evenement: titreEvenement,
+          theme_evenement: themeEvenement,
         });
+        console.log("Réponse de l'API lors de la modification:", response.data);
+        setEvenements(evenements.map(evenement => evenement._id === modifierEvenementId ? { ...evenement, titre_evenement: titreEvenement, date_evenement: dateEvenement, theme_evenement: themeEvenement } : evenement));
       } else {
-        throw new Error("Erreur lors de l'ajout du rendez-vous");
+        // Ajouter un nouvel événement
+        const response = await axios.post('http://localhost:5000/api/evenements', {
+          date_evenement: dateEvenement,
+          titre_evenement: titreEvenement,
+          theme_evenement: themeEvenement,
+        });
+        console.log("Réponse de l'API lors de l'ajout:", response.data);
+        setEvenements([...evenements, response.data]);
+      }
+      setTitreEvenement('');
+      setDateEvenement('');
+      setThemeEvenement('bleu');
+      setModifierEvenementId(null);
+      setOuvrirModalEvenement(false);
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout ou de la modification de l\'événement:', error.response ? error.response.data : error.message);
+    }
+  };
+
+  const supprimerEvenement = async (id) => {
+    try {
+      await axios.delete(`http://localhost/api/evenements/${id}`);
+      setEvenements(evenements.filter(evenement => evenement._id !== id));
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'événement', error);
+    }
+  };
+
+  const obtenirNombreDeJours = () => {
+    const joursDansMois = new Date(annee, mois + 1, 0).getDate();
+    const jourSemaine = new Date(annee, mois, 1).getDay();
+    const arrayJoursVides = Array.from({ length: jourSemaine === 0 ? 6 : jourSemaine - 1 }, (_, i) => i + 1);
+    const arrayJours = Array.from({ length: joursDansMois }, (_, i) => i + 1);
+    setJoursVides(arrayJoursVides);
+    setNombreDeJours(arrayJours);
+  };
+
+  const obtenirEvenements = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/evenements');
+      // Assurez-vous que la réponse est bien un tableau
+      if (Array.isArray(response.data)) {
+        setEvenements(response.data);
+      } else {
+        console.error('La réponse des événements n\'est pas un tableau:', response.data);
+        setEvenements([]);
       }
     } catch (error) {
-      console.error(error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Erreur',
-        text: "Impossible d'ajouter le rendez-vous.",
-        showConfirmButton: true,
-        timer: 1500,
-      });
+      console.error('Erreur lors de la récupération des événements', error);
     }
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-8 bg-blue-gray-50 shadow-lg rounded-lg border border-blue-gray-200">
-      <form onSubmit={handleAdd} className="space-y-6">
-        <h2 className="text-2xl font-bold text-blue-gray-800 mb-4">Formulaire de Rendez-vous</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Input fields */}
-          <div>
-            <label htmlFor="nom" className="block text-sm font-medium text-blue-gray-700">Nom</label>
-            <input
-              id="nom"
-              type="text"
-              value={nom}
-              onChange={(e) => setNom(e.target.value)}
-              className="border border-blue-gray-300 rounded-md p-3 w-full"
-            />
+    <div className="antialiased sans-serif bg-blue-gray-100 h-screen">
+      <div className="container mx-auto px-4 py-2 md:py-24">
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="flex items-center justify-between py-2 px-6">
+            <div>
+              <span className="text-lg font-bold text-gray-800">{NOMS_MOIS[mois]}</span>
+              <span className="ml-1 text-lg text-gray-600 font-normal">{annee}</span>
+            </div>
+            <div className="border rounded-lg px-1" style={{ paddingTop: '2px' }}>
+              <button
+                type="button"
+                className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center ${mois === 0 && 'cursor-not-allowed opacity-25'}`}
+                onClick={() => {
+                  if (mois > 0) {
+                    setMois(mois - 1);
+                  } else {
+                    setMois(11);
+                    setAnnee(annee - 1);
+                  }
+                }}
+              >
+                <svg className="h-6 w-6 text-gray-500 inline-flex leading-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <div className="border-r inline-flex h-6"></div>
+              <button
+                type="button"
+                className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex items-center cursor-pointer hover:bg-gray-200 p-1 ${mois === 11 && 'cursor-not-allowed opacity-25'}`}
+                onClick={() => {
+                  if (mois < 11) {
+                    setMois(mois + 1);
+                  } else {
+                    setMois(0);
+                    setAnnee(annee + 1);
+                  }
+                }}
+              >
+                <svg className="h-6 w-6 text-gray-500 inline-flex leading-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <div>
-            <label htmlFor="prenom" className="block text-sm font-medium text-blue-gray-700">Prénom</label>
-            <input
-              id="prenom"
-              type="text"
-              value={prenom}
-              onChange={(e) => setPrenom(e.target.value)}
-              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
-            />
+          <div className="-mx-1 -mb-1">
+            <div className="flex flex-wrap" style={{ marginBottom: '-40px' }}>
+              {JOURS.map((jour, index) => (
+                <div key={index} style={{ width: '14.26%' }} className="px-2 py-2">
+                  <div className="text-gray-600 text-sm uppercase tracking-wide font-bold text-center">{jour}</div>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap border-t border-l">
+              {joursVides.map((_, index) => (
+                <div key={index} style={{ width: '14.28%', height: '120px' }} className="text-center border-r border-b px-4 pt-2"></div>
+              ))}
+              {nombreDeJours.map((date, index) => (
+                <div key={index} style={{ width: '14.28%', height: '120px' }} className="px-4 pt-2 border-r border-b relative text-right">
+                  <span
+                    className={`block w-6 h-6 rounded-full leading-none text-center ${estAujourdHui(date) ? 'bg-blue-500 text-white' : ''}`}
+                    onClick={() => afficherModalEvenement(date)}
+                  >
+                    {date}
+                  </span>
+                  <div className="absolute left-0 right-0 top-8 overflow-y-auto">
+                    {Array.isArray(evenements) && evenements
+                      .filter(evenement => new Date(evenement.date_evenement).getDate() === date)
+                      .map((evenement, index) => (
+                        <div
+                          key={index}
+                          className={`mt-2 p-1 rounded border ${evenement.theme_evenement === 'bleu' ? 'border-blue-200 text-blue-600' : 'border-red-200 text-red-600'} text-sm`}
+                        >
+                          <div className="flex justify-between items-center">
+                            <span>{evenement.titre_evenement}</span>
+                            <button
+                              onClick={() => supprimerEvenement(evenement._id)}
+                              className="text-xs text-red-500"
+                            >
+                              X
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div>
-            <label htmlFor="entreprise" className="block text-sm font-medium text-blue-gray-700">Nom de l’entreprise</label>
-            <input
-              id="entreprise"
-              type="text"
-              value={entreprise}
-              onChange={(e) => setEntreprise(e.target.value)}
-              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="adresse" className="block text-sm font-medium text-blue-gray-700">Adresse</label>
-            <input
-              id="adresse"
-              type="text"
-              value={adresse}
-              onChange={(e) => setAdresse(e.target.value)}
-              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="codePostal" className="block text-sm font-medium text-blue-gray-700">Code postal</label>
-            <input
-              id="codePostal"
-              type="text"
-              value={codePostal}
-              onChange={(e) => setCodePostal(e.target.value)}
-              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="ville" className="block text-sm font-medium text-blue-gray-700">Ville</label>
-            <input
-              id="ville"
-              type="text"
-              value={ville}
-              onChange={(e) => setVille(e.target.value)}
-              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
-            />
-          </div>
-
-         
-
-          <div>
-            <label htmlFor="datePriseRDV" className="block text-sm font-medium text-blue-gray-700">Date de prise de rendez-vous</label>
-            <input
-              id="datePriseRDV"
-              type="date"
-              value={datePriseRDV}
-              onChange={(e) => setDatePriseRDV(e.target.value)}
-              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="dateRDV" className="block text-sm font-medium text-blue-gray-700">Date du rendez-vous</label>
-            <input
-              id="dateRDV"
-              type="date"
-              value={dateRDV}
-              onChange={(e) => setDateRDV(e.target.value)}
-              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="heureRDV" className="block text-sm font-medium text-blue-gray-700">Heure du rendez-vous</label>
-            <input
-              id="heureRDV"
-              type="time"
-              value={heureRDV}
-              onChange={(e) => setHeureRDV(e.target.value)}
-              className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
-            />
-          </div>
-          </div>
-          <div>
-  <label className="block text-sm font-medium text-blue-gray-700">Formations</label>
-  <Card className="w-full border border-blue-gray-300">
-    <List className="flex flex-wrap">
-      {[
-        ["Transformation numérique", "Échafaudage fixe", "Habilitations Électriques B0"],
-        ["La cybersécurité", "Développement durable", "Autocad"],
-        ["CACES R482", "CACES R486", "CACES R489"],
-        ["Échafaudage roulant", "Habilitations électriques", "Revit"],
-        ["RGE", "Sketchup", "SST initial"],
-        ["Travail en hauteur"]
-      ].map((row, rowIndex) => (
-        <div key={rowIndex} className="flex w-full">
-          {row.map((option, index) => (
-            <ListItem key={index} className="p-0 w-1/3">
-              <label className="flex w-full cursor-pointer items-center px-3 py-2">
-                <ListItemPrefix className="mr-3">
-                  <Checkbox
-                    id={`horizontal-list-${rowIndex}-${index}`}
-                    ripple={false}
-                    checked={formation.includes(option)}
-                    onChange={() => handleCheckboxChange(option)}
-                  />
-                </ListItemPrefix>
-                <Typography color="blue-gray" className="font-medium">
-                  {option}
-                </Typography>
-              </label>
-            </ListItem>
-          ))}
         </div>
-      ))}
-    </List>
-  </Card>
-</div>
+      </div>
 
-
-
-        <button type="submit" className="bg-blue-gray-600 text-white py-2 px-6 rounded-lg">
-          Enregistrer le rendez-vous
-        </button>
-      </form>
+      {/* Modal pour ajouter ou modifier un événement */}
+      {ouvrirModalEvenement && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg w-1/3 p-6">
+            <h3 className="text-lg font-semibold mb-4">{modifierEvenementId ? 'Modifier l\'événement' : 'Ajouter un événement'}</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                ajouterOuModifierEvenement();
+              }}
+            >
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2" htmlFor="titreEvenement">
+                  Titre
+                </label>
+                <input
+                  type="text"
+                  id="titreEvenement"
+                  value={titreEvenement}
+                  onChange={(e) => setTitreEvenement(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2" htmlFor="dateEvenement">
+                  Date
+                </label>
+                <input
+                  type="text"
+                  id="dateEvenement"
+                  value={dateEvenement}
+                  readOnly
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2" htmlFor="themeEvenement">
+                  Thème
+                </label>
+                <select
+                  id="themeEvenement"
+                  value={themeEvenement}
+                  onChange={(e) => setThemeEvenement(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded"
+                >
+                  <option value="bleu">Bleu</option>
+                  <option value="rouge">Rouge</option>
+                </select>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setOuvrirModalEvenement(false)}
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded mr-2"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                 
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  {modifierEvenementId ? 'Modifier' : 'Ajouter'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default SouscriptionOPCO;
-
-
-
-
-
-
-
-
+export default calend;

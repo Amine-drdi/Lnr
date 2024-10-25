@@ -11,6 +11,7 @@ import {
   PresentationChartBarIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
+import { IoCalendarNumber } from "react-icons/io5";
 import { MdOutlinePriceChange } from "react-icons/md";
 import { VscError } from "react-icons/vsc";
 import { FaFileContract} from "react-icons/fa6";
@@ -29,6 +30,7 @@ import { CiBoxList } from "react-icons/ci";
 import Devis from "../contrat/Devis";
 
 import ListeDevisGestio from "../contrat/ListeDevisGestio";
+
 
 
 
@@ -61,7 +63,7 @@ export default function Gestionnaire() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -108,8 +110,10 @@ export default function Gestionnaire() {
           return <Souscription />;
           case 'AjoutDevis':
             return <Devis />;
-            case 'listeDevis':
-        return <ListeDevisGestio />;
+          case 'listeDevis':
+            return <ListeDevisGestio />;
+            case 'Agenda':
+              return <Agenda />;
 
         case 'NonValide':
           return <ContratNvalideGestio />;
@@ -169,6 +173,13 @@ export default function Gestionnaire() {
               <CiBoxList className="h-5 w-5 text-white" />
             </ListItemPrefix>
            Liste des Devis
+          </ListItem>
+
+          <ListItem onClick={() => setActiveComponent('Agenda')} className="hover:bg-blue-600 text-white">
+            <ListItemPrefix>
+              <IoCalendarNumber className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+           Agenda
           </ListItem>
 
           <ListItem onClick={() => setActiveComponent('NonValide')}  className="hover:bg-blue-600 text-white">

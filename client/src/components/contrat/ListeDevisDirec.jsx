@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaTrash  } from 'react-icons/fa'; // Importer l'icône de vue
 import Commercial from '../role/Commercial';
-
+import Swal from 'sweetalert2';
 function ListeDevisDirec() {
   const [deviss, setDeviss] = useState([]);
   const [filteredDevis, setFilteredDeviss] = useState([]);
@@ -23,7 +23,7 @@ function ListeDevisDirec() {
   useEffect(() => {
     const fetchdevis = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/devis');
+        const response = await fetch('http://localhost:5000/api/devis');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des devis');
         }
@@ -42,7 +42,7 @@ function ListeDevisDirec() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -122,7 +122,7 @@ function ListeDevisDirec() {
     try {
       const token = localStorage.getItem('authToken');
       const response = await axios.put(
-        `http://51.83.69.195:5000/api/devis/${selectedDevis._id}`,
+        `http://localhost:5000/api/devis/${selectedDevis._id}`,
         updatedDevis,
         {
           headers: {
@@ -143,20 +143,40 @@ function ListeDevisDirec() {
     }
   };
    // Fonction pour supprimer un devis
-   const handleDeleteDevis = async (devisId) => {
+
+
+const handleDeleteDevis = async (devisId) => {
+  const result = await Swal.fire({
+    title: 'Êtes-vous sûr?',
+    text: 'Voulez-vous vraiment supprimer ce devis ?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Oui, supprimer!',
+    cancelButtonText: 'Annuler'
+  });
+
+  if (result.isConfirmed) {
     try {
       const token = localStorage.getItem('authToken');
-      await axios.delete(`http://51.83.69.195:5000/api/devis/${devisId}`, {
+      await axios.delete(`http://localhost:5000/api/devis/${devisId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       // Mettre à jour la liste des devis après suppression
       setDeviss(deviss.filter((devis) => devis._id !== devisId));
+
+      Swal.fire('Supprimé!', 'Le devis a été supprimé avec succès.', 'success');
     } catch (error) {
       console.error('Erreur lors de la suppression du devis:', error);
+      Swal.fire('Erreur!', 'Erreur lors de la suppression du devis.', 'error');
     }
-  };
+  }
+};
+
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen text-gray-600">Chargement des devis...</div>;

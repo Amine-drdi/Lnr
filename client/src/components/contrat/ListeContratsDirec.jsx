@@ -2,7 +2,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
-
+import { IoIosRefresh } from "react-icons/io";
+import Swal from 'sweetalert2';
 function ListeContratsDirec() {
   const [contrats, setContrats] = useState([]);
   const [filteredContrats, setFilteredContrats] = useState([]);
@@ -33,7 +34,7 @@ function ListeContratsDirec() {
 
   const handleSaveModal = async () => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${editedContrat._id}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${editedContrat._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -64,10 +65,11 @@ function ListeContratsDirec() {
   };
 
   // Charger les contrats au premier rendu
-  useEffect(() => {
+
     const fetchContrats = async () => {
+      setLoading(true);
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats');
+        const response = await fetch('http://localhost:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -86,6 +88,7 @@ function ListeContratsDirec() {
         setLoading(false);
       }
     };
+    useEffect(() => {
     fetchContrats();
   }, []);
 
@@ -122,7 +125,7 @@ const handleEditClick = (contrat) => {
 // Fonction pour sauvegarder les modifications
 const handleSaveClick = async (contratId) => {
   try {
-    const response = await fetch(`http://51.83.69.195:5000/api/contrats/${contratId}`, {
+    const response = await fetch(`http://localhost:5000/api/contrats/${contratId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -161,10 +164,23 @@ const closeModal = () => {
 };
 
 // Fonction pour supprimer un contrat
+
+
 const handleDeleteClick = async (contratId) => {
-  if (window.confirm('Êtes-vous sûr de vouloir supprimer ce contrat ?')) {
+  const result = await Swal.fire({
+    title: 'Êtes-vous sûr?',
+    text: 'Voulez-vous vraiment supprimer ce contrat ?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Oui, supprimer!',
+    cancelButtonText: 'Annuler'
+  });
+
+  if (result.isConfirmed) {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${contratId}`, {
+      const response = await fetch(`http://localhost:5000/api/contrats/${contratId}`, {
         method: 'DELETE',
       });
 
@@ -176,11 +192,14 @@ const handleDeleteClick = async (contratId) => {
       const updatedList = contrats.filter((contrat) => contrat._id !== contratId);
       setContrats(updatedList);
       setFilteredContrats(updatedList); // Met à jour la liste filtrée
+
+      Swal.fire('Supprimé!', 'Le contrat a été supprimé avec succès.', 'success');
     } catch (error) {
       setError(error.message);
     }
   }
 };
+
 
   // Filtrage par mois et commercial
   useEffect(() => {
@@ -226,6 +245,11 @@ const handleDeleteClick = async (contratId) => {
     filterByDate();
   }, [selectedMonth, selectedDay, contrats]);
 
+
+  const handleRefresh = () => {
+    fetchContrats(); // Fetch the RDVs again when the button is clicked
+  };
+
   if (loading) {
     return <div className="flex justify-center items-center h-screen text-gray-600">Chargement des contrats...</div>;
   }
@@ -237,6 +261,13 @@ const handleDeleteClick = async (contratId) => {
   return (
     <div className="max-w-full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
       <h1 className="text-3xl font-semibold text-left text-blue-gray-700 mb-6 border-b pb-4">Liste des Contrats</h1>
+      {/* Refresh Button */}
+      <button 
+        onClick={handleRefresh} 
+        className="mb-4 px-4 py-2 bg-transparent text-blue-gray-700 rounded  flex items-center"
+      >
+        <IoIosRefresh className="mr-2" /> Actualiser
+      </button>
       <div className="mb-4">
         <input
           type="text"
