@@ -272,6 +272,7 @@ app.post('/api/rdvs', async (req, res) => {
       telephone,
       email,
       entreprise,
+      siret,
       nbrempl,
       adresse,
       codePostal,
@@ -282,7 +283,8 @@ app.post('/api/rdvs', async (req, res) => {
       heureRDV,
       userName,
       rdvType,
-      commentaireManager
+      commentaireManager,
+      commentaireAgent
     } = req.body;
 
     const newRDV = new RDV({
@@ -291,6 +293,7 @@ app.post('/api/rdvs', async (req, res) => {
       telephone,
       email,
       entreprise,
+      siret,
       nbrempl,
       adresse,
       codePostal,
@@ -301,7 +304,8 @@ app.post('/api/rdvs', async (req, res) => {
       heureRDV,
       userName,
       rdvType,
-      commentaireManager
+      commentaireManager,
+      commentaireAgent
     });
 
     await newRDV.save();
@@ -511,106 +515,6 @@ app.delete('/api/users/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
-// Route pour récupérer tous les événements
-app.get('/api/evenements', async (req, res) => {
-  try {
-    const evenements = await Evenement.find();
-    res.json(evenements);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// Route pour ajouter un événement
-app.post('/api/evenements', async (req, res) => {
-  try {
-    const evenement = new Evenement(req.body);
-    await evenement.save();
-    res.status(201).json(evenement);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-// Route pour mettre à jour un événement
-app.put('/api/evenements/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const evenement = await Evenement.findByIdAndUpdate(id, req.body, { new: true });
-    if (!evenement) return res.status(404).json({ message: 'Événement non trouvé' });
-    res.json(evenement);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-// Route pour supprimer un événement
-app.delete('/api/evenements/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const evenement = await Evenement.findByIdAndDelete(id);
-    if (!evenement) return res.status(404).json({ message: 'Événement non trouvé' });
-    res.json({ message: 'Événement supprimé' });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-// Définir le modèle pour les événements
-const evenementSchema = new mongoose.Schema({
-  date_evenement: String,
-  titre_evenement: String,
-  theme_evenement: String,
-});
-
-
-
-// Route pour récupérer tous les événements
-app.get('/api/evenements', async (req, res) => {
-  try {
-    const evenements = await Evenement.find();
-    res.json(evenements);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// Route pour ajouter un événement
-app.post('/api/evenements', async (req, res) => {
-  try {
-    const evenement = new Evenement(req.body);
-    await evenement.save();
-    res.status(201).json(evenement);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-// Route pour mettre à jour un événement
-app.put('/api/evenements/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const evenement = await Evenement.findByIdAndUpdate(id, req.body, { new: true });
-    if (!evenement) return res.status(404).json({ message: 'Événement non trouvé' });
-    res.json(evenement);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-// Route pour supprimer un événement
-app.delete('/api/evenements/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const evenement = await Evenement.findByIdAndDelete(id);
-    if (!evenement) return res.status(404).json({ message: 'Événement non trouvé' });
-    res.json({ message: 'Événement supprimé' });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
 // Récupérer les contrats ajoutés aujourd'hui et hier
 app.get('/api/contrats/today', async (req, res) => {
   try {
@@ -750,6 +654,40 @@ const deleteDevisById = async (req, res) => {
 // DELETE route using the separate function
 app.delete('/api/devis/:id', deleteDevisById);
 
+
+
+// Modèle d'événement
+const eventSchema = new mongoose.Schema({
+  title: String,
+  subtitle: String,
+  time: String,
+  date: String,
+  link: String,
+  participants: Array,
+});
+const Event = mongoose.model("Event", eventSchema);
+
+// Routes API
+app.get("/events", async (req, res) => {
+  const events = await Event.find();
+  res.json(events);
+});
+
+app.post("/events", async (req, res) => {
+  const newEvent = new Event(req.body);
+  await newEvent.save();
+  res.json(newEvent);
+});
+
+app.put("/events/:id", async (req, res) => {
+  const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(updatedEvent);
+});
+
+app.delete("/events/:id", async (req, res) => {
+  await Event.findByIdAndDelete(req.params.id);
+  res.json({ message: "Event deleted" });
+});
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;

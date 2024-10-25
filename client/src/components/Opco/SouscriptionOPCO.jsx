@@ -10,6 +10,7 @@ function SouscriptionOPCO({ setIsAdding }) {
   const [telephone, setTelephone] = useState('');
   const [email, setEmail] = useState('');
   const [entreprise, setEntreprise] = useState('');
+  const [siret, setSiret] = useState('');
   const [nbrempl, setNbrempl] = useState('');
   const [adresse, setAdresse] = useState('');
   const [codePostal, setCodePostal] = useState('');
@@ -20,6 +21,7 @@ function SouscriptionOPCO({ setIsAdding }) {
   const [heureRDV, setHeureRDV] = useState('');
   const [userName, setUserName] = useState('');
   const [rdvType, setRdvType] = useState('');
+  const [commentaireAgent, setCommentaireAgent] = useState('');
   const textInput = useRef(null);
   const navigate = useNavigate();
 
@@ -53,7 +55,7 @@ function SouscriptionOPCO({ setIsAdding }) {
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    if (!nom || !prenom || !email || !telephone || !entreprise || !nbrempl || !adresse || !codePostal || !ville || !formation || !datePriseRDV || !dateRDV || !heureRDV || !rdvType) {
+    if (!nom || !prenom || !email || !telephone || !entreprise || !siret|| !nbrempl || !adresse || !codePostal || !ville || !formation || !datePriseRDV || !dateRDV || !heureRDV || !rdvType) {
       return Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -69,6 +71,7 @@ function SouscriptionOPCO({ setIsAdding }) {
       email,
       telephone,
       entreprise,
+      siret,
       nbrempl,
       adresse,
       codePostal,
@@ -79,6 +82,7 @@ function SouscriptionOPCO({ setIsAdding }) {
       heureRDV,
       userName,
       rdvType,
+      commentaireAgent
     };
 
     try {
@@ -237,6 +241,10 @@ function SouscriptionOPCO({ setIsAdding }) {
             />
           </div>
           <div>
+            <label htmlFor="siret" className="block text-sm font-medium text-blue-gray-700">SIRET</label>
+            <input id="siret" type="text" value={siret} onChange={(e) => setSiret(e.target.value)} className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500" />
+          </div>
+          <div>
             <label htmlFor="nbrempl" className="block text-sm font-medium text-blue-gray-700">Nombre de salariés</label>
             <input
               id="nbrempl"
@@ -344,7 +352,10 @@ function SouscriptionOPCO({ setIsAdding }) {
               </List>
             </Card>
           </div>
-
+          <div className="mt-6">
+          <label htmlFor="commentaire" className="block text-sm font-medium text-blue-gray-700">Commentaire</label>
+          <textarea id="commentaireAgent" value={commentaireAgent} onChange={(e) => setCommentaireAgent(e.target.value)} className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500" rows="4"></textarea>
+        </div>
         <button type="submit" className="bg-blue-gray-600 text-white py-2 px-6 rounded-lg hover:bg-blue-gray-700 transition duration-150">
           Enregistrer le rendez-vous
         </button>

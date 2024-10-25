@@ -224,7 +224,7 @@ export function Direction() {
             <ListItemPrefix>
               <ImUsers className="h-5 w-5 text-white" />
             </ListItemPrefix>
-            Liste employés
+            Liste des employés
           </ListItem>
           <ListItem onClick={() => setActiveComponent('profile')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>

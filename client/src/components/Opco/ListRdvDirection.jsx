@@ -164,6 +164,7 @@ function ListeRdvDirection() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Téléphone</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Email</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Entreprise</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">SIRET</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nombre de salariés</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Adresse</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Code Postal</th>
@@ -172,6 +173,7 @@ function ListeRdvDirection() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date Prise RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure RDV</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Manager</th>
@@ -207,6 +209,7 @@ function ListeRdvDirection() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.telephone}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.email}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.entreprise}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.siret}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.nbrempl}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.adresse}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.codePostal}</td>
@@ -215,6 +218,7 @@ function ListeRdvDirection() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.datePriseRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.dateRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.heureRDV}</td>
+                <td className="px-4 py-3 text-sm text-blue-700">{RDV.commentaireAgent}</td>
                 <td className="px-4 py-3 text-sm text-red-500">{RDV.commentaireCommercial}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.etatDossier}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireManager}</td>
@@ -242,6 +246,7 @@ function ListeRdvDirection() {
                 <p className="text-left"><strong>Téléphone :</strong> {selectedRdv.telephone}</p>
                 <p className="text-left"><strong>Email :</strong> {selectedRdv.email}</p>
                 <p className="text-left"><strong>Nom du l'entreprise :</strong> {selectedRdv.entreprise}</p>
+                <p className="text-left"><strong>SIRET :</strong> {selectedRdv.siret}</p>
                 <p className="text-left"><strong>nombre de salariés :</strong> {selectedRdv.nbrempl}</p>
                 <p className="text-left"><strong>Adresse :</strong> {selectedRdv.adresse}</p>
                 <p className="text-left"><strong>Code postal :</strong> {selectedRdv.codePostal}</p>
@@ -251,6 +256,8 @@ function ListeRdvDirection() {
                 <p className="text-left"><strong>Date RDV :</strong> {selectedRdv.dateRDV}</p>
                 <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>
                 <p className="text-left"><strong>état du dossier :</strong><span className="text-red-500"> {selectedRdv.etatDossier}</span></p>
+                <p className="text-left"><strong>Commentaire Agent :</strong><span className="text-blue-700"> {selectedRdv.commentaireAgent}</span></p>
+
                 <p className="text-left"><strong>Commentaire manager :</strong> {selectedRdv.commentaireManager}</p>
                 <p className="text-left"><strong>Commentaire Commercial :</strong><span className="text-red-500"> {selectedRdv.commentaireCommercial}</span></p>
 
@@ -331,6 +338,15 @@ function ListeRdvDirection() {
                     <input
                       name="entreprise"
                       value={formData.entreprise}
+                      onChange={handleInputChange}
+                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
+                    />
+                  </label>
+                  <label className="block mb-2">
+                    <span className="text-gray-700">SIRET :</span>
+                    <input
+                      name="siret"
+                      value={formData.siret}
                       onChange={handleInputChange}
                       className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
                     />

@@ -27,6 +27,10 @@ const RDVSchema = new mongoose.Schema({
         type: String,
         required: true
       },
+      siret: {
+        type: String,
+        required: true
+      },
       nbrempl: {
         type: Number,
         required: true
@@ -56,7 +60,7 @@ const RDVSchema = new mongoose.Schema({
         required: true
       },
       heureRDV: {
-        type: String, // Optionnel, vous pouvez utiliser "Date" si vous gérez l'heure avec précision
+        type: String, 
         required: true
       },
       etatDossier : String ,
@@ -67,6 +71,7 @@ const RDVSchema = new mongoose.Schema({
         default: Date.now // La date et l'heure de l'insertion sont automatiquement générées ici
       },
       userName : String ,
+      commentaireAgent : String ,
 });
 
 const RDV = mongoose.model('RDV', RDVSchema);
