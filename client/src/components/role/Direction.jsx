@@ -14,6 +14,7 @@ import {
   PresentationChartBarIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
+import { IoCalendarNumber } from "react-icons/io5";
 import { ImUsers } from "react-icons/im";
 import { MdOutlinePriceChange } from "react-icons/md";
 import { RiArrowDropDownLine } from "react-icons/ri";
@@ -37,6 +38,8 @@ import ListeDevisDirec from "../contrat/ListeDevisDirec";
 import ProfileSetting from "../ProfileSetting";
 import SouscriptionOPCO from '../Opco/SouscriptionOPCO';
 import { FaPlusCircle } from "react-icons/fa";
+import Agenda from "../Agenda";
+
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -95,6 +98,8 @@ export function Direction() {
         return <ProfileSetting/>;
         case 'AjoutRDV':
           return <SouscriptionOPCO />;
+          case 'Agenda':
+            return <Agenda />;
       default:
         return <DashboardContent />;
     }
@@ -166,6 +171,12 @@ export function Direction() {
                   </ListItemPrefix>
                   Liste des Devis
                 </ListItem>
+                <ListItem onClick={() => setActiveComponent('Agenda')} className="hover:bg-blue-600 text-white pl-10 ">
+            <ListItemPrefix>
+              <IoCalendarNumber className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+           Agenda
+          </ListItem>
                
                 <ListItem onClick={() => setActiveComponent('NonValide')} className="hover:bg-blue-600 text-white pl-10">
                   <ListItemPrefix>

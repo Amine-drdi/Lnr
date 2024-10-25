@@ -3,7 +3,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
 import { IoIosRefresh } from "react-icons/io";
-
+import { IoMdCloseCircleOutline } from "react-icons/io";
 function ListeContratsGestio() {
   const [contrats, setContrats] = useState([]);
   const [filteredContrats, setFilteredContrats] = useState([]);
@@ -13,7 +13,8 @@ function ListeContratsGestio() {
   const [editContratId, setEditContratId] = useState(null);
   const [updatedContrat, setUpdatedContrat] = useState({});
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
-  const etatDocs = ["" , "Validé", "Non validé","NRP" , "Impayé", "Sans effet", "Rétractation", "Résigné"];
+  const etatDocs = ["" , "Validé", "Non validé","NRP" , "Sans effet", "Rétractation", "Résigné"];
+  const payements = ["" , "Payé", "Pas payé"];
   const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
   const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jabra" , "Rihab Kouki" ,"Leads"];
   const [selectedMonth, setSelectedMonth] = useState(''); //state pour le mois
@@ -286,6 +287,7 @@ function ListeContratsGestio() {
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Payement</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
@@ -348,6 +350,25 @@ function ListeContratsGestio() {
                  </select>
                  ) : (
                  contrat.etatDossier
+                  )}
+                </td>
+
+                <td className="px-4 py-3 text-sm text-gray-700">
+                 {editContratId === contrat._id ? (
+                <select
+                  name="payement"
+                  value={updatedContrat.payement}
+                  onChange={handleSelectChange}
+                  className="border rounded-md p-2"
+                 >
+                 {payements.map(payement => (
+                 <option key={payement} value={payement}>
+                 {payement}
+                 </option>
+                 ))}
+                 </select>
+                 ) : (
+                 contrat.payement
                   )}
                 </td>
 
@@ -621,10 +642,14 @@ function ListeContratsGestio() {
               {isEditing ? "Modifier le Contrat" : "Détails du Contrat"}
             </h2>
 
+
+            
+
             {!isEditing ? (
               <>
 
             <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
+            <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.payement}</p>
             <p className='text-left'><strong>Nom:</strong> {selectedContrat.nom ? selectedContrat.nom.toUpperCase() : ''}</p>
             <p className='text-left'><strong>Prénom:</strong> {selectedContrat.prenom ? selectedContrat.prenom.toUpperCase() : ''}</p>
             <p className='text-left'><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
@@ -662,6 +687,23 @@ function ListeContratsGestio() {
                 >
                   <option value="Validé">Validé</option>
                   <option value="Non validé">Non validé</option>
+                  <option value="NRP">NRP</option>
+                  <option value="Rétractation">Rétractation</option>
+                  <option value="Résigné">Résigné</option>
+                </select>
+                </div>
+                <div className="flex flex-col">
+                <label className='font-semibold '>Payement : </label>
+                <select
+                 value={updatedContrat.payement && selectedContrat.payement} // Initialisation avec la valeur existante
+                 name="payement"
+                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 className="w-full border border-gray-300 rounded p-2"
+                >
+                    <option value="">Choisissez une option</option>
+                  <option value="Payé">Payé</option>
+                  <option value="Pas payé">Pas payé</option>
+
                 </select>
                 </div>
                 <div className="flex flex-col">

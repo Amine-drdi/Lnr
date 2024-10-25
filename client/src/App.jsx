@@ -46,7 +46,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Signup />} />
-        <Route path="/Agenda" element={<Agenda/>} />
+
         {/* Routes protégées */}
         <Route 
           path="/contratsGest" 
@@ -96,10 +96,10 @@ function App() {
           path="/chart" 
           element={<PrivateRoute element={<Chart />} allowedRoles={['Gestionnaire', 'Direction', 'Manager']} />} 
         />
-       {/* <Route 
+        <Route 
           path="/Agenda" 
           element={<PrivateRoute element={<Agenda />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
-        />*/}
+        />
         <Route 
           path="/profile-settings" 
           element={<PrivateRoute element={<ProfileSetting />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 

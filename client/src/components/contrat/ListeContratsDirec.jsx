@@ -17,7 +17,7 @@ function ListeContratsDirec() {
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife" ,"Soly Azar" , "Zenio"];
   const etatDocs = ["" , "Validé", "Non validé", "NRP" , "Impayé", "Sans effet", "Rétractation", "Résigné"];
   const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jabra" , "Rihab Kouki" ,"Leads"];
-
+  const payements = ["" , "Payé", "Pas payé"];
   const typeResiliations = ["" , "Infra", "Résiliation à échéance"];
   const [selectedMonth, setSelectedMonth] = useState(''); 
   const [selectedDay, setSelectedDay] = useState(''); // State pour le jour
@@ -339,6 +339,7 @@ const handleDeleteClick = async (contratId) => {
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Payement</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
@@ -402,6 +403,25 @@ const handleDeleteClick = async (contratId) => {
                  </select>
                  ) : (
                  contrat.etatDossier
+                  )}
+                </td>
+
+                <td className="px-4 py-3 text-sm text-gray-700">
+                 {editContratId === contrat._id ? (
+                <select
+                  name="payement"
+                  value={updatedContrat.payement}
+                  onChange={handleSelectChange}
+                  className="border rounded-md p-2"
+                 >
+                 {payements.map(payement => (
+                 <option key={payement} value={payement}>
+                 {payement}
+                 </option>
+                 ))}
+                 </select>
+                 ) : (
+                 contrat.payement
                   )}
                 </td>
 
@@ -669,6 +689,7 @@ const handleDeleteClick = async (contratId) => {
               <>
 
             <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
+            <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.payement}</p>
             <p className='text-left'><strong>Nom:</strong> {selectedContrat.nom ? selectedContrat.nom.toUpperCase() : ''}</p>
             <p className='text-left'><strong>Prénom:</strong> {selectedContrat.prenom ? selectedContrat.prenom.toUpperCase() : ''}</p>
             <p className='text-left'><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
@@ -704,8 +725,26 @@ const handleDeleteClick = async (contratId) => {
                  onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 >
+                  <option value="">État du dossier</option>
                   <option value="Validé">Validé</option>
                   <option value="Non validé">Non validé</option>
+                  <option value="NRP">NRP</option>
+                  <option value="Rétractation">Rétractation</option>
+                  <option value="Résigné">Résigné</option>
+                </select>
+                </div>
+                <div className="flex flex-col">
+                <label className='font-semibold '>Payement : </label>
+                <select
+                 value={updatedContrat.payement && selectedContrat.payement} // Initialisation avec la valeur existante
+                 name="payement"
+                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 className="w-full border border-gray-300 rounded p-2"
+                >
+                  <option value="">Choisissez une option</option>
+                  <option value="Payé">Payé</option>
+                  <option value="Pas payé">Pas payé</option>
+
                 </select>
                 </div>
                 <div className="flex flex-col">

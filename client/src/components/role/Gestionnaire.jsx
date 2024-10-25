@@ -30,6 +30,7 @@ import { CiBoxList } from "react-icons/ci";
 import Devis from "../contrat/Devis";
 
 import ListeDevisGestio from "../contrat/ListeDevisGestio";
+import Agenda from "../Agenda";
 
 
 

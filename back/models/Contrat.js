@@ -31,7 +31,7 @@ const contratSchema = new mongoose.Schema({
   typeResiliation :  String ,
   ancienneMutuelle: String,
   createdAt: { type: Date, default: Date.now },
-  
+  payement: String,
 });
 
 const Contrat = mongoose.model('Contrat', contratSchema);

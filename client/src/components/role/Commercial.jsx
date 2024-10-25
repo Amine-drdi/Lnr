@@ -21,13 +21,14 @@ import { CiBoxList } from "react-icons/ci";
 import {  FaFileSignature } from "react-icons/fa6";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import { MdOutlinePriceChange } from "react-icons/md";
+import { IoCalendarNumber } from "react-icons/io5";
 import logo from "../../assets/logo.png";
 import img from "../../assets/user.png";
 import ListeContratsComm from '../contrat/ListeContratsComm';
 import Souscription from '../contrat/Souscription';
 import Devis from '../contrat/Devis';
 import ListeDevisComm from '../contrat/ListeDevisComm';
-
+import Agenda from "../Agenda";
 function Commercial() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -119,6 +120,8 @@ function Commercial() {
           return <Devis />;
           case 'listeDevis':
             return <ListeDevisComm />;
+            case 'Agenda':
+              return <Agenda />;
       default:
         return <Souscription />;
     }
@@ -188,6 +191,13 @@ function Commercial() {
               <CiBoxList className="h-5 w-5" />
             </ListItemPrefix>
              Liste des devis
+          </ListItem>
+
+          <ListItem onClick={() => setActiveComponent('Agenda')} className="hover:bg-blue-600 text-white">
+            <ListItemPrefix>
+              <IoCalendarNumber className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+           Agenda
           </ListItem>
 
           <ListItem

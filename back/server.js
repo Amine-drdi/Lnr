@@ -164,6 +164,7 @@ app.post('/api/contrats',  async (req, res) => {
       commentaireAgent,
       ancienneMutuelle,
       typeResiliation,
+      payement,
    
     } = req.body;
 
@@ -189,6 +190,7 @@ app.post('/api/contrats',  async (req, res) => {
       commentaireAgent,
       ancienneMutuelle,
       typeResiliation,
+      payement,
 
     });
 
