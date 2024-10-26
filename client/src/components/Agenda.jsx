@@ -1,22 +1,50 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { format, addDays, startOfWeek } from "date-fns";
+import { useNavigate } from 'react-router-dom';
 
 const Agenda = () => {
+  const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState(''); 
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
   const [newEvent, setNewEvent] = useState({
     title: "",
     subtitle: "",
     time: "",
     date: format(selectedDay, "yyyy-MM-dd"),
     participants: [],
+    //ajoutePar: userName // Ajouter le champ "ajoutePar"
   });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUserName(response.data.user.name);
+          setUserRole(response.data.user.role);
+        } else {
+          navigate('/');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération du profil:', error);
+        navigate('/');
+      }
+    };
+    fetchProfile();
+  }, [navigate]);
+
   const [eventToEdit, setEventToEdit] = useState(null);
 
-  // Liste d'options de participants
   const availableParticipants = [
     { id: 1003, name: "Faten" },
     { id: 1004, name: "Hanene" },
@@ -34,7 +62,7 @@ const Agenda = () => {
     { id: 1016, name: "Refka" },
     { id: 1017, name: "Dhekra" },
     { id: 1018, name: "Olfa" },
-    { id: 1018, name: "Imen Bouazizi" },
+    { id: 1019, name: "Imen Bouazizi" },
   ];
 
   useEffect(() => {
@@ -51,6 +79,17 @@ const Agenda = () => {
   const handleNextWeek = () => setSelectedDay(addDays(selectedDay, 7));
 
   const handleAddEvent = () => {
+    const matchedParticipant = availableParticipants.find((p) => p.name === userName);
+    const initialParticipants = matchedParticipant ? [matchedParticipant] : [];
+
+    setNewEvent({
+      title: "",
+      subtitle: "",
+      time: "",
+      date: format(selectedDay, "yyyy-MM-dd"),
+      participants: initialParticipants,
+      ajoutePar: userName // Enregistre l'utilisateur actuel en tant qu'ajouteur
+    });
     setIsAdding(true);
     setIsEditing(false);
   };
@@ -71,7 +110,7 @@ const Agenda = () => {
         })
         .catch((error) => console.error(error));
     }
-    setNewEvent({ title: "", subtitle: "", time: "", date: format(selectedDay, "yyyy-MM-dd"), participants: [] });
+    setNewEvent({ title: "", subtitle: "", time: "", date: format(selectedDay, "yyyy-MM-dd"), participants: [], ajoutePar: userName });
   };
 
   const handleEditEvent = (event) => {
@@ -86,14 +125,41 @@ const Agenda = () => {
       .then(() => setEvents(events.filter((event) => event._id !== id)))
       .catch((error) => console.error(error));
   };
+  
+  const handleCancel = () => {
+    setIsAdding(false);
+    setNewEvent({
+      title: "",
+      subtitle: "",
+      time: "",
+      date: format(selectedDay, "yyyy-MM-dd"),
+      participants: [],
+      ajoutePar: userName
+    });
+  };
 
-  const handleSelectParticipant = (e) => {
-    const participantId = e.target.value;
-    const participant = availableParticipants.find((p) => p.id.toString() === participantId);
-    if (participant && !newEvent.participants.includes(participant)) {
-      setNewEvent({ ...newEvent, participants: [...newEvent.participants, participant] });
+  const handleSelectParticipant = (e, participant) => {
+    if (e.target.checked) {
+      setNewEvent((prev) => ({
+        ...prev,
+        participants: [...prev.participants, participant]
+      }));
+    } else {
+      setNewEvent((prev) => ({
+        ...prev,
+        participants: prev.participants.filter((p) => p.id !== participant.id)
+      }));
     }
   };
+
+
+// Filtre des événements visibles
+const visibleEvents = events.filter((event) => 
+  userRole === 'Direction' || // Vérifie si l'utilisateur a le rôle 'Direction'
+  event.ajoutePar === userName || 
+  event.participants.some((p) => p.name === userName)
+);
+
 
   return (
     <div className="p-6 max-w-2xl mx-auto bg-white shadow-xl rounded-lg">
@@ -124,39 +190,44 @@ const Agenda = () => {
       </div>
 
       <div className="space-y-6">
-        {events
+        {visibleEvents
           .filter((event) => event.date === formatDate(selectedDay))
           .map((event) => (
             <div key={event._id} className="p-6 bg-gray-50 rounded-lg shadow-lg transition hover:bg-indigo-50">
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-xl font-bold text-gray-800">{event.title}</h3>
-                <p className="text-sm text-gray-500">{event.time}</p>
+                <p className="text-sm text-gray-700 pr-8">Heure du rendez-vous: <span className="text-lg font-semibold text-blue-500">{event.time}</span></p>
               </div>
-              <p className="text-gray-600 mb-2">{event.subtitle}</p>
+              <p className="text-gray-600 text-left mb-2">{event.subtitle}</p>
 
-              <div className="flex space-x-2">
-                {event.participants.map((participant, idx) => (
-                  <div key={idx} className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-800">
-                    {participant.name.charAt(0)}
-                  </div>
+              <div className="flex space-x-4 items-center">
+                 {event.participants.map((participant, idx) => (
+                  
+                 <p key={idx} className="text-indigo-700 font-medium"> 
+              {participant.name}
+            </p>
                 ))}
+               
                 <button onClick={() => handleEditEvent(event)} className="text-blue-600">Modifier</button>
                 <button onClick={() => handleDeleteEvent(event._id)} className="text-red-600">Supprimer</button>
               </div>
             </div>
           ))}
       </div>
-
+      {/* Formulaire de création ou d'édition de RDV */}
       {isAdding && (
         <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">{isEditing ? "Modifier le rendez-vous" : "Nouveau rendez-vous"}</h3>
+         
+          <label className=' text-sm '>Heure du rendez-vous : </label>
           <input
-            type="text"
-            placeholder="Heure"
-            value={newEvent.time}
-            onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
-            className="w-full p-2 mb-4 border rounded"
+           type="time"
+           value={newEvent.time}
+           onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
+           className="w-full p-2 mb-4 border rounded"
           />
+          
+          <label className=' text-sm '>Titre : </label>
           <input
             type="text"
             placeholder="Titre"
@@ -164,28 +235,41 @@ const Agenda = () => {
             onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
             className="w-full p-2 mb-4 border rounded"
           />
-          <input
-            type="text"
-            placeholder="Sous-titre"
+          <label className=' text-sm '>Paragraphe : </label>
+          <textarea
+            placeholder="Pargraphe"
             value={newEvent.subtitle}
             onChange={(e) => setNewEvent({ ...newEvent, subtitle: e.target.value })}
             className="w-full p-2 mb-4 border rounded"
           />
-          <select onChange={handleSelectParticipant} className="w-full p-2 mb-4 border rounded">
-            <option value="">Sélectionner un participant</option>
-            {availableParticipants.map((participant) => (
-              <option key={participant.id} value={participant.id}>
-                {participant.name}
-              </option>
-            ))}
-          </select>
-          <div className="flex space-x-2 mb-4">
-            {newEvent.participants.map((participant, idx) => (
-              <span key={idx} className="p-2 bg-gray-300 rounded-full">{participant.name}</span>
-            ))}
+
+          <div className="mb-4">
+            <h4 className="text-sm font-medium text-gray-600 mb-2">Participants:</h4>
+            <div className="flex flex-wrap">
+              {availableParticipants.map((participant) => (
+                <div key={participant.id} className="flex items-center mb-2 w-1/4">
+                  <input
+                    type="checkbox"
+                    id={`participant-${participant.id}`}
+                    value={participant.id}
+                    checked={newEvent.participants.some((p) => p.id === participant.id)}
+                    onChange={(e) => handleSelectParticipant(e, participant)}
+                    disabled={participant.name === userName} // Désactive la case pour le participant correspondant à `userName`
+                  />
+                  <label htmlFor={`participant-${participant.id}`} className="ml-2">
+                    {participant.name}
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
-          <button onClick={handleSaveEvent} className="p-2 px-4 bg-blue-600 text-white rounded-lg shadow">Enregistrer</button>
-          <button onClick={() => setIsAdding(false)} className="p-2 px-4 bg-gray-400 text-white rounded-lg shadow">Fermer</button>
+
+          <button onClick={handleSaveEvent} className="px-4 py-2 bg-green-500 hover:bg-green-800 text-white rounded-lg">
+            {isEditing ? "Enregistrer les modifications" : "Ajouter le rendez-vous"}
+          </button>
+          <button onClick={handleCancel} className="px-4 py-2 bg-red-400 hover:bg-red-700 text-white rounded-lg">
+            Annuler
+          </button>
         </div>
       )}
     </div>

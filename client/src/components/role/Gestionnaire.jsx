@@ -176,12 +176,7 @@ export default function Gestionnaire() {
            Liste des Devis
           </ListItem>
 
-          <ListItem onClick={() => setActiveComponent('Agenda')} className="hover:bg-blue-600 text-white">
-            <ListItemPrefix>
-              <IoCalendarNumber className="h-5 w-5 text-white" />
-            </ListItemPrefix>
-           Agenda
-          </ListItem>
+
 
           <ListItem onClick={() => setActiveComponent('NonValide')}  className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
