@@ -46,6 +46,9 @@ const Login = () => {
       else if (user.role === 'CommercialeVente') {
         navigate('/Commercial-Vente');
       }
+      else if (user.role === 'PriseRDV') {
+        navigate('/priseRDV');
+      }
       
       
     } catch (error) {
