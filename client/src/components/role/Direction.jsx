@@ -39,6 +39,7 @@ import ProfileSetting from "../ProfileSetting";
 import SouscriptionOPCO from '../Opco/SouscriptionOPCO';
 import { FaPlusCircle } from "react-icons/fa";
 import Agenda from "../Agenda";
+import AddAgent from "../AddAgent";
 
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
@@ -89,7 +90,7 @@ export function Direction() {
       case 'listeEmployes':
         return <ListeEmp/>;
       case 'Addcomm':
-        return <AddAgent />;
+        return <AddAgent/>
       case 'NonValide':
         return <ContratNonValide />;
       case 'RDV':
