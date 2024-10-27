@@ -42,6 +42,7 @@ import PriseRDV from './components/role/PriseRdv';
 
 
 
+
 function App() {
   return (
     <Router>
@@ -173,13 +174,14 @@ function App() {
           path="/direction" 
           element={<PrivateRoute element={<Direction />} allowedRoles={['Direction']} />} 
         />
-          <Route 
-          path="/priseRDV" 
-          element={<PrivateRoute element={<PriseRDV />} allowedRoles={['PriseRDV']} />} 
-        />
+   
         <Route 
           path="/manager" 
           element={<PrivateRoute element={<Manager />} allowedRoles={['Manager']} />} 
+        />
+          <Route 
+          path="/priseRDV" 
+          element={<PrivateRoute element={<PriseRDV/>} allowedRoles={['PriseRDV']} />} 
         />
         <Route 
           path="/manager-OPCO" 

@@ -18,7 +18,6 @@ import {
 } from "@material-tailwind/react";
 import { IoIosNotifications } from "react-icons/io";
 import { CiBoxList } from "react-icons/ci";
-import {  FaFileSignature } from "react-icons/fa6";
 import { PowerIcon } from "@heroicons/react/24/solid";
 
 import { IoCalendarNumber } from "react-icons/io5";
