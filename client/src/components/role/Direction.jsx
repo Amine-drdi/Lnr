@@ -224,7 +224,13 @@ export function Direction() {
             <ListItemPrefix>
               <ImUsers className="h-5 w-5 text-white" />
             </ListItemPrefix>
-            Liste des employés
+            Liste des agents
+          </ListItem>
+          <ListItem onClick={() => setActiveComponent('Addcomm')} className="hover:bg-blue-600 text-white">
+            <ListItemPrefix>
+              <IoSettingsSharp className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            Ajouter un agent
           </ListItem>
           <ListItem onClick={() => setActiveComponent('profile')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
