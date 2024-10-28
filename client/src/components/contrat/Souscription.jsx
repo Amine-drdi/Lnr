@@ -344,6 +344,7 @@ function Souscription({ setIsAdding }) {
           <option value="Rim Dabebi ">Rim Dabebi </option>
           <option value="Eya Ben Jabra">Eya Ben Jabra</option>
           <option value="Rihab Kouki">Rihab Kouki</option>
+          <option value="Eric">Eric</option>
           <option value="Leads">Leads </option>
          
         </select>
