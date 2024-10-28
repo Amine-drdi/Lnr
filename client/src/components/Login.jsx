@@ -46,6 +46,9 @@ const Login = () => {
       else if (user.role === 'CommercialeVente') {
         navigate('/Commercial-Vente');
       }
+      else if (user.role === 'Prise') {
+        navigate('/Prise');
+      }
      
       
       

@@ -37,6 +37,8 @@ import ListeDevisComm from './components/contrat/ListeDevisComm';
 import ListeDevisGestio from './components/contrat/ListeDevisGestio';
 import ListeDevisDirec from './components/contrat/ListeDevisDirec';
 import Agenda from './components/Agenda';
+import Prise from './components/role/Prise';
+import ListeContratsPrise from './components/contrat/ListeContratsPrise';
 
 
 
@@ -58,6 +60,11 @@ function App() {
         <Route 
           path="/contratsComm" 
           element={<PrivateRoute element={<ListeContratsComm />} allowedRoles={['Commercial']} />} 
+        />
+
+        <Route 
+          path="/contratsPrise" 
+          element={<PrivateRoute element={<ListeContratsPrise />} allowedRoles={['Prise']} />} 
         />
   
         <Route 
@@ -137,6 +144,7 @@ function App() {
           path="/liste-RDV-commercial" 
           element={<PrivateRoute element={<ListeRdvCommVente />} allowedRoles={['ManagerOPCO' ,'CommercialeVente']} />} 
         />
+        
         <Route 
           path="/formation" 
           element={<PrivateRoute element={<Formation />} allowedRoles={['SouscriptionOPCO']} />} 
@@ -166,6 +174,10 @@ function App() {
         <Route 
           path="/commerciale" 
           element={<PrivateRoute element={<Commercial />} allowedRoles={['Commerciale']} />} 
+        />
+          <Route 
+          path="/Prise" 
+          element={<PrivateRoute element={<Prise />} allowedRoles={['Prise']} />} 
         />
         <Route 
           path="/direction" 

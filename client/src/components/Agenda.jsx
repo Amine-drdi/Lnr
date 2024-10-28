@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { format, addDays, startOfWeek } from "date-fns";
+import { format, addDays, startOfWeek  } from "date-fns";
 import { useNavigate } from 'react-router-dom';
 
 const Agenda = () => {
@@ -180,7 +180,7 @@ const visibleEvents = events.filter((event) =>
               formatDate(day) === formatDate(selectedDay)
                 ? "bg-blue-gray-500 text-white"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
+              }`}
             onClick={() => setSelectedDay(day)}
           >
             <div className="font-bold text-lg">{format(day, "E")}</div>

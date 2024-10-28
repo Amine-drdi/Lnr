@@ -349,6 +349,7 @@ const handleDeleteClick = async (contratId) => {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date d'Effet</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/mois</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Apporteur d'affaire</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Type de résiliation</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Retour compagnie</th>
