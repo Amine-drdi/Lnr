@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+
 import {
   Card,
   List,
@@ -14,6 +15,7 @@ import {
   PresentationChartBarIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
+import { IoIosAddCircle } from "react-icons/io";
 import { IoCalendarNumber } from "react-icons/io5";
 import { ImUsers } from "react-icons/im";
 import { MdOutlinePriceChange } from "react-icons/md";
@@ -40,12 +42,17 @@ import SouscriptionOPCO from '../Opco/SouscriptionOPCO';
 import { FaPlusCircle } from "react-icons/fa";
 import Agenda from "../Agenda";
 import AddAgent from "../AddAgent";
+import { ToastContainer, toast } from 'react-toastify'; // Importer ToastContainer et toast
 
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
+  const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(0); // State for accordion
+  const [showModal, setShowModal] = useState(false);
+  const [previousNotificationCount, setPreviousNotificationCount] = useState(0);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -74,7 +81,7 @@ export function Direction() {
     localStorage.removeItem('authToken');
     navigate('/');
   };
-
+  
   const renderComponent = () => {
     switch (activeComponent) {
       case 'dashboard':
@@ -110,14 +117,54 @@ export function Direction() {
     setOpen(open === value ? 0 : value);
   };
 
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get('http://51.83.69.195:5000/api/notifications', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        const now = new Date();
+        const recentNotifications = response.data.filter(notification => {
+          const notificationDate = new Date(notification.date);
+          const diffInHours = (now - notificationDate) / (1000 * 60 * 60); // Différence en heures
+          return diffInHours <= 1; // Filtrer les notifications datant de moins d'une heure
+        });
+  
+        setNotifications(recentNotifications);
+  
+        if (recentNotifications.length > previousNotificationCount) {
+          setShowModal(true);
+          toast.success("Nouvelle notification reçue !");
+        }
+  
+        setPreviousNotificationCount(recentNotifications.length);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des notifications :", error);
+      }
+    };
+  
+    fetchNotifications();
+    const intervalId = setInterval(fetchNotifications, 5000);
+  
+    return () => clearInterval(intervalId);
+  }, [previousNotificationCount]);
+  
+
   return (
     <div className="flex">
+      
       <Card className="h-full min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
+     
       <img
           className="object-cover w-auto h-24"
           src={logo}
           alt="Company Logo"
         />
+        
                 <div className="text-light-blue-900 pl-5 mb-4 pt-8 flex items-center space-x-2">
           <Typography variant="h6" className="flex items-center">
             
@@ -125,8 +172,11 @@ export function Direction() {
             {userName}
           </Typography>
         </div>
+
+      
   
         <List>
+      
         <ListItem onClick={() => setActiveComponent('dashboard')} className="hover:bg-blue-600 text-white ">
                   <ListItemPrefix>
                     <PresentationChartBarIcon className="h-5 w-5 text-white" />
@@ -229,7 +279,7 @@ export function Direction() {
           </ListItem>
           <ListItem onClick={() => setActiveComponent('Addcomm')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
-              <IoSettingsSharp className="h-5 w-5 text-white" />
+              <IoIosAddCircle className="h-5 w-5 text-white" />
             </ListItemPrefix>
             Ajouter un agent
           </ListItem>
@@ -247,11 +297,48 @@ export function Direction() {
           </ListItem>
         </List>
       </Card>
-
+ 
       {/* Contenu affiché */}
       <div className="flex-1 p-6">
         {renderComponent()}
+        {showModal && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-auto relative transform transition-all duration-500 overflow-y-auto max-h-screen">
+      <button 
+        onClick={() => setShowModal(false)}
+        className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 transition duration-150"
+      >
+        ✕
+      </button>
+      <h2 className="text-xl font-semibold mb-4 text-gray-800">Nouvelles Notifications</h2>
+      <div className="space-y-4">
+        {notifications.map((notification, index) => (
+          <div
+            key={index}
+            className="bg-blue-100 p-3 rounded-md text-blue-900 flex items-start space-x-2"
+          >
+            <span className="text-lg">🔔</span>
+            <p className="text-sm">
+            <span className="font-bold"> {notification.userName}</span> est connecté sur LNR, et il/elle veut activé son compte {" "}
+
+            </p>
+          </div>
+        ))}
       </div>
+      <button
+        onClick={() => setShowModal(false)}
+        className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition duration-150"
+      >
+        Fermer
+      </button>
+    </div>
+  </div>
+)}
+
+
+      </div>
+    
+ 
     </div>
   );
 }

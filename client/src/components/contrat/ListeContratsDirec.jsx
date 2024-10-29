@@ -700,6 +700,7 @@ const handleDeleteClick = async (contratId) => {
             <p className='text-left'><strong>Commercial :</strong> {selectedContrat.Commercial}</p>
             <p className='text-left'><strong>Date d'Effet :</strong> {selectedContrat.effetDate}</p>
             <p className='text-left'><strong>Montant VP/mois :</strong> {selectedContrat.cotisation}</p>
+            <p className='text-left'><strong>Apporteur d'affaire :</strong> {selectedContrat.apporteurAffaire}</p>
             <p className='text-left'><strong>Ancienne mutuelle :</strong> {selectedContrat.ancienneMutuelle}</p>
             <p className='text-left'><strong>Type de résiliation:</strong> {selectedContrat.typeResiliation}</p>
             <p className='text-left'><strong>Retour compagnie :</strong> {selectedContrat.retourCompagnie}</p>
@@ -846,6 +847,23 @@ const handleDeleteClick = async (contratId) => {
                     onChange={handleInputChangeModal}
                     className="border p-2 rounded mb-2"
                   />
+                </div>
+                <div className="flex flex-col">
+                  <label className='font-semibold '>Apporteur d'affaire :</label>
+                  <select
+                 value={updatedContrat.apporteurAffaire || selectedContrat.apporteurAffaire} // Initialisation avec la valeur existante
+                 name="typeResiliation"
+                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 className="w-full border border-gray-300 rounded p-2"
+                >
+                  <option value=""></option>
+                  <option value="Sihem Selemi">Sihem Selemi</option>
+                  <option value="Hajer Askri	">Hajer Askri	</option>
+                  <option value="Rim Dabebi">Rim Dabebi</option>
+                  <option value="Rihab Kouki">Rihab Kouki</option>
+                  <option value="Eric">Eric</option>
+
+                </select>
                 </div>
                 <div className="flex flex-col">
                   <label className='font-semibold '>Ancienne mutuelle :</label>

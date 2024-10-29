@@ -21,6 +21,13 @@ const userSchema = new mongoose.Schema({
     enum: ['Gestionnaire', 'Manager', 'Commerciale', 'Direction' , 'ManagerOPCO' ,'CommercialeOPCO' ,'CommercialeVente' ,'Prise'],
     default: '',
   },
+  demande :{
+    type: Boolean,
+    
+  },
+  etat :{
+    type: Number,
+  }
  
 }, {
   timestamps: true

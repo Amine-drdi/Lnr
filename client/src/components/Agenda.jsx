@@ -80,8 +80,8 @@ const Agenda = () => {
   const daysOfWeek = Array.from({ length: 7 }).map((_, idx) => addDays(startDate, idx));
   const formatDate = (date) => format(date, "yyyy-MM-dd");
 
-  const handlePreviousWeek = () => setSelectedDay(addDays(selectedDay, -7));
-  const handleNextWeek = () => setSelectedDay(addDays(selectedDay, 7));
+  const handlePreviousWeek = () => setSelectedDay(addDays(selectedDay, -1));
+  const handleNextWeek = () => setSelectedDay(addDays(selectedDay, 1));
 
   const handleAddEvent = () => {
     const matchedParticipant = availableParticipants.find((p) => p.name === userName);

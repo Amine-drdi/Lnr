@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { Switch } from '@headlessui/react';
 function ListeEmp() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editUserId, setEditUserId] = useState(null);
   const [updatedUser, setUpdatedUser] = useState({});
-
+  const [showPassword, setShowPassword] = useState(false);
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -27,6 +28,9 @@ function ListeEmp() {
 
     fetchUsers();
   }, []);
+
+ 
+
 
   const handleEditClick = (user) => {
     setEditUserId(user._id);
@@ -76,9 +80,36 @@ function ListeEmp() {
       setError(error.message);
     }
   };
+  const handleToggleEtat = async (user) => {
+    try {
+      const newEtat = user.etat === 1 ? 0 : 1;
+      const response = await fetch(`http://51.83.69.195:5000/api/users/${user._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ etat: newEtat }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la mise à jour de l'état de l'utilisateur");
+      }
+
+      setUsers((prevUsers) =>
+        prevUsers.map((u) => (u._id === user._id ? { ...u, etat: newEtat } : u))
+      );
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
 
   const handleInputChange = (e) => {
     setUpdatedUser({ ...updatedUser, [e.target.name]: e.target.value });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   if (loading) {
@@ -98,13 +129,15 @@ function ListeEmp() {
               <th className="px-4 py-2 text-xs font-medium text-white uppercase tracking-wider">Nom et prénom</th>
               <th className="px-4 py-2 text-xs font-medium text-white uppercase tracking-wider">Numero ID</th>
               <th className="px-4 py-2 text-xs font-medium text-white uppercase tracking-wider">Mot de Passe</th>
+              <th className="px-4 py-2 text-xs font-medium text-white uppercase tracking-wider">état</th>
               <th className="px-4 py-2 text-xs font-medium text-white uppercase tracking-wider">Rôle</th>
               <th className="px-4 py-2 text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
+            
             {users
-             
+             .filter(user => user.role !== "Direction")
               .map((user) => (
                 <tr key={user._id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-3 text-sm text-gray-700">
@@ -134,18 +167,45 @@ function ListeEmp() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-700">
-                    {editUserId === user._id ? (
-                      <input
-                        type="password"
-                        name="password"
-                        value={updatedUser.password}
-                        onChange={handleInputChange}
-                        className="border rounded-md p-2"
-                      />
-                    ) : (
-                      '••••••••'
+                  {editUserId === user._id ? (
+                  <div className="relative">
+                  <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  
+                  onChange={handleInputChange}
+                 className="border rounded-md p-2 pr-10"
+                 />
+          <button
+            type="button"
+            onClick={togglePasswordVisibility}
+            className="absolute inset-y-0 right-2 flex items-center text-gray-600"
+          >
+            {showPassword ? (
+              <EyeSlashIcon className="h-5 w-5" />
+            ) : (
+              <EyeIcon className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+      ) : (
+        '••••••••'
+      )}
+    </td>
+
+                <td className="px-4 py-3 text-sm text-gray-700">
+                {(user.role === "Gestionnaire" || user.role === "Commerciale" || user.role === "Manager" || user.role === "Prise") && (
+                  <Switch
+                    checked={user.etat === 1}
+                    onChange={() => handleToggleEtat(user)}
+                    className={`${user.etat === 1 ? 'bg-green-500' : 'bg-red-500'} relative inline-flex h-6 w-12 items-center rounded-full`}
+                  >
+                    <span
+                      className={`${user.etat === 1 ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform bg-white rounded-full transition`}
+                    />
+                  </Switch>
                     )}
-                  </td>
+                </td>
                   <td className="px-4 py-3 text-sm text-gray-700">
                     {editUserId === user._id ? (
                       <input

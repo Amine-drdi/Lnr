@@ -39,7 +39,7 @@ import ListeDevisDirec from './components/contrat/ListeDevisDirec';
 import Agenda from './components/Agenda';
 import Prise from './components/role/Prise';
 import ListeContratsPrise from './components/contrat/ListeContratsPrise';
-
+import 'react-notifications-component/dist/theme.css';
 
 
 

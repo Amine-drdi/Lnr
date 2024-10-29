@@ -7,8 +7,10 @@ const User = require('./models/User'); // Importer le modèle User
 const Contrat = require('./models/Contrat');
 const Devis = require('./models/Devis');
 const RDV = require('./models/RDV');
+const Notification = require('./models/Notification');
 const ContratUpdate = require('./models/ContratUpdate') ;
 const moment = require('moment');
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -17,9 +19,6 @@ app.use(cors());
 mongoose.connect('mongodb://mongodb:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
-
-
-
 
 
 
@@ -688,6 +687,68 @@ app.delete("/events/:id", async (req, res) => {
   await Event.findByIdAndDelete(req.params.id);
   res.json({ message: "Event deleted" });
 });
+
+// Dans le middleware protect
+const protect = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'Non autorisé, token manquant' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, 'votre_secret');
+    req.user = { _id: decoded.id };
+    console.log('Utilisateur décodé:', req.user); // Ajout d'un log
+    next();
+  } catch (error) {
+    console.error('Erreur de vérification du token:', error); // Log de l'erreur
+    res.status(401).json({ message: 'Non autorisé, token invalide' });
+  }
+};
+
+
+// Route for updating demande
+app.put('/api/user/demande', protect, async (req, res) => {
+  try {
+    const { demande } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    const rolesNotifiés = ['Commerciale', 'Prise', 'Gestionnaire'];
+    if (rolesNotifiés.includes(user.role) && user.demande !== Boolean(demande)) {
+      // Créer une notification pour ce changement
+      await Notification.create({ userName: user.name, demande: Boolean(demande) });
+    }
+
+    // Mettre à jour le champ demande de l'utilisateur
+    user.demande = Boolean(demande);
+    await user.save();
+
+    res.json({ message: "État de demande mis à jour avec succès" });
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de demande:", error);
+    res.status(500).json({ message: "Erreur de mise à jour de demande" });
+  }
+});
+
+
+
+
+app.get('/api/notifications', protect, async (req, res) => {
+  try {
+    const notifications = await Notification.find().sort({ date: -1 }).limit(10); // Limitez si nécessaire
+    res.json(notifications);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des notifications:", error);
+    res.status(500).json({ message: "Erreur lors de la récupération des notifications" });
+  }
+});
+
+
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;
