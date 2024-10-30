@@ -113,6 +113,7 @@ function ListeRdvManager() {
         <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type rendez-vous</th>
@@ -141,6 +142,7 @@ function ListeRdvManager() {
           <tbody className="divide-y divide-gray-200">
             {filteredRdvs.map((RDV) => (
               <tr key={RDV._id} className="hover:bg-gray-50 transition-colors">
+              <td className="px-4 py-3 text-sm text-gray-700 text-center">{index + 1}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">
                   <FaEye className="text-blue-500 cursor-pointer w-4 h-4" onClick={() => handleViewRdv(RDV)} />
                 </td>

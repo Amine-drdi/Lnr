@@ -146,26 +146,6 @@ function ListeContratsGestio() {
       setFilteredContrats(filtered);
     }, [contrats]);
     
-
-
-  const handleDeleteClick = async (id) => {
-    try {
-      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Erreur lors de la suppression du contrat');
-      }
-
-      const updatedList = contrats.filter((contrat) => contrat._id !== id);
-      setContrats(updatedList);
-      setFilteredContrats(updatedList);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
   const handleInputChange = (e) => {
     setUpdatedContrat({ ...updatedContrat, [e.target.name]: e.target.value });
   };
