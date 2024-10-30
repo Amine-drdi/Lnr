@@ -59,7 +59,7 @@ export function Direction() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://localhost:5000/api/profile', {
+          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -121,7 +121,7 @@ export function Direction() {
     const fetchNotifications = async () => {
       try {
         const token = localStorage.getItem('authToken');
-        const response = await axios.get('http://localhost:5000/api/notifications', {
+        const response = await axios.get('http://51.83.69.195:5000/api/notifications', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
