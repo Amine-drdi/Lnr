@@ -42,7 +42,7 @@ import SouscriptionOPCO from '../Opco/SouscriptionOPCO';
 import { FaPlusCircle } from "react-icons/fa";
 import Agenda from "../Agenda";
 import AddAgent from "../AddAgent";
-import { ToastContainer, toast } from 'react-toastify'; // Importer ToastContainer et toast
+import { CiLogin } from "react-icons/ci";
 import TablePointage from "../TablePointage";
 
 export function Direction() {
@@ -241,7 +241,7 @@ export function Direction() {
         <List>
         <ListItem onClick={() => setActiveComponent('Pointage')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
-              <ImUsers className="h-5 w-5 text-white" />
+              <CiLogin className="h-5 w-5 text-white" />
             </ListItemPrefix>
             Tableau de pointage 
           </ListItem>
