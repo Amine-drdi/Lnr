@@ -43,6 +43,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import Agenda from "../Agenda";
 import AddAgent from "../AddAgent";
 import { ToastContainer, toast } from 'react-toastify'; // Importer ToastContainer et toast
+import TablePointage from "../TablePointage";
 
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
@@ -108,6 +109,8 @@ export function Direction() {
           return <SouscriptionOPCO />;
           case 'Agenda':
             return <Agenda />;
+            case 'Pointage':
+              return <TablePointage/>;
       default:
         return <DashboardContent />;
     }
@@ -117,42 +120,7 @@ export function Direction() {
     setOpen(open === value ? 0 : value);
   };
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const token = localStorage.getItem('authToken');
-        const response = await axios.get('http://51.83.69.195:5000/api/notifications', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
-        const now = new Date();
-        const recentNotifications = response.data.filter(notification => {
-          const notificationDate = new Date(notification.date);
-          const diffInHours = (now - notificationDate) / (1000 * 60 * 60); // Différence en heures
-          return diffInHours <= 1; // Filtrer les notifications datant de moins d'une heure
-        });
-  
-        setNotifications(recentNotifications);
-  
-        if (recentNotifications.length > previousNotificationCount) {
-          setShowModal(true);
-          toast.success("Nouvelle notification reçue !");
-        }
-  
-        setPreviousNotificationCount(recentNotifications.length);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des notifications :", error);
-      }
-    };
-  
-    fetchNotifications();
-    const intervalId = setInterval(fetchNotifications, 5000);
-  
-    return () => clearInterval(intervalId);
-  }, [previousNotificationCount]);
-  
+
 
   return (
     <div className="flex">
@@ -271,6 +239,12 @@ export function Direction() {
 
         {/* Paramètres et déconnexion */}
         <List>
+        <ListItem onClick={() => setActiveComponent('Pointage')} className="hover:bg-blue-600 text-white">
+            <ListItemPrefix>
+              <ImUsers className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            Tableau de pointage 
+          </ListItem>
         <ListItem onClick={() => setActiveComponent('listeEmployes')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <ImUsers className="h-5 w-5 text-white" />

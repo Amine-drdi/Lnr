@@ -15,9 +15,12 @@ import img from "../../assets/manager.png";
 import Souscription from '../contrat/Souscription';
 import ListeContratsManager from '../contrat/ListeContratsManager';
 import { CiBoxList } from "react-icons/ci";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 function Manager() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
+  const [etat, setEtat] = useState('');
+  const [isOnline, setIsOnline] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,6 +35,7 @@ function Manager() {
             },
           });
           setUserName(response.data.user.name);
+          setEtat(response.data.user.etat);
         } else {
           navigate('/');
         }
@@ -42,6 +46,24 @@ function Manager() {
     };
 
     fetchProfile();
+    const intervalId = setInterval(async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setEtat(response.data.user.etat);
+        }
+      } catch (error) {
+        console.error("Erreur lors de l'actualisation de l'état :", error);
+      }
+    }, 5000);
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    
   }, [navigate]);
 
   // Logout function
@@ -51,8 +73,32 @@ function Manager() {
     navigate('/');
   };
 
+  // Fonction pour gérer le changement de statut
+const handleStatusChange = async () => {
+  const newStatus = isOnline ? "hors ligne" : "en ligne"; // Définir le statut sous forme de texte
+  setIsOnline(!isOnline); // Changer l'état local du bouton
+
+  try {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      await axios.post(
+        "http://51.83.69.195:5000/api/status",
+        { username: userName, status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du statut :", error);
+  }
+};
+
   // Function to render the correct component based on state
   const renderComponent = () => {
+    if (etat === 0) return null;
     switch (activeComponent) {
       case 'listeContrats':
         return <ListeContratsManager />;
@@ -79,12 +125,29 @@ function Manager() {
             {userName}
           </Typography>
         </div>
-
+        <button
+  onClick={handleStatusChange}
+  className={`flex items-center px-4 py-2 mt-4 font-semibold text-white rounded-full shadow-md transition-colors duration-200 ease-in-out
+    ${isOnline ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 hover:bg-gray-500'}
+  `}
+>
+  {isOnline ? (
+    <>
+      <CheckCircleIcon className="w-5 h-5 mr-2" />
+      <span>En ligne</span>
+    </>
+  ) : (
+    <>
+      <XCircleIcon className="w-5 h-5 mr-2" />
+      <span>Hors ligne</span>
+    </>
+  )}
+</button>
         {/* Menu List */}
         <List>
           <ListItem
             onClick={() => setActiveComponent('listeContrats')}
-            className="hover:bg-blue-600 text-white"
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
           >
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
@@ -94,7 +157,7 @@ function Manager() {
 
           <ListItem
             onClick={() => setActiveComponent('AjoutContrat')}
-            className="hover:bg-blue-600 text-white"
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
           >
             <ListItemPrefix>
               <FaFileSignature className="h-5 w-5" />

@@ -2,13 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
-  Button,
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-} from "@material-tailwind/react";
-import {
   Card,
   Typography,
   List,
@@ -16,26 +9,20 @@ import {
   ListItemPrefix,
 
 } from "@material-tailwind/react";
-import { IoIosNotifications } from "react-icons/io";
 import { CiBoxList } from "react-icons/ci";
-import {  FaFileSignature } from "react-icons/fa6";
 import { PowerIcon } from "@heroicons/react/24/solid";
-import { MdOutlinePriceChange } from "react-icons/md";
 import { IoCalendarNumber } from "react-icons/io5";
 import logo from "../../assets/logo.png";
 import img from "../../assets/user.png";
-import Souscription from '../contrat/Souscription';
-import Devis from '../contrat/Devis';
 import Agenda from "../Agenda";
 import ListeContratsPrise from '../contrat/ListeContratsPrise';
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 function Prise() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
-  const [contratUpdates, setContratUpdates] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [etat, setEtat] = useState('');
+  const [isOnline, setIsOnline] = useState(false);
   const navigate = useNavigate();
-
-  const handleOpen = () => setOpen(!open);
 
   useEffect(() => {
     // Fonction pour récupérer les informations du profil
@@ -49,6 +36,7 @@ function Prise() {
             },
           });
           setUserName(response.data.user.name);
+          setEtat(response.data.user.etat);
         } else {
           navigate('/');
         }
@@ -57,59 +45,58 @@ function Prise() {
         navigate('/');
       }
     };
-
-    // Fonction pour récupérer les modifications des contrats
-    const fetchContratUpdates = async () => {
-      try {
-        const response = await axios.get('http://51.83.69.195:5000/api/contrat-updates');
-        setContratUpdates(response.data);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des mises à jour :", error);
-      }
-    };
-
     fetchProfile();
-    fetchContratUpdates();
 
-    // Configurer l'intervalle de polling
-    const intervalId = setInterval(() => {
-      fetchContratUpdates();
-    }, 5000); // Actualiser toutes les 5 secondes
+    const intervalId = setInterval(async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setEtat(response.data.user.etat);
+        }
+      } catch (error) {
+        console.error("Erreur lors de l'actualisation de l'état :", error);
+      }
+    }, 5000);
 
-    // Nettoyer l'intervalle lorsqu'on démonte le composant
-    return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, [navigate]);
-
-  // Fonction pour formater et afficher les champs modifiés
-  const renderUpdatedFields = () => {
-    return contratUpdates.map((update, index) => (
-      <div key={index} className="mb-4 m-14">
- 
-        <ul>
-          {Object.keys(update.updatedFields).map((field, idx) => (
-            <li key={idx}>
-              <strong className='text-blue-800'>{field}</strong> : 
-              <span> Ancien - {update.updatedFields[field].old} </span> {/* Ancienne valeur */}
-              <span> | Nouveau - {update.updatedFields[field].new}</span> {/* Nouvelle valeur */}
-            </li>
-          ))}
-        </ul>
-        <Typography className='text-right text-lg text-black ' variant="h6">
-          Modifié le {new Date(update.modificationDate).toLocaleDateString()}
-        </Typography>
-      </div>
-    ));
-  };
-
   // Fonction pour se déconnecter
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userInfo');
     navigate('/');
   };
+ // Fonction pour gérer le changement de statut
+const handleStatusChange = async () => {
+  const newStatus = isOnline ? "hors ligne" : "en ligne"; // Définir le statut sous forme de texte
+  setIsOnline(!isOnline); // Changer l'état local du bouton
+
+  try {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      await axios.post(
+        "http://51.83.69.195:5000/api/status",
+        { username: userName, status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du statut :", error);
+  }
+};
 
   // Fonction pour rendre le bon composant selon l'état
   const renderComponent = () => {
+    if (etat === 0) return null;
     switch (activeComponent) {
       case 'listeContrats':
         return <ListeContratsPrise />;
@@ -143,13 +130,30 @@ function Prise() {
             {userName}
           </Typography>
         </div>
-
+        <button
+  onClick={handleStatusChange}
+  className={`flex items-center px-4 py-2 mt-4 font-semibold text-white rounded-full shadow-md transition-colors duration-200 ease-in-out
+    ${isOnline ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 hover:bg-gray-500'}
+  `}
+>
+  {isOnline ? (
+    <>
+      <CheckCircleIcon className="w-5 h-5 mr-2" />
+      <span>En ligne</span>
+    </>
+  ) : (
+    <>
+      <XCircleIcon className="w-5 h-5 mr-2" />
+      <span>Hors ligne</span>
+    </>
+  )}
+</button>
 
         {/* Liste de menus */}
         <List>
           <ListItem
             onClick={() => setActiveComponent('listeContrats')}
-            className="hover:bg-blue-600 text-white"
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
           >
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
@@ -157,7 +161,8 @@ function Prise() {
             Liste des contrats
           </ListItem>
 
-          <ListItem onClick={() => setActiveComponent('Agenda')} className="hover:bg-blue-600 text-white">
+          <ListItem onClick={() => setActiveComponent('Agenda')} 
+          className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
             <ListItemPrefix>
               <IoCalendarNumber className="h-5 w-5 text-white" />
             </ListItemPrefix>
@@ -174,44 +179,13 @@ function Prise() {
             Se déconnecter
           </ListItem>
         </List>
-
       </Card>
-      
-
-
-
       <div className="flex-1 p-6">
-
-        
         {renderComponent()}
               {/* Zone de contenu */}
-
-      
       </div>
-
-      {/* Boîte de dialogue pour les notifications */}
-      <Dialog open={open} handler={handleOpen} className="max-h-[75vh]">
-        <DialogHeader className='text-green-700'> <IoIosNotifications/>Notifications</DialogHeader>
-        <DialogBody className="overflow-y-auto max-h-[50vh]">
-          {contratUpdates.length > 0 ? (
-            renderUpdatedFields() // Fonction qui affiche les champs modifiés
-          ) : (
-            <Typography>Aucune modification récente.</Typography>
-          )}
-        </DialogBody>
-        <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleOpen}
-            className="mr-1"
-          >
-            <span>Fermer</span>
-          </Button>
-        </DialogFooter>
-      </Dialog>
     </div>
   );
 }
 
-export default Prise;
+export default Prise; 

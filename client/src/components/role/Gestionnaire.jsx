@@ -29,7 +29,7 @@ import { CiBoxList } from "react-icons/ci";
 import Devis from "../contrat/Devis";
 import ListeDevisGestio from "../contrat/ListeDevisGestio";
 import Agenda from "../Agenda";
-
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 // Les composants pour chaque section de la dashboard
 function DashboardContent() {
   return <div><Dashboard/></div>;
@@ -48,7 +48,7 @@ export default function Gestionnaire() {
   const [userName, setUserName] = useState('');
   const [etat, setEtat] = useState('');
   const [notifications, setNotifications] = useState([]); 
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -102,8 +102,31 @@ export default function Gestionnaire() {
     localStorage.removeItem('authToken');
     navigate('/');
   };
+   // Fonction pour gérer le changement de statut
+const handleStatusChange = async () => {
+  const newStatus = isOnline ? "hors ligne" : "en ligne"; // Définir le statut sous forme de texte
+  setIsOnline(!isOnline); // Changer l'état local du bouton
+
+  try {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      await axios.post(
+        "http://51.83.69.195:5000/api/status",
+        { username: userName, status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du statut :", error);
+  }
+};
 
   const renderComponent = () => {
+    if (etat === 0) return null;
     switch (activeComponent) {
       case 'dashboard':
         return <Dashboard /> ;
@@ -138,13 +161,23 @@ export default function Gestionnaire() {
             </Typography>
           </div>
           <button
-            onClick={() => setIsOnline(!isOnline)}
-            className={`px-4 py-2 mt-4 font-semibold rounded-md  ${
-              isOnline ? 'bg-green-500' : 'bg-red-500'
-            }`}
-          >
-            {isOnline ? 'En ligne' : 'Hors ligne'}
-          </button>
+  onClick={handleStatusChange}
+  className={`flex items-center px-4 py-2 mt-4 font-semibold text-white rounded-full shadow-md transition-colors duration-200 ease-in-out
+    ${isOnline ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 hover:bg-gray-500'}
+  `}
+>
+  {isOnline ? (
+    <>
+      <CheckCircleIcon className="w-5 h-5 mr-2" />
+      <span>En ligne</span>
+    </>
+  ) : (
+    <>
+      <XCircleIcon className="w-5 h-5 mr-2" />
+      <span>Hors ligne</span>
+    </>
+  )}
+</button>
           <ListItem onClick={() => setActiveComponent('dashboard')} className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
             <ListItemPrefix>
               <PresentationChartBarIcon className="h-5 w-5 text-white" />

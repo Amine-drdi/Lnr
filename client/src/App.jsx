@@ -40,6 +40,7 @@ import Agenda from './components/Agenda';
 import Prise from './components/role/Prise';
 import ListeContratsPrise from './components/contrat/ListeContratsPrise';
 import 'react-notifications-component/dist/theme.css';
+import TablePointage from './components/TablePointage';
 
 
 
@@ -165,6 +166,10 @@ function App() {
                 <Route 
           path="/devi-Direction" 
           element={<PrivateRoute element={<ListeDevisDirec />} allowedRoles={['Direction']} />} 
+        />
+          <Route 
+          path="/pointage" 
+          element={<PrivateRoute element={<TablePointage />} allowedRoles={['Direction']} />} 
         />
         {/* Rôles spécifiques */}
         <Route 

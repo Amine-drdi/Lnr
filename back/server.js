@@ -7,10 +7,9 @@ const User = require('./models/User'); // Importer le modèle User
 const Contrat = require('./models/Contrat');
 const Devis = require('./models/Devis');
 const RDV = require('./models/RDV');
-const Notification = require('./models/Notification');
+const UserStatus = require('./models/UserStatus');
 const ContratUpdate = require('./models/ContratUpdate') ;
 const moment = require('moment');
-
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -688,66 +687,56 @@ app.delete("/events/:id", async (req, res) => {
   res.json({ message: "Event deleted" });
 });
 
-// Dans le middleware protect
-const protect = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
 
-  if (!token) {
-    return res.status(401).json({ message: 'Non autorisé, token manquant' });
-  }
+// Route pour enregistrer la connectivité (en ligne / hors ligne)
+app.post('/api/status', async (req, res) => {
+  const { username, status } = req.body;
 
-  try {
-    const decoded = jwt.verify(token, 'votre_secret');
-    req.user = { _id: decoded.id };
-    console.log('Utilisateur décodé:', req.user); // Ajout d'un log
-    next();
-  } catch (error) {
-    console.error('Erreur de vérification du token:', error); // Log de l'erreur
-    res.status(401).json({ message: 'Non autorisé, token invalide' });
-  }
-};
-
-
-// Route for updating demande
-app.put('/api/user/demande', protect, async (req, res) => {
-  try {
-    const { demande } = req.body;
-    const user = await User.findById(req.user._id);
-
-    if (!user) {
-      return res.status(404).json({ message: "Utilisateur non trouvé" });
-    }
-
-    const rolesNotifiés = ['Commerciale', 'Prise', 'Gestionnaire'];
-    if (rolesNotifiés.includes(user.role) && user.demande !== Boolean(demande)) {
-      // Créer une notification pour ce changement
-      await Notification.create({ userName: user.name, demande: Boolean(demande) });
-    }
-
-    // Mettre à jour le champ demande de l'utilisateur
-    user.demande = Boolean(demande);
-    await user.save();
-
-    res.json({ message: "État de demande mis à jour avec succès" });
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour de demande:", error);
-    res.status(500).json({ message: "Erreur de mise à jour de demande" });
-  }
+  const userStatus = new UserStatus({ username, status });
+  await userStatus.save();
+  res.status(201).send('Statut enregistré');
 });
 
-
-
-
-app.get('/api/notifications', protect, async (req, res) => {
+// Endpoint pour récupérer les statuts par utilisateur et par date
+app.get('/api/status-history', async (req, res) => {
   try {
-    const notifications = await Notification.find().sort({ date: -1 }).limit(10); // Limitez si nécessaire
-    res.json(notifications);
+    const history = await UserStatus.find().sort({ timestamp: -1 });
+
+    // Regrouper par username et date
+    const groupedHistory = {};
+
+    history.forEach(record => {
+      const dateKey = record.timestamp.toLocaleDateString('fr-FR'); // Formate la date
+
+      if (!groupedHistory[record.username]) {
+        groupedHistory[record.username] = {};
+      }
+
+      if (!groupedHistory[record.username][dateKey]) {
+        groupedHistory[record.username][dateKey] = [];
+      }
+
+      groupedHistory[record.username][dateKey].push({
+        status: record.status,
+        time: record.timestamp.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+      });
+    });
+
+    // Convertir l'objet en tableau pour le renvoyer
+    const response = Object.keys(groupedHistory).map(username => ({
+      username,
+      dates: Object.keys(groupedHistory[username]).map(date => ({
+        date,
+        statuses: groupedHistory[username][date]
+      }))
+    }));
+
+    res.json(response);
   } catch (error) {
-    console.error("Erreur lors de la récupération des notifications:", error);
-    res.status(500).json({ message: "Erreur lors de la récupération des notifications" });
+    console.error("Erreur lors de la récupération de l'historique des statuts :", error);
+    res.status(500).json({ message: "Erreur lors de la récupération de l'historique des statuts" });
   }
 });
-
 
 
 // Démarrer le serveur
