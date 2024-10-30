@@ -48,7 +48,7 @@ function Commercial() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -68,7 +68,7 @@ function Commercial() {
 
     const fetchContratUpdates = async () => {
       try {
-        const response = await axios.get('http://51.83.69.195:5000/api/contrat-updates');
+        const response = await axios.get('http://localhost:5000/api/contrat-updates');
         setContratUpdates(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des mises à jour :", error);
@@ -121,7 +121,7 @@ function Commercial() {
       const token = localStorage.getItem('authToken');
       if (token) {
         await axios.put(
-          'http://51.83.69.195:5000/api/user/demande', // Assurez-vous que l'URL est correcte
+          'http://localhost:5000/api/user/demande', // Assurez-vous que l'URL est correcte
           { demande: newState },
           {
             headers: {

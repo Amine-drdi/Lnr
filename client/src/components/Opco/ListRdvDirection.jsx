@@ -17,7 +17,7 @@ function ListeRdvDirection() {
   useEffect(() => {
     const fetchRdvs = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/rdvs');
+        const response = await fetch('http://localhost:5000/api/rdvs');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des rendez-vous');
         }
@@ -67,7 +67,7 @@ function ListeRdvDirection() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/rdvs/${selectedRdv._id}`, {
+      const response = await fetch(`http://localhost:5000/api/rdvs/${selectedRdv._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ function ListeRdvDirection() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`http://51.83.69.195:5000/api/rdvs/${rdvId}`, {
+          const response = await fetch(`http://localhost:5000/api/rdvs/${rdvId}`, {
             method: 'DELETE',
           });
     
