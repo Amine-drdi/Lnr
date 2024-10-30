@@ -858,7 +858,7 @@ const handleDeleteClick = async (contratId) => {
                 >
                   <option value=""></option>
                   <option value="Sihem Selemi">Sihem Selemi</option>
-                  <option value="Hajer Askri	">Hajer Askri	</option>
+                  <option value="Hajer Askri">Hajer Askri	</option>
                   <option value="Rim Dabebi">Rim Dabebi</option>
                   <option value="Rihab Kouki">Rihab Kouki</option>
                   <option value="Eric">Eric</option>

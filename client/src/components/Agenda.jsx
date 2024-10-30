@@ -68,6 +68,7 @@ const Agenda = () => {
     { id: 1022, name: "Rim Dabebi" },
     { id: 1023, name: "Rihab Kouki" },
     { id: 1024, name: "Eric" },
+    { id: 1025, name: "Khouloud Khalfallah" },
   ];
 
   useEffect(() => {
