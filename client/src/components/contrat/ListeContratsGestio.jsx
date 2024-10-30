@@ -12,7 +12,7 @@ function ListeContratsGestio() {
   const [searchTerm, setSearchTerm] = useState('');
   const [editContratId, setEditContratId] = useState(null);
   const [updatedContrat, setUpdatedContrat] = useState({});
-  const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
+  const compagnies = ["" , "Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
   const etatDocs = ["" , "Validé", "Non validé","NRP" , "Sans effet", "Rétractation", "Résigné"];
   const payements = ["" , "Payé", "Pas payé"];
   const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
@@ -440,7 +440,7 @@ function ListeContratsGestio() {
                 <td className="px-4 py-3 text-sm text-gray-700">
                  {editContratId === contrat._id ? (
                 <select
-                  name="signatureType2"
+                  name="compagnie"
                   value={updatedContrat.compagnie}
                   onChange={handleSelectChange}
                   className="border rounded-md p-2"
@@ -685,7 +685,7 @@ function ListeContratsGestio() {
                  name="etatDossier"
                  onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
-                >
+                > <option value="">Choisissez une option</option>
                   <option value="Validé">Validé</option>
                   <option value="Non validé">Non validé</option>
                   <option value="NRP">NRP</option>
@@ -765,6 +765,7 @@ function ListeContratsGestio() {
                  onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 >
+                  <option value="">Choisissez une option</option>
                   <option value="Néoliane">Néoliane</option>
                   <option value="Assurema">Assurema</option>
                   <option value="Alptis">Alptis</option>

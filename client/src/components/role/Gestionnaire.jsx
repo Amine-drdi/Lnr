@@ -108,7 +108,7 @@ export default function Gestionnaire() {
       case 'dashboard':
         return <Dashboard /> ;
       case 'listeContrats':
-        return <ListeContrats />;
+        return <ListeContratsGestio />;
       case 'AjoutContrat':
         return <Souscription />;
       case 'AjoutDevis':
