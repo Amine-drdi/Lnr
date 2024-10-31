@@ -16,7 +16,7 @@ function ListeContratsGestio() {
   const etatDocs = ["" , "Validé", "Non validé","NRP" , "Sans effet", "Rétractation", "Résigné"];
   const payements = ["" , "Payé", "Pas payé"];
   const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
-  const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jabra" , "Rihab Kouki" ,"Leads"];
+  const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jbara" , "Rihab Kouki" ,"Leads"];
   const [selectedMonth, setSelectedMonth] = useState(''); //state pour le mois
   const [selectedDay, setSelectedDay] = useState(''); // State pour le jour
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
@@ -800,7 +800,7 @@ function ListeContratsGestio() {
                   <option value="Sihem Selemi">Sihem Selemi</option>
                   <option value="Hajer Askri">Hajer Askri</option>
                   <option value="Rim Dabebi">Rim Dabebi</option>
-                  <option value="Eya Ben Jabra">Eya Ben Jabra</option>
+                  <option value="Eya Ben Jbara">Eya Ben Jbara</option>
                   <option value="Rihab Kouki">Rihab Kouki</option>
                   <option value="Eric">Eric</option>
                   <option value="Leads">Leads </option>

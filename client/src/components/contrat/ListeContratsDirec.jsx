@@ -16,7 +16,7 @@ function ListeContratsDirec() {
   const [commercials, setCommercials] = useState([]);  // Pour stocker la liste des commerciaux
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife" ,"Soly Azar" , "Zenio"];
   const etatDocs = ["" , "Validé", "Non validé", "NRP" , "Impayé", "Sans effet", "Rétractation", "Résigné"];
-  const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jabra" , "Rihab Kouki" ,"Leads"];
+  const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jbara" , "Rihab Kouki" ,"Leads"];
   const payements = ["" , "Payé", "Pas payé"];
   const typeResiliations = ["" , "Infra", "Résiliation à échéance"];
   const [selectedMonth, setSelectedMonth] = useState(''); 
