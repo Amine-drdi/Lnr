@@ -9,6 +9,7 @@ import {
   ListItemPrefix,
 
 } from "@material-tailwind/react";
+import { GiNotebook } from "react-icons/gi";
 import { CiBoxList } from "react-icons/ci";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import { IoCalendarNumber } from "react-icons/io5";
@@ -17,6 +18,7 @@ import img from "../../assets/user.png";
 import Agenda from "../Agenda";
 import ListeContratsPrise from '../contrat/ListeContratsPrise';
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import BlocNotes from '../BlocNotes';
 function Prise() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -100,7 +102,8 @@ const handleStatusChange = async () => {
     switch (activeComponent) {
       case 'listeContrats':
         return <ListeContratsPrise />;
-
+        case 'BlocNote':
+          return <BlocNotes />;
             case 'Agenda':
               return <Agenda />;
       default:
@@ -167,6 +170,13 @@ const handleStatusChange = async () => {
               <IoCalendarNumber className="h-5 w-5 text-white" />
             </ListItemPrefix>
            Agenda
+          </ListItem>
+          <ListItem onClick={() => setActiveComponent('BlocNote')} 
+          className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
+            <ListItemPrefix>
+              <GiNotebook className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+           Bloc note
           </ListItem>
 
           <ListItem

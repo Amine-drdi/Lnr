@@ -44,7 +44,8 @@ import Agenda from "../Agenda";
 import AddAgent from "../AddAgent";
 import { CiLogin } from "react-icons/ci";
 import TablePointage from "../TablePointage";
-
+import BlocNotes from "../BlocNotes";
+import { GiNotebook } from "react-icons/gi";
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -109,6 +110,8 @@ export function Direction() {
           return <SouscriptionOPCO />;
           case 'Agenda':
             return <Agenda />;
+            case 'BlocNote':
+              return <BlocNotes />;
             case 'Pointage':
               return <TablePointage/>;
       default:
@@ -196,7 +199,7 @@ export function Direction() {
             </ListItemPrefix>
            Agenda
           </ListItem>
-               
+
                 <ListItem onClick={() => setActiveComponent('NonValide')} className="hover:bg-blue-600 text-white pl-10">
                   <ListItemPrefix>
                     <VscError className="h-5 w-5 text-white" />
@@ -239,6 +242,12 @@ export function Direction() {
 
         {/* Paramètres et déconnexion */}
         <List>
+        <ListItem onClick={() => setActiveComponent('BlocNote')} className="hover:bg-blue-600 text-white  ">
+            <ListItemPrefix>
+              <GiNotebook className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+           Bloc note
+          </ListItem>
         <ListItem onClick={() => setActiveComponent('Pointage')} className="hover:bg-blue-600 text-white">
             <ListItemPrefix>
               <CiLogin className="h-5 w-5 text-white" />

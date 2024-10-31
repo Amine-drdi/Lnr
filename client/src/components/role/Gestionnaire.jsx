@@ -11,18 +11,16 @@ import {
   PresentationChartBarIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
-import { IoCalendarNumber } from "react-icons/io5";
 import { MdOutlinePriceChange } from "react-icons/md";
 import { VscError } from "react-icons/vsc";
 import { FaFileContract} from "react-icons/fa6";
-import { IoSettingsSharp } from "react-icons/io5";
+import { GiNotebook } from "react-icons/gi";
 import { useNavigate } from 'react-router-dom';
 import logo from "../../assets/logo.png";
 import img from "../../assets/gestionnaire.png";
 import ListeEmp from "../ListeEmp";
 import ListeContratsGestio from "../contrat/ListeContratsGestio";
 import Souscription from "../contrat/Souscription";
-import ProfileSetting from "../ProfileSetting";
 import ContratNvalideGestio from "../contrat/ContratNvalideGestio";
 import Dashboard from "../Dashboard";
 import { CiBoxList } from "react-icons/ci";
@@ -30,6 +28,7 @@ import Devis from "../contrat/Devis";
 import ListeDevisGestio from "../contrat/ListeDevisGestio";
 import Agenda from "../Agenda";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import BlocNotes from "../BlocNotes";
 // Les composants pour chaque section de la dashboard
 function DashboardContent() {
   return <div><Dashboard/></div>;
@@ -142,8 +141,8 @@ const handleStatusChange = async () => {
         return <Agenda />;
       case 'NonValide':
         return <ContratNvalideGestio />;
-      case 'profile':
-        return <ProfileSetting />;
+      case 'BlocNote':
+        return <BlocNotes />;
       default:
         return <DashboardContent />;
     }
@@ -207,6 +206,12 @@ const handleStatusChange = async () => {
               <CiBoxList className="h-5 w-5 text-white" />
             </ListItemPrefix>
             Liste des Devis
+          </ListItem>
+          <ListItem onClick={() => setActiveComponent('BlocNote')} className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
+            <ListItemPrefix>
+              <GiNotebook className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            Bloc note
           </ListItem>
           <ListItem onClick={() => setActiveComponent('NonValide')} className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
             <ListItemPrefix>

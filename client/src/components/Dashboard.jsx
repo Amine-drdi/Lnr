@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import StatsCard from './StatsCard';
-import { FaFileContract } from "react-icons/fa";
-import { BsBarChartLineFill } from "react-icons/bs";
-import { GrBusinessService } from "react-icons/gr";
-import CommercialsToday from './CommercialsToday';
-import ProgressionChart from './ProgressionChart';
-import Chart from './Chart';
-import CommercialChart from './CommercialChart';
-import RdvToday from './Opco/RdvToday';
-
-function Dashboard() {
+import React, { useEffect, useState } from 'react';
+//import { EyeIcon, ShoppingCartIcon, ShoppingBagIcon } from '@heroicons/react/outline';
+import { FaFileContract } from "react-icons/fa6";
+import { BsCalendarDateFill } from "react-icons/bs";
+import { GiDiploma } from "react-icons/gi";
+const Dashboard = () => {
   const [contratsAujourdHui, setContratsAujourdHui] = useState(0);
   const [pourcentageProgression, setPourcentageProgression] = useState(0);
   const [table, setTable] = useState(1);
@@ -33,50 +27,56 @@ function Dashboard() {
 
   const handleStatsCardClick = (index) => setTable(index);
 
+  const stats = [
+    {
+      title: 'Vente',
+      value: contratsAujourdHui,
+      percentage: pourcentageProgression.toFixed(2) + "%",
+      icon: <FaFileContract className='h-6 w-6'/>,
+      trend: 'up',
+    },
+    {
+      title: 'Prise de RDV',
+      value: '',
+      percentage: '',
+      icon: <BsCalendarDateFill className='h-6 w-6'/>,
+      trend: 'up',
+    },
+    {
+      title: 'OPCO',
+      value: '',
+      percentage: '',
+      icon: <GiDiploma className='h-6 w-6'/>,
+      trend: 'up',
+    },
+  ];
+
   return (
-    <div className="text-center">
-      <h2 className='text-2xl font-semibold'>Tableau de Bord</h2>
-
-      <div className="pl-48 pt-10 mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4 mt-5">
-        <StatsCard
-          icon={<FaFileContract className='h-6 w-6' />}
-          bgColor="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-blue-500/40"
-          title="Nombre de contrats signés aujourd'hui"
-          amount={contratsAujourdHui}
-          percentage={pourcentageProgression.toFixed(2) + "%"}
-          percentageColor={pourcentageProgression < 0 ? 'text-red-500' : 'text-green-500'}
-          onClick={() => handleStatsCardClick(1)}
-          isActive={table === 1}
-        />
-        <StatsCard
-          icon={<BsBarChartLineFill className='h-6 w-6' />}
-          bgColor="bg-gradient-to-tr from-pink-600 to-pink-400 shadow-pink-500/40"
-          title="Progression Mensuelle des Contrats"
-          amount="2,300"
-          percentage="+3%"
-          percentageColor="text-green-500"
-          onClick={() => handleStatsCardClick(2)}
-          isActive={table === 2}
-        />
-        <StatsCard
-          icon={<GrBusinessService className='h-6 w-6' />}
-          bgColor="bg-gradient-to-tr from-green-600 to-green-400 shadow-green-500/40"
-          title="Liste des compagnies signées aujourd'hui"
-          amount="3,462"
-          percentage="-2%"
-          percentageColor="text-red-500"
-          onClick={() => handleStatsCardClick(3)}
-          isActive={table === 3}
-        />
-      </div>
-
-      {table === 1 && <div className='flex justify-center items-center h-full'><CommercialsToday /></div>}
-      {table === 2 && <div className='flex justify-center items-center h-full'><Chart /></div>}
-      {table === 3 && <div className='flex justify-center items-center h-full'><CommercialChart/></div>}
-
-      
+    <div className="flex space-x-4">
+      {stats.map((stat, index) => (
+        <DashboardCard key={index} {...stat} />
+      ))}
     </div>
   );
-}
+};
+
+const DashboardCard = ({ title, value, percentage, icon, trend }) => {
+  return (
+    <div className="bg-white shadow rounded-lg p-4 h-32  w-80">
+      <div className="flex items-center">
+        <div className="p-2 bg-indigo-100 rounded-full">
+          {icon}
+        </div>
+        <div className="ml-4">
+          <h4 className="text-gray-500">{title}</h4>
+          <div className="text-2xl font-semibold text-gray-800">{value}</div>
+        </div>
+      </div>
+      <div className={`mt-2 text-sm ${trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+        {percentage} {trend === 'up' ? '▲' : '▼'}
+      </div>
+    </div>
+  );
+};
 
 export default Dashboard;

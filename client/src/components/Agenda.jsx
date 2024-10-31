@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { format, addDays, startOfWeek  } from "date-fns";
 import { useNavigate } from 'react-router-dom';
-
+import { RiDeleteBin6Line } from "react-icons/ri";
 const Agenda = () => {
   const [userName, setUserName] = useState('');
   const [userRole, setUserRole] = useState(''); 
@@ -214,8 +214,14 @@ const visibleEvents = events.filter((event) =>
             </p>
                 ))}
                
-                <button onClick={() => handleEditEvent(event)} className="text-blue-600">Modifier</button>
-                <button onClick={() => handleDeleteEvent(event._id)} className="text-red-600">Supprimer</button>
+        
+               <div className="flex pl-96 space-x-2 mt-2">
+                 <button onClick={() => handleEditEvent(event)} className="text-blue-600">✏️</button>
+                 <button onClick={() => handleDeleteEvent(event._id)} className="text-red-600">
+                 <RiDeleteBin6Line className="h-6 w-6" />
+                 </button>
+            
+              </div>
               </div>
             </div>
           ))}

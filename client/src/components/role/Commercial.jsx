@@ -18,6 +18,7 @@ import {
   Badge,
 } from "@material-tailwind/react";
 import { IoIosNotifications } from "react-icons/io";
+import { GiNotebook } from "react-icons/gi";
 import { CiBoxList } from "react-icons/ci";
 import { FaFileSignature } from "react-icons/fa6";
 import { PowerIcon } from "@heroicons/react/24/solid";
@@ -31,6 +32,7 @@ import Devis from '../contrat/Devis';
 import ListeDevisComm from '../contrat/ListeDevisComm';
 import Agenda from "../Agenda";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import BlocNotes from '../BlocNotes';
 function Commercial() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -150,6 +152,8 @@ const handleStatusChange = async () => {
         return <ListeDevisComm />;
       case 'Agenda':
         return <Agenda />;
+        case 'BlocNote':
+          return <BlocNotes />;
       default:
         return <Souscription />;
     }
@@ -191,30 +195,41 @@ const handleStatusChange = async () => {
     </>
   )}
 </button>
-        <List>
-          {['listeContrats', 'AjoutContrat', 'AjoutDevis', 'listeDevis', 'Agenda'].map((item, index) => (
-            <ListItem
-              key={index}
-              onClick={() => setActiveComponent(item)}
-              className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
-            >
-              <ListItemPrefix>
-                {index === 0 ? <CiBoxList className="h-5 w-5" /> : index === 1 ? <FaFileSignature className="h-5 w-5" /> : index === 2 ? <MdOutlinePriceChange className="h-5 w-5" /> : index === 3 ? <CiBoxList className="h-5 w-5" /> : <IoCalendarNumber className="h-5 w-5" />}
-              </ListItemPrefix>
-              {index === 0 ? 'Liste des contrats' : index === 1 ? 'Souscription' : index === 2 ? 'Devis' : index === 3 ? 'Liste des devis' : 'Agenda'}
-            </ListItem>
-          ))}
+<List>
+  {['listeContrats', 'AjoutContrat', 'AjoutDevis', 'listeDevis', 'Agenda', 'BlocNote'].map((item, index) => (
+    <ListItem
+      key={index}
+      onClick={() => setActiveComponent(item)}
+      className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
+    >
+      <ListItemPrefix>
+        {index === 0 ? <CiBoxList className="h-5 w-5" />
+          : index === 1 ? <FaFileSignature className="h-5 w-5" />
+          : index === 2 ? <MdOutlinePriceChange className="h-5 w-5" />
+          : index === 3 ? <CiBoxList className="h-5 w-5" />
+          : index === 4 ? <IoCalendarNumber className="h-5 w-5" />
+          : <GiNotebook className="h-5 w-5" />} {/* Icône Bloc Notes */}
+      </ListItemPrefix>
+      {index === 0 ? 'Liste des contrats'
+        : index === 1 ? 'Souscription'
+        : index === 2 ? 'Devis'
+        : index === 3 ? 'Liste des devis'
+        : index === 4 ? 'Agenda'
+        : 'Bloc Notes'} {/* Nom Bloc Notes */}
+    </ListItem>
+  ))}
 
-          <ListItem
-            onClick={handleLogout}
-            className={`hover:bg-blue-600 text-white `}
-          >
-            <ListItemPrefix>
-              <PowerIcon className="h-5 w-5" />
-            </ListItemPrefix>
-            Se déconnecter
-          </ListItem>
-        </List>
+  <ListItem
+    onClick={handleLogout}
+    className="hover:bg-blue-600 text-white"
+  >
+    <ListItemPrefix>
+      <PowerIcon className="h-5 w-5" />
+    </ListItemPrefix>
+    Se déconnecter
+  </ListItem>
+</List>
+
       </Card>
 
       <div className="flex-1 p-6">

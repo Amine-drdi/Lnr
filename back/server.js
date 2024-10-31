@@ -7,6 +7,7 @@ const User = require('./models/User'); // Importer le modèle User
 const Contrat = require('./models/Contrat');
 const Devis = require('./models/Devis');
 const RDV = require('./models/RDV');
+const Note = require('./models/Note');
 const UserStatus = require('./models/UserStatus');
 const ContratUpdate = require('./models/ContratUpdate') ;
 const moment = require('moment');
@@ -706,7 +707,7 @@ app.get('/api/status-history', async (req, res) => {
     const groupedHistory = {};
 
     history.forEach(record => {
-      const dateKey = record.timestamp.toLocaleDateString('fr-FR'); // Formate la date
+      const dateKey = record.timestamp.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' }); // GMT+1 avec heure française
 
       if (!groupedHistory[record.username]) {
         groupedHistory[record.username] = {};
@@ -718,7 +719,11 @@ app.get('/api/status-history', async (req, res) => {
 
       groupedHistory[record.username][dateKey].push({
         status: record.status,
-        time: record.timestamp.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+        time: record.timestamp.toLocaleTimeString('fr-FR', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'Europe/Paris'  // GMT+1 avec heure française
+        })
       });
     });
 
@@ -735,6 +740,38 @@ app.get('/api/status-history', async (req, res) => {
   } catch (error) {
     console.error("Erreur lors de la récupération de l'historique des statuts :", error);
     res.status(500).json({ message: "Erreur lors de la récupération de l'historique des statuts" });
+  }
+});
+
+// Route ajouté une note
+app.post('/notes', async (req, res) => {
+  try {
+    const newNote = new Note(req.body);
+    const savedNote = await newNote.save();
+    res.status(201).json(savedNote);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+// Route récuperer une note
+app.get('/notes', async (req, res) => {
+  try {
+    const name = req.query.Name;
+    const notes = await Note.find({ Name: name });
+    res.json(notes);
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur lors de la récupération des notes' });
+  }
+});
+
+// Route supprimer une note
+app.delete('/notes/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Note.findByIdAndDelete(id);
+    res.status(204).end();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 

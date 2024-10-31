@@ -41,6 +41,7 @@ import Prise from './components/role/Prise';
 import ListeContratsPrise from './components/contrat/ListeContratsPrise';
 import 'react-notifications-component/dist/theme.css';
 import TablePointage from './components/TablePointage';
+import BlocNotes from './components/BlocNotes';
 
 
 
@@ -170,6 +171,10 @@ function App() {
           <Route 
           path="/pointage" 
           element={<PrivateRoute element={<TablePointage />} allowedRoles={['Direction']} />} 
+        />
+          <Route 
+          path="/blocNote" 
+          element={<PrivateRoute element={<BlocNotes />} allowedRoles={['Direction']} />} 
         />
         {/* Rôles spécifiques */}
         <Route 
