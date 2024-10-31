@@ -19,7 +19,7 @@ import ContratNvalideGestio from './components/contrat/ContratNvalideGestio';
 import Dashboard from './components/Dashboard';
 import CommercialsToday from './components/CommercialsToday';
 import ProgressionChart from './components/ProgressionChart';
-import Chart from './components/Chart';
+import Chart from './components/ChartComponent';
 import CommercialChart from './components/CommercialChart';
 import AddAgent from './components/AddAgent';
 import SouscriptionOPCO from './components/Opco/SouscriptionOPCO';
@@ -42,6 +42,7 @@ import ListeContratsPrise from './components/contrat/ListeContratsPrise';
 import 'react-notifications-component/dist/theme.css';
 import TablePointage from './components/TablePointage';
 import BlocNotes from './components/BlocNotes';
+import ChartComponent from './components/ChartComponent';
 
 
 
@@ -108,7 +109,7 @@ function App() {
         />
         <Route 
           path="/chart" 
-          element={<PrivateRoute element={<Chart />} allowedRoles={['Gestionnaire', 'Direction', 'Manager']} />} 
+          element={<PrivateRoute element={<ChartComponent />} allowedRoles={['Gestionnaire', 'Direction', 'Manager']} />} 
         />
         <Route 
           path="/Agenda" 

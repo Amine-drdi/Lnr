@@ -160,11 +160,12 @@ function ListeRdvDirection() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type Rendez-vous</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Entreprise</th>
+
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Téléphone</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Email</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Entreprise</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">SIRET</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nombre de salariés</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Adresse</th>
@@ -206,11 +207,11 @@ function ListeRdvDirection() {
                 >
                  {RDV.rdvType}
                 </td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.entreprise}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.nom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.prenom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.telephone}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.email}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{RDV.entreprise}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.siret}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.nbrempl}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.adresse}</td>
@@ -243,11 +244,11 @@ function ListeRdvDirection() {
                {selectedRdv.rdvType}
               </span>
               </p>
+              <p className="text-left"><strong>Nom du l'entreprise :</strong> {selectedRdv.entreprise}</p>
                 <p className="text-left"><strong>Nom :</strong> {selectedRdv.nom}</p>
                 <p className="text-left"><strong>Prénom :</strong> {selectedRdv.prenom}</p>
                 <p className="text-left"><strong>Téléphone :</strong> {selectedRdv.telephone}</p>
                 <p className="text-left"><strong>Email :</strong> {selectedRdv.email}</p>
-                <p className="text-left"><strong>Nom du l'entreprise :</strong> {selectedRdv.entreprise}</p>
                 <p className="text-left"><strong>SIRET :</strong> {selectedRdv.siret}</p>
                 <p className="text-left"><strong>nombre de salariés :</strong> {selectedRdv.nbrempl}</p>
                 <p className="text-left"><strong>Adresse :</strong> {selectedRdv.adresse}</p>
@@ -300,6 +301,15 @@ function ListeRdvDirection() {
                   </select>
                   </label>
                   <label className="block mb-2">
+                    <span className="text-gray-700">Nom du l'entreprise :</span>
+                    <input
+                      name="entreprise"
+                      value={formData.entreprise}
+                      onChange={handleInputChange}
+                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
+                    />
+                  </label>
+                  <label className="block mb-2">
                     <span className="text-gray-700">Nom :</span>
                     <input
                       name="nom"
@@ -335,15 +345,7 @@ function ListeRdvDirection() {
                       className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
                     />
                   </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Nom du l'entreprise :</span>
-                    <input
-                      name="entreprise"
-                      value={formData.entreprise}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
+
                   <label className="block mb-2">
                     <span className="text-gray-700">SIRET :</span>
                     <input

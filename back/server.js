@@ -562,46 +562,98 @@ app.get('/api/contrats/commercials-today', async (req, res) => {
   }
 });
 
-
-
- // afficher le chart graphique mensuel 
-
- app.get('/api/contrats/count-by-month', async (req, res) => {
+// prise Today
+app.get('/events/stats/today', async (req, res) => {
   try {
-    const contrats = await Contrat.find(); // Récupérer tous les contrats
-    const contratsParMois = {};
+    // Formatage de la date d'aujourd'hui et d'hier en chaînes `yyyy-mm-dd`
+    const today = moment().format('YYYY-MM-DD');
+    const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD');
 
-    contrats.forEach(contrat => {
-      let dateSignature = moment(contrat.signatureDate, ["YYYY-MM-DD", "DD/MM/YYYY", "MM/DD/YYYY"], true);      if (dateSignature.isValid()) {
-        const moisAnnee = dateSignature.format('MM-YYYY'); // Formater en Mois-Année (ex: "01-2024")
-        
-        if (!contratsParMois[moisAnnee]) {
-          contratsParMois[moisAnnee] = 0;
-        }
-        contratsParMois[moisAnnee]++;
-      }
+    // Nombre d'événements enregistrés aujourd'hui
+    const todayCountEvent = await Event.countDocuments({
+      date: today
     });
 
-    res.status(200).json(contratsParMois); // Envoyer la réponse avec les résultats
+    // Nombre d'événements enregistrés hier
+    const yesterdayCountEvent = await Event.countDocuments({
+      date: yesterday
+    });
+
+    // Calcul du pourcentage d'augmentation
+    const pourcentageProgressionEvent = yesterdayCountEvent
+      ? ((todayCountEvent - yesterdayCountEvent) / yesterdayCountEvent) * 100
+      : 0;
+
+    res.json({
+      todayCountEvent,
+      pourcentageProgressionEvent: pourcentageProgressionEvent.toFixed(2) + "%"
+    });
   } catch (error) {
-    console.error('Erreur lors de la récupération des contrats par mois', error);
-    res.status(500).json({ message: 'Erreur serveur' });
+    res.status(500).json({ error: 'Une erreur est survenue' });
   }
 });
 
 
-app.get('/api/contrats/commercials-total', async (req, res) => {
+
+// route count rdv OPCO
+app.get('/rdv/stats/today', async (req, res) => {
   try {
-    const commercials = await Contrat.aggregate([
-      { $group: { _id: '$Commercial', totalContracts: { $sum: 1 } } }, // Grouper par Commercial et compter les contrats
-      { $project: { Commercial: '$_id', totalContracts: 1, _id: 0 } } // Projeter les données
-    ]);
+    // Date du jour et d'hier
+    const today = moment().startOf('day');
+    const yesterday = moment().subtract(1, 'days').startOf('day');
 
-    res.status(200).json(commercials); // Envoyer la réponse JSON
+    // Nombre de RDV enregistrés aujourd'hui
+    const todayCountRDV = await RDV.countDocuments({
+      dateInsertion: { $gte: today.toDate(), $lt: moment(today).endOf('day').toDate() }
+    });
+
+    // Nombre de RDV enregistrés hier
+    const yesterdayCountRDV = await RDV.countDocuments({
+      dateInsertion: { $gte: yesterday.toDate(), $lt: moment(yesterday).endOf('day').toDate() }
+    });
+
+    // Calcul du pourcentage d'augmentation
+    const pourcentageProgressionRDV = yesterdayCountRDV
+      ? ((todayCountRDV - yesterdayCountRDV) / yesterdayCountRDV) * 100
+      : 0;
+
+    res.json({
+      todayCountRDV,
+      pourcentageProgressionRDV: pourcentageProgressionRDV.toFixed(2) + "%"
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la récupération des contrats' });
+    res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des statistiques de RDV.' });
   }
 });
+
+// Route pour récupérer le classement des commerciaux
+app.get('/api/commercials/ranking', async (req, res) => {
+  try {
+    const ranking = await Contrat.aggregate([
+      {
+        $group: {
+          _id: "$Commercial",
+          contratsCount: { $sum: 1 },
+          totalCotisation: { $sum: "$cotisation" }
+        }
+      },
+      {
+        $project: {
+          nom: "$_id",
+          contratsCount: 1,
+          totalCotisation: 1
+        }
+      },
+      { $sort: { contratsCount: -1 } }
+    ]);
+    
+    res.json(ranking);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Erreur serveur');
+  }
+});
+
 
 // route pour calculer les rdv ajouté aujourd'hui 
 

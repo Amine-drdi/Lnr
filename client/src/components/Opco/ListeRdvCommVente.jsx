@@ -124,11 +124,11 @@ function ListeRdvCommVente() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type RDV</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Entreprise</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Téléphone</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Email</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Entreprise</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">SIRET</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nombre de salariés</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Adresse</th>
@@ -158,11 +158,11 @@ function ListeRdvCommVente() {
                 >
                  {RDV.rdvType}
                 </td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.entreprise}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.nom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.prenom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.telephone}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.email}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{RDV.entreprise}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.siret}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.adresse}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.nbrempl}</td>
