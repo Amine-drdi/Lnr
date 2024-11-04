@@ -31,7 +31,7 @@ function ListeContratsGestio() {
 
   const handleSaveModal = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/contrats/${editedContrat._id}`, {
+      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${editedContrat._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ function ListeContratsGestio() {
     const fetchContrats = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:5000/api/contrats');
+        const response = await fetch('http://51.83.69.195:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -104,7 +104,7 @@ function ListeContratsGestio() {
 
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/contrats/${id}`, {
+      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -595,7 +595,7 @@ function ListeContratsGestio() {
                 <td className="px-4 py-3 text-sm text-gray-700">
         {contrat.file ? (
           <a 
-            href={`http://localhost:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
+            href={`http://51.83.69.195:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-blue-500 hover:underline"

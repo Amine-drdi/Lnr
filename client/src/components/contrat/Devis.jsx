@@ -36,7 +36,7 @@ function Devis({ setIsAdding }) {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://localhost:5000/api/profile', {
+          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -107,7 +107,7 @@ function Devis({ setIsAdding }) {
 
     };
     try {
-      const response = await fetch('http://localhost:5000/api/devis', {
+      const response = await fetch('http://51.83.69.195:5000/api/devis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // Ajout du header pour JSON

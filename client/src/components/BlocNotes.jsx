@@ -12,7 +12,7 @@ function BlocNotes() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://localhost:5000/api/profile', {
+          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -32,7 +32,7 @@ function BlocNotes() {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/notes?Name=${Name}`);
+        const response = await fetch(`http://51.83.69.195:5000/notes?Name=${Name}`);
         const data = await response.json();
         setNotes(data);
       } catch (error) {
@@ -52,7 +52,7 @@ const addNote = async () => {
     if (title && description) { // Vérification pour éviter d'ajouter des notes vides
       const newNote = { title, description, Name }; // Inclure userName dans la nouvelle note
       try {
-        const response = await fetch('http://localhost:5000/notes', {
+        const response = await fetch('http://51.83.69.195:5000/notes', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newNote),
@@ -71,7 +71,7 @@ const addNote = async () => {
   // Supprimer une note
   const deleteNote = async (id) => {
     try {
-      await fetch(`http://localhost:5000/notes/${id}`, { method: 'DELETE' });
+      await fetch(`http://51.83.69.195:5000/notes/${id}`, { method: 'DELETE' });
       setNotes(notes.filter(note => note._id !== id));
     } catch (error) {
       console.error("Erreur lors de la suppression de la note :", error);

@@ -12,7 +12,7 @@ const ChartComponent = () => {
     const fetchData = async () => {
       try {
         // Mettez à jour l'URL ici
-        const response = await axios.get('http://localhost:5000/api/commercials/ranking');
+        const response = await axios.get('http://51.83.69.195:5000/api/commercials/ranking');
         setData(response.data);
       } catch (err) {
         setError('Erreur lors de la récupération des données');
