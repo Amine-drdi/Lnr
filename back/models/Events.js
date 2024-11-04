@@ -7,6 +7,7 @@ const eventSchema = new mongoose.Schema({
     date: String,
     link: String,
     participants: [{ name: String }],
+    ajoutePar: String
   });
   
   const Event = mongoose.model('Event', eventSchema);

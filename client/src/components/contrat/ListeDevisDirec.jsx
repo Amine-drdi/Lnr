@@ -23,7 +23,7 @@ function ListeDevisDirec() {
   useEffect(() => {
     const fetchdevis = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/devis');
+        const response = await fetch('http://localhost:5000/api/devis');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des devis');
         }
@@ -42,7 +42,7 @@ function ListeDevisDirec() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -122,7 +122,7 @@ function ListeDevisDirec() {
     try {
       const token = localStorage.getItem('authToken');
       const response = await axios.put(
-        `http://51.83.69.195:5000/api/devis/${selectedDevis._id}`,
+        `http://localhost:5000/api/devis/${selectedDevis._id}`,
         updatedDevis,
         {
           headers: {
@@ -160,7 +160,7 @@ const handleDeleteDevis = async (devisId) => {
   if (result.isConfirmed) {
     try {
       const token = localStorage.getItem('authToken');
-      await axios.delete(`http://51.83.69.195:5000/api/devis/${devisId}`, {
+      await axios.delete(`http://localhost:5000/api/devis/${devisId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

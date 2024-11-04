@@ -43,6 +43,8 @@ import 'react-notifications-component/dist/theme.css';
 import TablePointage from './components/TablePointage';
 import BlocNotes from './components/BlocNotes';
 import ChartComponent from './components/ChartComponent';
+import DashChart from './components/DashChart';
+import OPCOchart from './components/OPCOchart';
 
 
 
@@ -98,6 +100,14 @@ function App() {
         <Route 
           path="/dashboard" 
           element={<PrivateRoute element={<Dashboard />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
+        />
+        <Route 
+          path="/Prisechart" 
+          element={<PrivateRoute element={<DashChart />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
+        />
+                <Route 
+          path="/OPCOchart" 
+          element={<PrivateRoute element={<OPCOchart />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
         />
         <Route 
           path="/commToday" 

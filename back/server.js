@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb://mongodb:27017/mydatabase')
+mongoose.connect('mongodb://localhost:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
@@ -715,6 +715,7 @@ const eventSchema = new mongoose.Schema({
   date: String,
   link: String,
   participants: Array,
+  ajoutePar: String
 });
 const Event = mongoose.model("Event", eventSchema);
 
@@ -827,7 +828,78 @@ app.delete('/notes/:id', async (req, res) => {
   }
 });
 
+// Route pour obtenir les statistiques de cotisation mensuelle
+app.get('/api/contrats/stats/monthly-cotisation', async (req, res) => {
+  try {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
 
+    const previousMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const previousYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+
+    const getMonthlyCotisation = async (month, year) => {
+      const monthlyData = await Contrat.aggregate([
+        {
+          $match: {
+            signatureDate: { $regex: `^\\d{2}/${String(month).padStart(2, '0')}/${year}$` }
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            totalCotisation: { $sum: "$cotisation" }
+          }
+        }
+      ]);
+
+      return monthlyData.length > 0 ? monthlyData[0].totalCotisation : 0;
+    };
+
+    const totalCotisationCurrentMonth = await getMonthlyCotisation(currentMonth, currentYear);
+    const totalCotisationPreviousMonth = await getMonthlyCotisation(previousMonth, previousYear);
+
+    const cotisationProgression = totalCotisationPreviousMonth
+      ? ((totalCotisationCurrentMonth - totalCotisationPreviousMonth) / totalCotisationPreviousMonth) * 100
+      : 0;
+
+    res.json({
+      totalCotisationCurrentMonth,
+      cotisationProgression: `${cotisationProgression.toFixed(2)}%`
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des statistiques de cotisation :", error);
+    res.status(500).json({ error: "Erreur lors de la récupération des statistiques de cotisation" });
+  }
+});
+
+
+
+app.get('/api/events/ranking', async (req, res) => {
+  try {
+      const ranking = await Event.aggregate([
+          { $group: { _id: "$ajoutePar", count: { $sum: 1 } } },
+          { $sort: { count: -1 } }
+      ]);
+      res.json(ranking);
+  } catch (error) {
+      res.status(500).json({ message: "Erreur lors de la récupération des données." });
+  }
+});
+
+
+// Route pour obtenir le nombre de RDVs par userName
+app.get('/api/rdv-count', async (req, res) => {
+  try {
+    const result = await RDV.aggregate([
+      { $group: { _id: "$userName", count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
