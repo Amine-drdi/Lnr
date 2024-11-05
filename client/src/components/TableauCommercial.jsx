@@ -76,11 +76,7 @@ const TableauCommercial = () => {
               <td className="border px-4 py-2">{apporteur._id || "Non spécifié"}</td>
               <td className="border px-4 py-2">{apporteur.nbContrats}</td>
               <td className="border px-4 py-2">{apporteur.totalCotisation} €</td>
-              <td className="border px-4 py-2">
-                {apporteur.compagnies.map((compagnie, i) => (
-                  <div key={i}>{compagnie}</div>
-                ))}
-              </td>
+ 
               <td className="border px-4 py-2">{apporteur.nbContratsValides}</td>
             </tr>
           ))}
