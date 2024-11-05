@@ -14,6 +14,7 @@ function ListeDevisComm() {
   const [selectedDevis, setSelectedDevis] = useState(null); // Contrat sélectionné pour le modal
   const [showModal, setShowModal] = useState(false); // Contrôle du modal
   const [newComment, setNewComment] = useState('');
+  const [devis, setDevis] = useState([]);
   const navigate = useNavigate();
 
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife", "Soly Azar", "Zenio"];
@@ -107,22 +108,20 @@ function ListeDevisComm() {
   }, [deviss, userName, selectedMonth, searchTerm]);
 
   const handleViewDevis = (devis) => {
-    setSelectedDevis(devis); // Définir le contrat sélectionné
-    setShowModal(true); // Afficher le modal
+    setSelectedDevis(devis);
+    setNewComment(devis.commentaireAgent); // Initialisez newComment avec le commentaire existant
+    setShowModal(true);
   };
 
   const handleUpdateComment = async () => {
     try {
-      const response = await axios.put(`http://51.83.69.195:5000/api/deviscomm/${selectedDevis._id}`, {
+      const response = await axios.put(`http://51.83.69.195:5000/api/devis/${selectedDevis._id}`, {
         commentaireAgent: newComment,
       });
-      if (response.status === 200) {
-        // Mettre à jour l'état local avec le nouveau commentaire
-        setFilteredDeviss((prev) => 
-          prev.map((d) => (d._id === selectedDevis._id ? { ...d, commentaireAgent: newComment } : d))
-        );
-        closeModal();
-      }
+      setDevis(devis.map(d => (d._id === selectedDevis._id ? response.data : d))); // Mettez à jour la liste des devis
+      setNewComment(''); // Réinitialisez le commentaire après la mise à jour
+      setSelectedDevis(null); // Fermez le modal après la mise à jour
+      setShowModal(false);
     } catch (error) {
       console.error('Erreur lors de la mise à jour du commentaire:', error);
     }
@@ -130,7 +129,10 @@ function ListeDevisComm() {
 
   const closeModal = () => {
     setShowModal(false);
+    setSelectedDevis(null);
+    setNewComment(''); // Réinitialisez newComment lorsque le modal se ferme
   };
+
   if (loading) {
     return <div className="flex justify-center items-center h-screen text-gray-600">Chargement des devis...</div>;
   }
@@ -242,8 +244,9 @@ function ListeDevisComm() {
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               className="w-full h-24 border border-gray-300 rounded-md p-2 mt-4"
-              placeholder={selectedDevis.commentaireAgent}
+              placeholder="Ajouter un commentaire ou modifier"
             />
+
 
             <div className="mt-4 flex justify-end">
               <button onClick={closeModal} className="mr-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition">
