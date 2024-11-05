@@ -314,6 +314,20 @@ app.post('/api/rdvs', async (req, res) => {
     res.status(500).json({ message: 'Erreur du serveur' });
   }
 });
+// Mettre à jour un devis par ID
+app.put('/api/deviscomm/:id', async (req, res) => {
+  const { commentaireAgent } = req.body;
+  try {
+    const updatedDevis = await Devis.findByIdAndUpdate(req.params.id, { commentaireAgent }, { new: true });
+    if (!updatedDevis) {
+      return res.status(404).json({ message: 'Devis non trouvé' });
+    }
+    res.json(updatedDevis);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la mise à jour du devis' });
+  }
+});
+
 // Route pour récupérer tous les contrats
 app.get('/api/contrats', async (req, res) => {
   try {

@@ -13,6 +13,7 @@ function ListeDevisComm() {
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedDevis, setSelectedDevis] = useState(null); // Contrat sélectionné pour le modal
   const [showModal, setShowModal] = useState(false); // Contrôle du modal
+  const [newComment, setNewComment] = useState('');
   const navigate = useNavigate();
 
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife", "Soly Azar", "Zenio"];
@@ -110,10 +111,26 @@ function ListeDevisComm() {
     setShowModal(true); // Afficher le modal
   };
 
-  const closeModal = () => {
-    setShowModal(false); // Fermer le modal
+  const handleUpdateComment = async () => {
+    try {
+      const response = await axios.put(`http://51.83.69.195:5000/api/deviscomm/${selectedDevis._id}`, {
+        commentaireAgent: newComment,
+      });
+      if (response.status === 200) {
+        // Mettre à jour l'état local avec le nouveau commentaire
+        setFilteredDeviss((prev) => 
+          prev.map((d) => (d._id === selectedDevis._id ? { ...d, commentaireAgent: newComment } : d))
+        );
+        closeModal();
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du commentaire:', error);
+    }
   };
 
+  const closeModal = () => {
+    setShowModal(false);
+  };
   if (loading) {
     return <div className="flex justify-center items-center h-screen text-gray-600">Chargement des devis...</div>;
   }
@@ -203,12 +220,12 @@ function ListeDevisComm() {
         </table>
       </div>
 
-      {/* Modal pour afficher les détails d'un contrat */}
-      {showModal && selectedDevis && (
+       {/* Modal pour afficher les détails d'un contrat */}
+       {showModal && selectedDevis && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
             <h2 className="text-2xl font-semibold mb-4 text-light-blue-700">Détails du Devis</h2>
-            <p className='text-left'><strong >Nom:</strong> {selectedDevis.nom ? selectedDevis.nom.toUpperCase() : ''}</p>
+            <p className='text-left'><strong>Nom:</strong> {selectedDevis.nom ? selectedDevis.nom.toUpperCase() : ''}</p>
             <p className='text-left'><strong>Prénom:</strong> {selectedDevis.prenom ? selectedDevis.prenom.toUpperCase() : ''}</p>
             <p className='text-left'><strong>Téléphone:</strong> {selectedDevis.telephone}</p>
             <p className='text-left'><strong>Email:</strong> {selectedDevis.email}</p>
@@ -221,12 +238,21 @@ function ListeDevisComm() {
             <p className='text-left'><strong>Apporteur d'affaire:</strong> {selectedDevis.apporteurAffaire}</p>
             <p className='text-left'><strong>Commentaire Agent:</strong> {selectedDevis.commentaireAgent}</p>
 
-            <button
-              onClick={closeModal}
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition"
-            >
-              Fermer
-            </button>
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              className="w-full h-24 border border-gray-300 rounded-md p-2 mt-4"
+              placeholder={selectedDevis.commentaireAgent}
+            />
+
+            <div className="mt-4 flex justify-end">
+              <button onClick={closeModal} className="mr-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition">
+                Fermer
+              </button>
+              <button onClick={handleUpdateComment} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition">
+                Modifier
+              </button>
+            </div>
           </div>
         </div>
       )}
