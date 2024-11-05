@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import Gestionnaire from './components/role/Gestionnaire';
 import Commercial from './components/role/Commercial';
-import Signup from './components/Signup';
 import ListeEmp from './components/ListeEmp';
 import PrivateRoute from './components/PrivateRoute'; 
 import { Direction } from './components/role/Direction';
