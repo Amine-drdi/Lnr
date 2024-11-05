@@ -18,8 +18,6 @@ import ContratNonValide from './components/contrat/ContratNonValide';
 import ContratNvalideGestio from './components/contrat/ContratNvalideGestio';
 import Dashboard from './components/Dashboard';
 import CommercialsToday from './components/CommercialsToday';
-import ProgressionChart from './components/ProgressionChart';
-import Chart from './components/ChartComponent';
 import CommercialChart from './components/CommercialChart';
 import AddAgent from './components/AddAgent';
 import SouscriptionOPCO from './components/Opco/SouscriptionOPCO';
@@ -47,11 +45,6 @@ import DashChart from './components/DashChart';
 import OPCOchart from './components/OPCOchart';
 import DashboardGestion from './components/DashbordGestion';
 import TableauCommercial from './components/TableauCommercial';
-
-
-
-
-
 function App() {
   return (
     <Router>
