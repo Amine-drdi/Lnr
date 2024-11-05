@@ -46,6 +46,9 @@ import { CiLogin } from "react-icons/ci";
 import TablePointage from "../TablePointage";
 import BlocNotes from "../BlocNotes";
 import { GiNotebook } from "react-icons/gi";
+import { VscGraph } from "react-icons/vsc";
+import { FaTableCells } from "react-icons/fa6";
+import TableauCommercial from "../TableauCommercial";
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -88,6 +91,8 @@ export function Direction() {
     switch (activeComponent) {
       case 'dashboard':
         return <Dashboard />;
+        case 'Tableaux':
+          return <TableauCommercial/>;
       case 'listeContrats':
         return <ListeContratsDirec/>;
         case 'listeDevis':
@@ -147,13 +152,35 @@ export function Direction() {
       
   
         <List>
-      
-        <ListItem onClick={() => setActiveComponent('dashboard')} className="hover:bg-blue-600 text-white ">
+        <Accordion open={open === 2} icon={<RiArrowDropDownLine className="h-7 w-7 text-white" />}>
+            <ListItem className="p-0">
+              <AccordionHeader onClick={() => handleAccordionOpen(2)} className="border-b-0 p-3">
+                <ListItemPrefix>
+                  <PresentationChartBarIcon className="h-5 w-5 text-white" />
+                </ListItemPrefix>
+                <Typography color="white" className="mr-auto font-normal">
+                  Dashbord
+                </Typography>
+              </AccordionHeader>
+            </ListItem>
+            <AccordionBody className="py-1">
+              <List className="p-0">
+              <ListItem onClick={() => setActiveComponent('dashboard')} className="hover:bg-blue-600 text-white pl-10">
                   <ListItemPrefix>
-                    <PresentationChartBarIcon className="h-5 w-5 text-white" />
+                    <VscGraph className="h-5 w-5 text-white" />
                   </ListItemPrefix>
-                  Tableau de Bord
+                  Graphiques
                 </ListItem>
+                <ListItem onClick={() => setActiveComponent('Tableaux')} className="hover:bg-blue-600 text-white pl-10">
+                  <ListItemPrefix>
+                    <FaTableCells className="h-5 w-5 text-white " />
+                  </ListItemPrefix>
+                  Tableaux
+                </ListItem>
+              </List>
+            </AccordionBody>
+          </Accordion>
+
           <Accordion open={open === 1} icon={<RiArrowDropDownLine  className="h-7 w-7 text-white " />}>
             <ListItem className="p-0">
               <AccordionHeader onClick={() => handleAccordionOpen(1)} className="border-b-0 p-3">

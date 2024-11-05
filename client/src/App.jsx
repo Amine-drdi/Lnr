@@ -45,6 +45,8 @@ import BlocNotes from './components/BlocNotes';
 import ChartComponent from './components/ChartComponent';
 import DashChart from './components/DashChart';
 import OPCOchart from './components/OPCOchart';
+import DashboardGestion from './components/DashbordGestion';
+import TableauCommercial from './components/TableauCommercial';
 
 
 
@@ -100,6 +102,14 @@ function App() {
         <Route 
           path="/dashboard" 
           element={<PrivateRoute element={<Dashboard />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
+        />
+        <Route 
+          path="/dashboard-gestion" 
+          element={<PrivateRoute element={<DashboardGestion />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
+        />
+        <Route 
+          path="/tableau-commerial" 
+          element={<PrivateRoute element={<TableauCommercial />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
         />
         <Route 
           path="/Prisechart" 

@@ -63,7 +63,7 @@ function OPCOchart() {
   return (
     <div className="flex justify-center items-center h-full w-full mt-8">
       <div className="w-2/3">
-        <h2 className="text-center">Classement des Agents Prise de RDV</h2>
+        <h2 className="text-center">Classement des Agents OPCO</h2>
         <Bar data={chartData} options={{ responsive: true, scales: { y: { beginAtZero: true } } }} />
       </div>
     </div>

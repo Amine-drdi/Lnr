@@ -29,9 +29,10 @@ import ListeDevisGestio from "../contrat/ListeDevisGestio";
 import Agenda from "../Agenda";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import BlocNotes from "../BlocNotes";
+import DashboardGestion from "../DashbordGestion";
 // Les composants pour chaque section de la dashboard
 function DashboardContent() {
-  return <div><Dashboard/></div>;
+  return <div><DashboardGestion/></div>;
 }
 
 function ListeContrats() {
@@ -128,7 +129,7 @@ const handleStatusChange = async () => {
     if (etat === 0) return null;
     switch (activeComponent) {
       case 'dashboard':
-        return <Dashboard /> ;
+        return <DashboardGestion /> ;
       case 'listeContrats':
         return <ListeContratsGestio />;
       case 'AjoutContrat':
@@ -144,14 +145,14 @@ const handleStatusChange = async () => {
       case 'BlocNote':
         return <BlocNotes />;
       default:
-        return <DashboardContent />;
+        return <DashboardGestion />;
     }
   };
 
   return (
     <div className="flex">
-      <Card className="h-[calc(100vh-2rem)]  min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
-        <img className="object-cover w-auto h-24" src={logo} alt="" />
+    <Card className="h-full min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">        
+     <img className="object-cover w-auto h-24" src={logo} alt="" />
         <List>
           <div className="text-light-blue-900 pl-5 mb-4 pt-8 flex items-center space-x-2">
             <Typography variant="h6" className="flex items-center">

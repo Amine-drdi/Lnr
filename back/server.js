@@ -900,6 +900,83 @@ app.get('/api/rdv-count', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Route tableau classsement commerciaux
+app.get('/api/classement', async (req, res) => {
+  try {
+    const classement = await Contrat.aggregate([
+      {
+        $group: {
+          _id: "$Commercial",
+          totalCotisation: { $sum: "$cotisation" },
+          nbContrats: { $sum: 1 },
+          compagnies: { $addToSet: "$compagnie" },
+          nbContratsValides: {
+            $sum: { $cond: [{ $eq: ["$etatDossier", "Validé"] }, 1, 0] },
+          },
+        },
+      },
+      { $sort: { nbContrats: -1, totalCotisation: -1 } }
+    ]);
+
+    res.json(classement);
+  } catch (error) {
+    console.error("Erreur lors de l'obtention du classement:", error);
+    res.status(500).json({ error: "Erreur lors de l'obtention du classement." });
+  }
+});
+
+
+
+//route classement Apporteur d'affaire 
+
+// Route pour obtenir le classement des apporteurs d'affaire
+app.get('/api/classement-apporteurs', async (req, res) => {
+  try {
+    const classementApporteurs = await Contrat.aggregate([
+      {
+        $group: {
+          _id: "$apporteurAffaire",  // Utilise "apporteurAffaire" pour le classement
+          totalCotisation: { $sum: "$cotisation" },
+          nbContrats: { $sum: 1 },
+          compagnies: { $addToSet: "$compagnie" },
+          nbContratsValides: {
+            $sum: { $cond: [{ $eq: ["$etatDossier", "Validé"] }, 1, 0] },
+          },
+        },
+      },
+      { $sort: { nbContrats: -1, totalCotisation: -1 } }
+    ]);
+
+    res.json(classementApporteurs);
+  } catch (error) {
+    console.error("Erreur lors de l'obtention du classement des apporteurs d'affaire:", error);
+    res.status(500).json({ error: "Erreur lors de l'obtention du classement des apporteurs d'affaire." });
+  }
+});
+
+// Route pour obtenir le classement des commerciaux avec le nombre de RDVs ajoutés et les formations associées
+app.get('/api/classement-rdv', async (req, res) => {
+  try {
+    const classementRDV = await RDV.aggregate([
+      {
+        $group: {
+          _id: "$userName",
+          nbRDVs: { $sum: 1 },
+          formations: { $addToSet: "$formation" }, // Rassemble toutes les formations ajoutées par commercial
+        },
+      },
+      { $sort: { nbRDVs: -1 } } // Trie par nombre de RDVs en ordre décroissant
+    ]);
+
+    res.json(classementRDV);
+  } catch (error) {
+    console.error("Erreur lors de l'obtention du classement des RDVs:", error);
+    res.status(500).json({ error: "Erreur lors de l'obtention du classement des RDVs." });
+  }
+});
+
+
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
