@@ -7,10 +7,10 @@ mongoose.connect('mongodb://51.83.69.195:27017/mydatabase')
   .catch((error) => console.error('Erreur de connexion à MongoDB:', error));
 
 const addUser = async () => {
-  const matricule = '1000';
-  const name = 'Administrateur' ;
-  const password = 'admin123';
-  const role = 'Direction';
+  const matricule = '1003';
+  const name = 'Faten' ;
+  const password = 'faten123';
+  const role = 'commerciale';
   try {
     const existingUser = await User.findOne({ matricule });
     if (existingUser) {

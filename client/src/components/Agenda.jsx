@@ -71,7 +71,7 @@ const Agenda = () => {
     { id: 1025, name: "Khouloud Khalfallah" },
     { id: 1026, name: "Eya Ben Jbara" },
   ];
-s
+
   useEffect(() => {
     axios.get("http://51.83.69.195:5000/api/events")
       .then((response) => setEvents(response.data))
