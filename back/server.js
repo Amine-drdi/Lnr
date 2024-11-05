@@ -720,7 +720,7 @@ const eventSchema = new mongoose.Schema({
 const Event = mongoose.model("Event", eventSchema);
 
 // Routes API
-app.get("/events", async (req, res) => {
+app.get("/api/events", async (req, res) => {
   const events = await Event.find();
   res.json(events);
 });
