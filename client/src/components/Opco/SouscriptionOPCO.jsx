@@ -20,6 +20,7 @@ function SouscriptionOPCO({ setIsAdding }) {
   const [dateRDV, setDateRDV] = useState('');
   const [heureRDV, setHeureRDV] = useState('');
   const [userName, setUserName] = useState('');
+  const [role, setUserRole] = useState('');
   const [rdvType, setRdvType] = useState('');
   const [commentaireAgent, setCommentaireAgent] = useState('');
   const textInput = useRef(null);
@@ -40,6 +41,7 @@ function SouscriptionOPCO({ setIsAdding }) {
             },
           });
           setUserName(response.data.user.name);
+          setUserRole(response.data.user.role);
         } else {
           navigate('/');
         }
@@ -81,6 +83,7 @@ function SouscriptionOPCO({ setIsAdding }) {
       dateRDV,
       heureRDV,
       userName,
+      role,
       rdvType,
       commentaireAgent
     };

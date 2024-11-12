@@ -85,8 +85,10 @@ const AddAgent = () => {
                 <option value="Gestionnaire">Gestionnaire</option>
                 <option value="Direction">Direction</option>
                 <option value="ManagerOPCO">Manager-OPCO</option>
-                <option value="CommercialeOPCO">Commerciale-OPCO</option>
-                <option value="CommercialeVente">Commerciale-Vente</option>
+                <option value="CommercialeOPCO(A)">Commerciale-OPCO(A)</option>
+                <option value="CommercialeOPCO(B)">CommercialeOPCO(B)</option>
+                <option value="CommercialeVente(A)">Commerciale-Vente(A)</option>
+                <option value="CommercialeVente(B)">Commerciale-Vente(B)</option>
               </select>
             </div>
 

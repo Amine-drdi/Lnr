@@ -71,6 +71,7 @@ const RDVSchema = new mongoose.Schema({
         default: Date.now // La date et l'heure de l'insertion sont automatiquement générées ici
       },
       userName : String ,
+      role : String ,
       commentaireAgent : String ,
 });
 

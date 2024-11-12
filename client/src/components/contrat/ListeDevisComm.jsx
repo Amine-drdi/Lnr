@@ -14,6 +14,8 @@ function ListeDevisComm() {
   const [selectedDevis, setSelectedDevis] = useState(null); // Contrat sélectionné pour le modal
   const [showModal, setShowModal] = useState(false); // Contrôle du modal
   const [newComment, setNewComment] = useState('');
+
+  
   const navigate = useNavigate();
 
   const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife", "Soly Azar", "Zenio"];

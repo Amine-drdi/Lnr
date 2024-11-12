@@ -44,6 +44,8 @@ import DashChart from './components/DashChart';
 import OPCOchart from './components/OPCOchart';
 import DashboardGestion from './components/DashbordGestion';
 import TableauCommercial from './components/TableauCommercial';
+
+
 function App() {
   return (
     <Router>
@@ -126,6 +128,7 @@ function App() {
           path="/Agenda" 
           element={<PrivateRoute element={<Agenda />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
         />
+
         <Route 
           path="/profile-settings" 
           element={<PrivateRoute element={<ProfileSetting />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
@@ -216,12 +219,20 @@ function App() {
           element={<PrivateRoute element={<ManagerOPCO />} allowedRoles={['ManagerOPCO']} />} 
         />
         <Route 
-          path="/Commercial-OPCO" 
-          element={<PrivateRoute element={<CommercialOPCO />} allowedRoles={['CommercialeOPCO']} />} 
+          path="/Commercial-OPCO(A)" 
+          element={<PrivateRoute element={<CommercialOPCO />} allowedRoles={['CommercialeOPCO(A)']} />} 
         />
-                <Route 
-          path="/Commercial-Vente" 
-          element={<PrivateRoute element={<CommercialVente />} allowedRoles={['CommercialeVente']} />} 
+          <Route 
+          path="/Commercial-OPCO(B)" 
+          element={<PrivateRoute element={<CommercialOPCO />} allowedRoles={['CommercialeOPCO(B)']} />} 
+        />
+          <Route 
+          path="/Commercial-Vente(A)" 
+          element={<PrivateRoute element={<CommercialVente />} allowedRoles={['CommercialeVente(A)']} />} 
+        />
+                  <Route 
+          path="/Commercial-Vente(B)" 
+          element={<PrivateRoute element={<CommercialVente />} allowedRoles={['CommercialeVente(B)']} />} 
         />
       </Routes>
     </Router>

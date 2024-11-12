@@ -27,7 +27,6 @@ function OPCOchart() {
         }
 
         const data = await response.json();
-        console.log("Données récupérées:", data);
 
         if (Array.isArray(data) && data.length > 0) {
           const userNames = data.map(item => item._id || "Inconnu");

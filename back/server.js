@@ -20,8 +20,6 @@ mongoose.connect('mongodb://mongodb:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
-
-
 // Route pour se connecter
 app.post('/api/login', async (req, res) => {
   const { matricule, password } = req.body;
@@ -281,6 +279,7 @@ app.post('/api/rdvs', async (req, res) => {
       dateRDV,
       heureRDV,
       userName,
+      role,
       rdvType,
       commentaireManager,
       commentaireAgent
@@ -302,6 +301,7 @@ app.post('/api/rdvs', async (req, res) => {
       dateRDV,
       heureRDV,
       userName,
+      role,
       rdvType,
       commentaireManager,
       commentaireAgent
@@ -338,7 +338,7 @@ app.get('/api/contrats', async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la récupération des contrats' });
   }
 });
-// Route pour récupérer tous les devis
+//Route pour récupérer tous les devis
 app.get('/api/devis', async (req, res) => {
   try {
     const devis = await Devis.find();
@@ -989,7 +989,6 @@ app.get('/api/classement-rdv', async (req, res) => {
     res.status(500).json({ error: "Erreur lors de l'obtention du classement des RDVs." });
   }
 });
-
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;

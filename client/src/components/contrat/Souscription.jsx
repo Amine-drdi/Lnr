@@ -23,7 +23,6 @@ function Souscription({ setIsAdding }) {
   const [typeResiliation , setTypeResiliation] = useState('');
   const [commentaireAgent, setCommentaireAgent] = useState('');
   const [Commercial, setUserName] = useState('');
-
   const textInput = useRef(null);
   const navigate = useNavigate(); // Utilisation du hook navigate pour rediriger
 
@@ -42,6 +41,7 @@ function Souscription({ setIsAdding }) {
             },
           });
           setUserName(response.data.user.name);
+
         } else {
           navigate('/');
         }
@@ -145,6 +145,7 @@ function Souscription({ setIsAdding }) {
       
         {/* Section Identité du Souscripteur */}
         <h2 className="text-2xl font-bold text-blue-gray-800 mb-4">Identité du Souscripteur  </h2>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="nom" className="block text-sm font-medium text-blue-gray-700">Nom</label>

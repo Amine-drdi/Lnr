@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
 const TableauCommercial = () => {
   const [classement, setClassement] = useState([]);
   const [apporteurs, setApporteurs] = useState([]);
@@ -14,10 +13,8 @@ const TableauCommercial = () => {
         console.error("Erreur lors de la récupération des données:", error);
       }
     };
-
     fetchData();
   }, []);
-
   useEffect(() => {
     // Appeler l'API pour obtenir les données des apporteurs d'affaire
     fetch('http://51.83.69.195:5000/api/classement-apporteurs')
@@ -25,7 +22,6 @@ const TableauCommercial = () => {
       .then(data => setApporteurs(data))
       .catch(error => console.error("Erreur lors de la récupération des apporteurs d'affaire:", error));
   }, []);
-
   useEffect(() => {
     fetch('http://51.83.69.195:5000/api/classement-rdv')
       .then(response => response.json())
@@ -34,7 +30,7 @@ const TableauCommercial = () => {
   }, []);
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4 text-blue-gray-500">Commercial Vente</h2>
+      <h2 className="text-2xl font-bold mb-4 text-blue-gray-500 py-4">Commercial Vente</h2>
       <table className="min-w-full bg-white border border-gray-200 ">
         <thead className='bg-blue-gray-500'>
           <tr>
@@ -60,7 +56,7 @@ const TableauCommercial = () => {
         </tbody>
       </table>
 
-      <h2 className="text-2xl font-bold mb-4 text-blue-gray-500 pt-12 ">Commercial Prise de RDV</h2>
+      <h2 className="text-2xl font-bold mb-4 text-blue-gray-500 pb-4 pt-12 ">Commercial Prise de RDV</h2>
       <table className="min-w-full bg-white border border-gray-200">
         <thead className='bg-blue-gray-500'>
           <tr>
@@ -82,9 +78,7 @@ const TableauCommercial = () => {
           ))}
         </tbody>
       </table>
-
-
-      <h2 className="text-2xl font-bold mb-4">Commercial OPCO</h2>
+      <h2 className="text-2xl font-bold mb-4 text-blue-gray-500 pb-4 pt-12">Commercial OPCO</h2>
       <table className="min-w-full bg-white border border-gray-200 ">
         <thead className='bg-blue-gray-500'>
           <tr>
@@ -110,5 +104,4 @@ const TableauCommercial = () => {
     </div>
   );
 };
-
 export default TableauCommercial;

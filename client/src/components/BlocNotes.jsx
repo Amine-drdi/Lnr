@@ -97,13 +97,13 @@ const addNote = async () => {
           placeholder="Titre"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="border rounded p-2 w-full mb-2"
+          className="border rounded p-2 w-full mb-2  focus:outline-blue-gray-700"
         />
         <textarea
           placeholder="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="border rounded p-2 w-full mb-2"
+          className="border rounded p-2 w-full mb-2 focus:outline-blue-gray-700"
           rows="4"
         />
         

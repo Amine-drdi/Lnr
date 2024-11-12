@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
 import axios from 'axios';
+
 function ListeRdv() {
   const [rdvs, setRdvs] = useState([]);
   const [filteredRdvs, setFilteredRdvs] = useState([]);
@@ -40,6 +41,7 @@ function ListeRdv() {
           },
         });
         setUser(response.data.user.name);
+      
       } else {
         navigate('/');
       }
@@ -106,12 +108,12 @@ function ListeRdv() {
         <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">
           <thead className="bg-blue-gray-500 border-b w-full">
             <tr>
-            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type rendez-vous</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Entreprise</th>
-             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Téléphone</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Email</th>
@@ -126,7 +128,6 @@ function ListeRdv() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Commercial</th>
-
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">

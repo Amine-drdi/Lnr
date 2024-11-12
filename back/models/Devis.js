@@ -29,6 +29,8 @@ const devisSchema = new mongoose.Schema({
   retourCompagnie : String,
   suiviGestion :String ,
   ancienneMutuelle: String,
+  Commercial: String, // Ajouté par l'utilisateur
+  date: { type: Date, default: Date.now },
   createdAt: { type: Date, default: Date.now },
   
 });

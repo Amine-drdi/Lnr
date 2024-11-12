@@ -40,10 +40,14 @@ const Login = () => {
         navigate('/direction');
       } else if (user.role === 'ManagerOPCO') {
         navigate('/manager-OPCO');
-      } else if (user.role === 'CommercialeOPCO') {
-        navigate('/Commercial-OPCO');
-      } else if (user.role === 'CommercialeVente') {
-        navigate('/Commercial-Vente');
+      } else if (user.role === 'CommercialeOPCO(A)') {
+        navigate('/Commercial-OPCO(A)');
+      } else if (user.role === 'CommercialeOPCO(B)') {
+        navigate('/Commercial-OPCO(B)');
+      } else if (user.role === 'CommercialeVente(A)') {
+        navigate('/Commercial-Vente(A)');
+      } else if (user.role === 'CommercialeVente(B)') {
+        navigate('/Commercial-Vente(B)');
       } else if (user.role === 'Prise') {
         navigate('/Prise');
       }

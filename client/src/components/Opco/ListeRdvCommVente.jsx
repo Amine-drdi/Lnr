@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
 import { IoIosRefresh } from "react-icons/io";
 import { FaRegCommentDots } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 function ListeRdvCommVente() {
+  const navigate = useNavigate();
+  const [role, setRole] = useState([]);
   const [rdvs, setRdvs] = useState([]);
   const [filteredRdvs, setFilteredRdvs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,6 +15,33 @@ function ListeRdvCommVente() {
   const [selectedRdv, setSelectedRdv] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [commentaireCommercial, setCommentaireCommercial] = useState('');
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setRole(response.data.user.role);
+        } else {
+          navigate('/');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération du profil:', error);
+        navigate('/');
+      }
+    };
+  
+    fetchProfile();
+  }, []);
+  
 
   const fetchRdvs = async () => {
     setLoading(true); // Show loading before fetching
@@ -43,11 +74,16 @@ function ListeRdvCommVente() {
     }
   }, [searchTerm, rdvs]);
 
-  const closeModal = () => {
-    setShowModal(false);
-    setSelectedRdv(null);
-  };
-
+  useEffect(() => {
+    if (role === 'CommercialeVente(B)') {
+      setFilteredRdvs(rdvs.filter(rdv => rdv.role === 'CommercialeOPCO(B)'));
+    } else if (role === 'CommercialeVente(A)') {
+      setFilteredRdvs(rdvs.filter(rdv => rdv.role !== 'CommercialeOPCO(B)'));
+    } else {
+      setFilteredRdvs(rdvs); // Aucun filtre si le rôle ne correspond pas
+    }
+  }, [rdvs, role]);
+  
   const handleViewRdv = (RDV) => {
     setSelectedRdv(RDV);
     setCommentaireCommercial(RDV.commentaireCommercial || '');
@@ -95,8 +131,8 @@ function ListeRdvCommVente() {
   }
 
   return (
-    <div className="full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-semibold text-left text-blue-gray-700 mb-6 border-b pb-4 ">Liste des Rendez-vous</h1>
+    <div className="max-w-full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
+         <h1 className="text-3xl font-semibold text-left text-blue-gray-700 mb-6 border-b pb-4">Liste des Rendez-vous</h1>
       
       {/* Refresh Button */}
       <button 
@@ -106,7 +142,7 @@ function ListeRdvCommVente() {
         <IoIosRefresh className="mr-2" /> Actualiser
       </button>
       
-      <div className="mb-4">
+      <div className="mb-4 flex space-x-4">
         <input
           type="text"
           placeholder="Rechercher par nom ou prénom..."
@@ -118,7 +154,7 @@ function ListeRdvCommVente() {
 
       
       <div className="overflow-x-scroll">
-      <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">          
+       <table className="min-w-[1200px] w-full bg-white border border-gray-200 rounded-lg shadow-md whitespace-nowrap">          
         <thead className="bg-blue-gray-500 border-b w-full">
             <tr>              
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
@@ -178,6 +214,7 @@ function ListeRdvCommVente() {
           </tbody>
         </table>
         </div>
+      
       
 
       {showModal && (
