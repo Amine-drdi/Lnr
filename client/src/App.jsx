@@ -44,14 +44,13 @@ import DashChart from './components/DashChart';
 import OPCOchart from './components/OPCOchart';
 import DashboardGestion from './components/DashbordGestion';
 import TableauCommercial from './components/TableauCommercial';
-
+import AddDevis from './components/AddDevis';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-
         {/* Routes protégées */}
         <Route 
           path="/contratsGest" 
@@ -128,7 +127,10 @@ function App() {
           path="/Agenda" 
           element={<PrivateRoute element={<Agenda />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
         />
-
+        <Route 
+          path="/Add-Devis" 
+          element={<PrivateRoute element={<AddDevis />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
+        />
         <Route 
           path="/profile-settings" 
           element={<PrivateRoute element={<ProfileSetting />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 

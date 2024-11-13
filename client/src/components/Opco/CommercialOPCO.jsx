@@ -153,7 +153,6 @@ function CommercialOPCO() {
             </ListItemPrefix>
              la liste des rendez-vous
           </ListItem>
-
           <ListItem
             onClick={() => setActiveComponent('AjoutContrat')}
             className="hover:bg-blue-600 text-white"

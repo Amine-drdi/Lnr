@@ -158,7 +158,7 @@ const DashboardCard = ({ title, value, percentage, icon, trend }) => {
       </div>
       <div
         className={`mt-2 text-sm ${
-          percentageValue > 0 ? 'text-green-700' : percentageValue < 0 ? 'text-red-600' : 'text-white'
+          percentageValue > 0 ? 'text-green-900' : percentageValue < 0 ? 'text-red-600' : 'text-white'
         }`}
       >
         {percentage} {percentageValue > 0 ? '▲' : percentageValue < 0 ? '▼' : ''}

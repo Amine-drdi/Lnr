@@ -128,6 +128,8 @@ function ListeRdv() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Commercial</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Résultat du RDV</th>
+
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -164,6 +166,7 @@ function ListeRdv() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.heureRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireAgent}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireCommercial}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.resultatRdv}</td>
 
                 
               </tr>
@@ -200,6 +203,8 @@ function ListeRdv() {
             <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>
             <p className="text-left"><strong>Commentaire Agent :</strong> {selectedRdv.commentaireAgent}</p>
             <p className="text-left"><strong>Commentaire Commercial :</strong> {selectedRdv.commentaireCommercial}</p>
+            <p className="text-left"><strong>Résultat du RDV :</strong> {selectedRdv.resultatRdv}</p>
+
 
 
             <button   

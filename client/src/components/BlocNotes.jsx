@@ -104,7 +104,7 @@ const addNote = async () => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="border rounded p-2 w-full mb-2 focus:outline-blue-gray-700"
-          rows="4"
+          rows="5"
         />
         
        

@@ -107,7 +107,7 @@ function ProfileSetting() {
 
         <button
           type="submit"
-          className="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg shadow-md hover:bg-indigo-700 transition duration-200"
+          className="w-full bg-blue-gray-600 text-white font-bold py-3 rounded-lg shadow-md hover:bg-blue-gray-800 transition duration-200"
         >
           Mettre à jour
         </button>

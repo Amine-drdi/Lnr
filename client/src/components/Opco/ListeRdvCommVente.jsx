@@ -15,6 +15,7 @@ function ListeRdvCommVente() {
   const [selectedRdv, setSelectedRdv] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [commentaireCommercial, setCommentaireCommercial] = useState('');
+  const [resultatRdv, setResultatRdv] = useState('');
 
   const closeModal = () => {
     setShowModal(false);
@@ -87,6 +88,7 @@ function ListeRdvCommVente() {
   const handleViewRdv = (RDV) => {
     setSelectedRdv(RDV);
     setCommentaireCommercial(RDV.commentaireCommercial || '');
+    setResultatRdv(RDV.resultatRdv || ''); // Charger le résultat existant
     setShowModal(true);
   };
 
@@ -98,14 +100,15 @@ function ListeRdvCommVente() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ commentaireCommercial }),
+          body: JSON.stringify({ commentaireCommercial,resultatRdv }),
+          
         });
 
         if (!response.ok) {
           throw new Error('Erreur lors de la mise à jour du commentaire');
         }
 
-        const updatedRdv = { ...selectedRdv, commentaireCommercial };
+        const updatedRdv = { ...selectedRdv, commentaireCommercial, resultatRdv };
         setRdvs((prevRdvs) =>
           prevRdvs.map((rdv) =>
             rdv._id === selectedRdv._id ? updatedRdv : rdv
@@ -175,6 +178,7 @@ function ListeRdvCommVente() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire commercial</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Résultat du rendez-vous </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -209,6 +213,7 @@ function ListeRdvCommVente() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.dateRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.heureRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireCommercial}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.resultatRdv}</td>
               </tr>
             ))}
           </tbody>
@@ -217,28 +222,51 @@ function ListeRdvCommVente() {
       
       
 
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
-            <h2 className="text-xl font-semibold mb-4">Commentaire Commercial</h2>
-            <textarea
-              value={commentaireCommercial}
-              onChange={(e) => setCommentaireCommercial(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              rows="5"
-            />
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={handleSaveComment}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 className="text-xl font-semibold mb-4">Détails du Rendez-vous</h2>
+            
+            {/* Commentaire */}
+            <div className="mb-4">
+              <label htmlFor="commentaire" className="block text-sm font-medium text-gray-700">Commentaire Commercial</label>
+              <textarea
+                id="commentaire"
+                value={commentaireCommercial}
+                onChange={(e) => setCommentaireCommercial(e.target.value)}
+                rows="4"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
+              />
+            </div>
+            
+            {/* Résultat RDV */}
+            <div className="mb-4">
+              <label htmlFor="resultatRdv" className="block text-sm font-medium text-gray-700">Résultat du RDV</label>
+              <select
+                id="resultatRdv"
+                value={resultatRdv}
+                onChange={(e) => setResultatRdv(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
               >
-                Enregistrer
-              </button>
+                <option value=""></option>
+                <option value="porte ouverte">Porte ouverte</option>
+                <option value="porte non-ouverte">Porte non-ouverte</option>
+              </select>
+            </div>
+
+            {/* Save Button */}
+            <div className="flex justify-end space-x-2">
               <button
                 onClick={closeModal}
-                className="ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+                className="px-4 py-2 bg-gray-300 rounded text-gray-700"
               >
-                Annuler
+                Fermer
+              </button>
+              <button
+                onClick={handleSaveComment}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Sauvegarder
               </button>
             </div>
           </div>

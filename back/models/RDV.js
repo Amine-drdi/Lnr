@@ -73,6 +73,7 @@ const RDVSchema = new mongoose.Schema({
       userName : String ,
       role : String ,
       commentaireAgent : String ,
+      resultatRdv : String ,
 });
 
 const RDV = mongoose.model('RDV', RDVSchema);

@@ -50,6 +50,7 @@ import { VscGraph } from "react-icons/vsc";
 import { FaTableCells } from "react-icons/fa6";
 import TableauCommercial from "../TableauCommercial";
 
+
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -116,7 +117,8 @@ export function Direction() {
           return <SouscriptionOPCO />;
           case 'Agenda':
             return <Agenda />;
-            case 'BlocNote':
+      
+             case 'BlocNote':
               return <BlocNotes />;
             case 'Pointage':
               return <TablePointage/>;
@@ -227,8 +229,6 @@ export function Direction() {
             </ListItemPrefix>
            Agenda
           </ListItem>
-
-
                 <ListItem onClick={() => setActiveComponent('NonValide')} className="hover:bg-blue-600 text-white pl-10">
                   <ListItemPrefix>
                     <VscError className="h-5 w-5 text-white" />

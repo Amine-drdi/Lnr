@@ -282,7 +282,8 @@ app.post('/api/rdvs', async (req, res) => {
       role,
       rdvType,
       commentaireManager,
-      commentaireAgent
+      commentaireAgent,
+      resultatRdv
     } = req.body;
 
     const newRDV = new RDV({
@@ -304,7 +305,8 @@ app.post('/api/rdvs', async (req, res) => {
       role,
       rdvType,
       commentaireManager,
-      commentaireAgent
+      commentaireAgent,
+      resultatRdv
     });
 
     await newRDV.save();
@@ -989,6 +991,74 @@ app.get('/api/classement-rdv', async (req, res) => {
     res.status(500).json({ error: "Erreur lors de l'obtention du classement des RDVs." });
   }
 });
+
+
+// Route pour ajouter un devis
+app.post('/api/calend-devis', async (req, res) => {
+  try {
+    const {
+      nom,
+      prenom,
+      telephone,
+      email,
+      dob,
+      address,
+      profession,
+      devisDate,
+      cotisation,
+      compagnie,
+      effetDate,
+      formulePropose,
+      fraisDossier,
+      niveauPropose,
+      apporteurAffaire,
+      commentaireAgent,
+      ancienneMutuelle
+    } = req.body;
+
+    // Créer un nouvel objet devis
+    const newDevis = new Devis({
+      nom,
+      prenom,
+      telephone,
+      email,
+      dob,
+      address,
+      profession,
+      devisDate,
+      cotisation,
+      compagnie,
+      effetDate,
+      formulePropose,
+      fraisDossier,
+      niveauPropose,
+      apporteurAffaire,
+      commentaireAgent,
+      ancienneMutuelle,
+    });
+
+    // Sauvegarder dans la base de données
+    await newDevis.save();
+
+    // Retourner une réponse avec succès
+    res.status(201).json({ message: 'Devis ajouté avec succès' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de l\'ajout du devis' });
+  }
+});
+
+// Route pour récupérer tous les devis
+app.get('/api/devis-recup', async (req, res) => {
+  try {
+    // Récupérer tous les devis sans filtre
+    const devis = await Devis.find();  
+    res.json(devis); // Renvoie tous les devis sous forme de JSON
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur lors de la récupération des devis', error: err });
+  }
+});
+
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;

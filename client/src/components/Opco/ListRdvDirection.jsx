@@ -177,8 +177,9 @@ function ListeRdvDirection() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Commercial</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Manager</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Résultat du RDV</th>
 
 
             </tr>
@@ -223,8 +224,10 @@ function ListeRdvDirection() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.heureRDV}</td>
                 <td className="px-4 py-3 text-sm text-blue-700">{RDV.commentaireAgent}</td>
                 <td className="px-4 py-3 text-sm text-red-500">{RDV.commentaireCommercial}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{RDV.etatDossier}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireManager}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.etatDossier}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{RDV.resultatRdv}</td>
+
               </tr>
             ))}
           </tbody>
@@ -263,7 +266,7 @@ function ListeRdvDirection() {
 
                 <p className="text-left"><strong>Commentaire manager :</strong> {selectedRdv.commentaireManager}</p>
                 <p className="text-left"><strong>Commentaire Commercial :</strong><span className="text-red-500"> {selectedRdv.commentaireCommercial}</span></p>
-
+                <p className="text-left"><strong>Resultat du RDV:</strong> {selectedRdv.resultatRdv}</p>
                 
                 <button
                   onClick={handleEditClick}
