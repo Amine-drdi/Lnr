@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
 import { IoIosRefresh } from "react-icons/io";
 import Swal from 'sweetalert2';
+import { FaCheckCircle, FaTimesCircle} from 'react-icons/fa';
+import { MdPhoneMissed } from "react-icons/md";
 function ListeContratsDirec() {
   const [contrats, setContrats] = useState([]);
   const [filteredContrats, setFilteredContrats] = useState([]);
@@ -401,22 +403,27 @@ const handleDeleteClick = async (contratId) => {
           key={etatDossier}
           value={etatDossier}
           className={etatDossier === "Validé" ? "text-green-500" :
-            etatDossier === "Non validé" ? "text-red-500" :
-            etatDossier === "NRP" ? "text-yellow-800" :
-            ""}
+                    etatDossier === "Non validé" ? "text-red-500" :
+                    etatDossier === "NRP" ? "text-yellow-700" :
+                    ""}
         >
+          {etatDossier === "Validé" && <FaCheckCircle className="mr-2 text-green-500 inline-block" />}
+          {etatDossier === "Non validé" && <FaTimesCircle className="mr-2 text-red-500 inline-block" />}
+          {etatDossier === "NRP" && <MdPhoneMissed className="mr-2 text-yellow-700 inline-block" />}
           {etatDossier}
         </option>
       ))}
     </select>
   ) : (
-<span className={
+    <span className={
       contrat.etatDossier === "Validé" ? "text-green-500" :
       contrat.etatDossier === "Non validé" ? "text-red-500" :
-      contrat.etatDossier === "NRP" ? "text-yellow-800" :
+      contrat.etatDossier === "NRP" ? "text-yellow-700" :
       ""
-      }
-    >
+    }>
+      {contrat.etatDossier === "Validé" && <FaCheckCircle className="mr-2 text-green-500 inline-block" />}
+      {contrat.etatDossier === "Non validé" && <FaTimesCircle className="mr-2 text-red-500 inline-block" />}
+      {contrat.etatDossier === "NRP" && <MdPhoneMissed className="mr-2 w-5 h-5 text-yellow-700 inline-block" />}
       {contrat.etatDossier}
     </span>
   )}

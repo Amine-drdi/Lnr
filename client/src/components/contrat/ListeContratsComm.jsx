@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa'; // Importer l'icône de vue
+import { FaCheckCircle, FaTimesCircle} from 'react-icons/fa';
+import { MdPhoneMissed } from "react-icons/md";
 
 function ListeContratsComm() {
   const [contrats, setContrats] = useState([]);
@@ -186,7 +188,19 @@ function ListeContratsComm() {
                 <td className="px-4 py-3 text-center">
                   <FaEye className="text-blue-500 hover:text-blue-700 cursor-pointer" onClick={() => handleViewContrat(contrat)} />
                 </td>
-                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.etatDossier}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">
+  <span className={
+    contrat.etatDossier === "Validé" ? "text-green-500" :
+    contrat.etatDossier === "Non validé" ? "text-red-500" :
+    contrat.etatDossier === "NRP" ? "text-yellow-700" :
+    "text-gray-700"
+  }>
+    {contrat.etatDossier === "Validé" && <FaCheckCircle className="mr-2 inline-block" />}
+    {contrat.etatDossier === "Non validé" && <FaTimesCircle className="mr-2 inline-block" />}
+    {contrat.etatDossier === "NRP" && <MdPhoneMissed className="mr-2 inline-block" />}
+    {contrat.etatDossier}
+  </span>
+</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.signatureDate}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.effetDate}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.nom ? contrat.nom.toUpperCase() : ''}</td>
