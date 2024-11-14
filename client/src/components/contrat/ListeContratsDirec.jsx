@@ -389,23 +389,38 @@ const handleDeleteClick = async (contratId) => {
             </td>
 
             <td className="px-4 py-3 text-sm text-gray-700">
-                 {editContratId === contrat._id ? (
-                <select
-                  name="etatDossier"
-                  value={updatedContrat.etatDossier}
-                  onChange={handleSelectChange}
-                  className="border rounded-md p-2"
-                 >
-                 {etatDocs.map(etatDossier => (
-                 <option key={etatDossier} value={etatDossier}>
-                 {etatDossier}
-                 </option>
-                 ))}
-                 </select>
-                 ) : (
-                 contrat.etatDossier
-                  )}
-                </td>
+  {editContratId === contrat._id ? (
+    <select
+      name="etatDossier"
+      value={updatedContrat.etatDossier}
+      onChange={handleSelectChange}
+      className="border rounded-md p-2"
+    >
+      {etatDocs.map((etatDossier) => (
+        <option
+          key={etatDossier}
+          value={etatDossier}
+          className={etatDossier === "Validé" ? "text-green-500" :
+            etatDossier === "Non validé" ? "text-red-500" :
+            etatDossier === "NRP" ? "text-yellow-800" :
+            ""}
+        >
+          {etatDossier}
+        </option>
+      ))}
+    </select>
+  ) : (
+<span className={
+      contrat.etatDossier === "Validé" ? "text-green-500" :
+      contrat.etatDossier === "Non validé" ? "text-red-500" :
+      contrat.etatDossier === "NRP" ? "text-yellow-800" :
+      ""
+      }
+    >
+      {contrat.etatDossier}
+    </span>
+  )}
+</td>
 
                 <td className="px-4 py-3 text-sm text-gray-700">
                  {editContratId === contrat._id ? (

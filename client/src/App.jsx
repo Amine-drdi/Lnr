@@ -131,6 +131,7 @@ function App() {
           path="/Add-Devis" 
           element={<PrivateRoute element={<AddDevis />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
         />
+
         <Route 
           path="/profile-settings" 
           element={<PrivateRoute element={<ProfileSetting />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 

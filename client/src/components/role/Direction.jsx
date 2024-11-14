@@ -117,6 +117,7 @@ export function Direction() {
           return <SouscriptionOPCO />;
           case 'Agenda':
             return <Agenda />;
+
       
              case 'BlocNote':
               return <BlocNotes />;
@@ -229,6 +230,7 @@ export function Direction() {
             </ListItemPrefix>
            Agenda
           </ListItem>
+
                 <ListItem onClick={() => setActiveComponent('NonValide')} className="hover:bg-blue-600 text-white pl-10">
                   <ListItemPrefix>
                     <VscError className="h-5 w-5 text-white" />
