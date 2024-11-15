@@ -49,7 +49,7 @@ import { GiNotebook } from "react-icons/gi";
 import { VscGraph } from "react-icons/vsc";
 import { FaTableCells } from "react-icons/fa6";
 import TableauCommercial from "../TableauCommercial";
-
+import CalendarDevis from "../CalendarDevis";
 
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
@@ -117,7 +117,8 @@ export function Direction() {
           return <SouscriptionOPCO />;
           case 'Agenda':
             return <Agenda />;
-
+            case 'Add-devis':
+              return <CalendarDevis />;
       
              case 'BlocNote':
               return <BlocNotes />;
@@ -211,13 +212,12 @@ export function Direction() {
                   </ListItemPrefix>
                   Souscription
                 </ListItem>
-
-                <ListItem onClick={() => setActiveComponent('AjoutDevis')} className="hover:bg-blue-600 text-white pl-10" >
-                <ListItemPrefix>
-                <MdOutlinePriceChange className="h-5 w-5" />
-                </ListItemPrefix>
-                Devis
-               </ListItem>
+                <ListItem onClick={() => setActiveComponent('Add-devis')} className="hover:bg-blue-600 text-white pl-10 ">
+            <ListItemPrefix>
+              <IoCalendarNumber className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+           Devis
+          </ListItem>
                <ListItem onClick={() => setActiveComponent('listeDevis')} className="hover:bg-blue-600 text-white pl-10">
                   <ListItemPrefix>
                     <FaListCheck className="h-5 w-5 text-white" />

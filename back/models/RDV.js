@@ -1,5 +1,4 @@
 // models/RDV.js
-
 const mongoose = require('mongoose');
 
 const RDVSchema = new mongoose.Schema({

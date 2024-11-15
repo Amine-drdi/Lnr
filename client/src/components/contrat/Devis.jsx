@@ -102,9 +102,6 @@ function Devis({ setIsAdding }) {
       Commercial,
       commentaireAgent,
       ancienneMutuelle,
-
-     
-
     };
     try {
       const response = await fetch('http://51.83.69.195:5000/api/devis', {

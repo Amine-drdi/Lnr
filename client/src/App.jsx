@@ -45,6 +45,7 @@ import OPCOchart from './components/OPCOchart';
 import DashboardGestion from './components/DashbordGestion';
 import TableauCommercial from './components/TableauCommercial';
 import AddDevis from './components/AddDevis';
+import CalendarDevis from './components/CalendarDevis';
 
 function App() {
   return (
@@ -130,6 +131,11 @@ function App() {
         <Route 
           path="/Add-Devis" 
           element={<PrivateRoute element={<AddDevis />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
+        />
+
+        <Route 
+          path="/calendrier-Devis" 
+          element={<PrivateRoute element={<CalendarDevis />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
         />
 
         <Route 

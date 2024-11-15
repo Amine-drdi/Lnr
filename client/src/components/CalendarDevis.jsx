@@ -6,6 +6,7 @@ import { Dialog, DialogHeader, DialogBody, DialogFooter, Button } from "@materia
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import frLocale from '@fullcalendar/core/locales/fr';
+import Swal from 'sweetalert2';
 // Fonction pour convertir une date au format "DD/MM/YYYY" ou "YYYY-MM-DD" en objet Date
 const parseDate = (dateString) => {
   if (!dateString) return null;
@@ -30,15 +31,16 @@ const parseDate = (dateString) => {
       return new Date(parts[2], parts[1] - 1, parts[0]);
     }
   }
-  
   console.error("Date invalide :", dateString);
   return null;
 };
 
 const CalendarDevis = () => {
-    const [devis, setDevis] = useState([]);
+
+  const [devis, setDevis] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [Name, setName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [role, setRole] = useState('');
   const navigate = useNavigate();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false); // Nouveau modal pour afficher les détails
   const [selectedDevis, setSelectedDevis] = useState(null);  // Pour stocker les détails du devis sélectionné
@@ -51,6 +53,7 @@ const CalendarDevis = () => {
     address: '',
     profession: '',
     devisDate: '',
+    heure:'',
     cotisation: '',
     compagnie: '',
     effetDate: '',
@@ -59,28 +62,77 @@ const CalendarDevis = () => {
     niveauPropose: '',
     apporteurAffaire: '',
     commentaireAgent: '',
-    ancienneMutuelle: ''
+    ancienneMutuelle: '',
+    userName: '',
+   
+    
   });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUserName(response.data.user.name);
+          setRole(response.data.user.role);
+        } else {
+          navigate('/');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération du profil:', error);
+        navigate('/');
+      }
+    };
+
+    fetchProfile();
+  }, [navigate]);
 
    // Fonction pour récupérer les devis depuis le backend
    const fetchDevis = async () => {
     try {
       const response = await axios.get('/api/devis-recup');
-      const devisData = response.data.map((devis) => ({
-        id: devis._id,
-        title: `${devis.nom.toLocaleUpperCase()} ${devis.prenom.toLocaleUpperCase()}`,
-        start: parseDate(devis.devisDate),
-        ...devis,
-      })).filter((devis) => devis.start);
-      setDevis(devisData);
+      
+      const devisData = response.data
+        .filter((devis) => {
+          if (role === 'Direction') {
+            return true; // Tous les devis
+          } else if (role === 'Commerciale') {
+            return devis.userName === userName; // Filtrer par devisCommercial
+          }
+          return false; // Si aucun rôle valide, ne rien retourner
+        })
+        .map((devis) => {
+          // Récupération de la date (devisDate) et de l'heure (heure)
+          const [year, month, day] = devis.devisDate.split('-'); // Décompose la date "yyyy-mm-dd"
+          const [hours, minutes] = devis.heure ? devis.heure.split(':') : [0, 0]; // Décompose l'heure "HH:mm" si elle existe
+  
+          // Création d'un objet Date complet avec l'heure
+          const eventDate = new Date(year, month - 1, day, parseInt(hours), parseInt(minutes)); // Le mois commence à 0
+  
+          return {
+            id: devis._id,
+            title: `${devis.nom.toLocaleUpperCase()} ${devis.prenom.toLocaleUpperCase()}`,
+            start: eventDate, // Utilisation de la date complète avec l'heure
+            ...devis,
+          };
+        })
+        .filter((devis) => devis.start);
+  
+      setDevis(devisData); // Met à jour les données de devis dans l'état
     } catch (error) {
       console.error('Erreur lors de la récupération des devis', error);
     }
   };
-
+  
   useEffect(() => {
     fetchDevis();
-  }, []);
+  }, [role, userName]); // Déclenchement de l'effet lorsque role ou userName change
+  
 
   const handleSelectEvent = (info) => {
     const selectedDevis = devis.find(d => d.id === info.event.id);
@@ -92,27 +144,7 @@ const CalendarDevis = () => {
     setIsDetailsModalOpen(false);
     setSelectedDevis(null);
   };
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem('authToken');
-        if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setName(response.data.user.name);
-        } else {
-          navigate('/');
-        }
-      } catch (error) {
-        console.error('Erreur lors de la récupération du profil:', error);
-        navigate('/');
-      }
-    };
-    fetchProfile();
-  }, [navigate]);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -120,13 +152,41 @@ const CalendarDevis = () => {
   };
 
   const handleAddDevis = async () => {
+    const requiredFields = [
+      'nom',
+      'prenom',
+      'telephone',
+      'email',
+      'dob',
+      'address',
+      'profession',
+      'devisDate',
+      'heure',
+      'cotisation',
+      'compagnie',
+      'effetDate',
+      'formulePropose',
+      'fraisDossier',
+      'niveauPropose',
+      'ancienneMutuelle',
+      'apporteurAffaire',
+    
+    ];
+  
+    // Vérification des champs obligatoires
+    const missingFields = requiredFields.filter((field) => !formData[field]);
+    if (missingFields.length > 0) {
+      alert(`Veuillez remplir tous les champs obligatoires : ${missingFields.join(', ')}`);
+      return;
+    }
     try {
+      const dataToSend = { ...formData, userName }; // Ajout de Commercial aux données
       const response = await fetch('/api/calend-devis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData), // Envoie des données en JSON
+        body: JSON.stringify(dataToSend), // Envoie des données complètes
       });
   
       if (!response.ok) {
@@ -134,11 +194,14 @@ const CalendarDevis = () => {
       }
   
       const result = await response.json();
-      console.log(result.message); // Afficher un message de succès ou d'erreur
+      console.log(result.message);
   
-      // Ajoutez le devis au calendrier si nécessaire
-      setDevis([...devis, { title: `${formData.nom} ${formData.prenom}`, start: new Date(formData.devisDate) }]);
-      
+      // Mise à jour de l'état local
+      setDevis([
+        ...devis,
+        { title: `${formData.nom} ${formData.prenom}`, start: new Date(formData.devisDate), userName },
+      ]);
+  
       setIsModalOpen(false);
       setFormData({
         nom: '',
@@ -149,6 +212,7 @@ const CalendarDevis = () => {
         address: '',
         profession: '',
         devisDate: '',
+        heure:'',
         cotisation: '',
         compagnie: '',
         effetDate: '',
@@ -157,7 +221,7 @@ const CalendarDevis = () => {
         niveauPropose: '',
         apporteurAffaire: '',
         commentaireAgent: '',
-        ancienneMutuelle: ''
+        ancienneMutuelle: '',
       });
     } catch (error) {
       console.error(error);
@@ -165,18 +229,20 @@ const CalendarDevis = () => {
     }
   };
   
+  
   useEffect(() => {
     document.body.style.overflow = isModalOpen ? 'hidden' : '';
   }, [isModalOpen]);
-
   return (
+    
     <div className="container mx-auto p-4 md:p-8">
-      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-blue-gray-700 mb-4">Agenda des devis</h1>
-      
-      <Button onClick={() => setIsModalOpen(true)} color="green" size="lg">
+
+      <h3 className="  lg:text-4xl font-bold text-left text-blue-gray-700 mb-4">Agenda des devis </h3>
+     <div className='text-right' >
+      <Button onClick={() => setIsModalOpen(true)} color="green" size="md">
         Ajouter un Devis  
       </Button>
-
+      </div>
       <Dialog open={isModalOpen} handler={() => setIsModalOpen(false)} portal container={document.body}>
         <DialogHeader>Ajouter un Devis</DialogHeader>
         <DialogBody divider className="max-h-[60vh] overflow-y-auto">
@@ -266,11 +332,13 @@ const CalendarDevis = () => {
                 />
               </div>
             </div>
+            {/* Ligne cotisation et Date de Devis */}
+
 
             {/* Ligne cotisation et Date de Devis */}
             <div className="flex space-x-4">
               <div className="flex-1">
-                <label className="text-sm font-medium">Date de Devis</label>
+                <label className="text-sm font-medium">Date du Devis</label>
                 <input
                   type="date"
                   name="devisDate"
@@ -280,6 +348,20 @@ const CalendarDevis = () => {
                 />
               </div>
               <div className="flex-1">
+                <label className="text-sm font-medium">heure</label>
+                <input
+                  type="time"
+                  name="heure"
+                  value={formData.heure}
+                  onChange={handleChange}
+                  className="border border-gray-300 p-2 rounded mt-1 w-full"
+                />
+              </div>
+
+            </div>
+
+            <div className="flex space-x-4">
+            <div className="flex-1">
                 <label className="text-sm font-medium">Montant vp</label>
                 <input
                   type="number"
@@ -289,38 +371,37 @@ const CalendarDevis = () => {
                   className="border border-gray-300 p-2 rounded mt-1 w-full"
                 />
               </div>
+              <div className="flex-1">
+                <label className="text-sm font-medium">Compagnie</label>
+                <select
+                  id="compagnie"
+                  name="compagnie"
+                  value={formData.compagnie}
+                  onChange={handleChange}
+                  className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
+
+                >
+                  <option value="">Sélectionnez la compagnie</option>
+                  <option value="Néolyane">Néoliane</option>
+                  <option value="Assurema">Assurema</option>
+                  <option value="Alptis">Alptis</option>
+                  <option value="April">April</option>
+                  <option value="Malakoff Humanis">Malakoff Humanis</option>
+                  <option value="Cegema">Cegema</option>
+                  <option value="Swisslife">Swisslife</option>
+                  <option value="Soly Azar">Soly Azar</option>
+                  <option value="Zenio">Zenio</option>
+                 </select>
+              </div>
             </div>
 
             <div className="flex space-x-4">
-              <div className="flex-1">
+            <div className="flex-1">
                 <label className="text-sm font-medium">Date d'effet</label>
                 <input
                   type="date"
                   name="effetDate"
                   value={formData.effetDate}
-                  onChange={handleChange}
-                  className="border border-gray-300 p-2 rounded mt-1 w-full"
-                />
-              </div>
-              <div className="flex-1">
-                <label className="text-sm font-medium">Compagnie</label>
-                <input
-                  type="text"
-                  name="compagnie"
-                  value={formData.compagnie}
-                  onChange={handleChange}
-                  className="border border-gray-300 p-2 rounded mt-1 w-full"
-                />
-              </div>
-            </div>
-
-            <div className="flex space-x-4">
-              <div className="flex-1">
-                <label className="text-sm font-medium">formule Proposé</label>
-                <input
-                  type="text"
-                  name="formulePropose"
-                  value={formData.formulePropose}
                   onChange={handleChange}
                   className="border border-gray-300 p-2 rounded mt-1 w-full"
                 />
@@ -337,6 +418,16 @@ const CalendarDevis = () => {
               </div>
             </div>
             <div className="flex space-x-4">
+            <div className="flex-1">
+                <label className="text-sm font-medium">formule Proposé</label>
+                <input
+                  type="text"
+                  name="formulePropose"
+                  value={formData.formulePropose}
+                  onChange={handleChange}
+                  className="border border-gray-300 p-2 rounded mt-1 w-full"
+                />
+              </div>
               <div className="flex-1">
                 <label className="text-sm font-medium">Niveau proposé</label>
                 <input
@@ -347,7 +438,10 @@ const CalendarDevis = () => {
                   className="border border-gray-300 p-2 rounded mt-1 w-full"
                 />
               </div>
-              <div className="flex-1">
+
+          </div>
+          <div className="flex space-x-4">
+          <div className="flex-1">
                 <label className="text-sm font-medium">Ancienne mutuelle</label>
                 <input
                   type="text"
@@ -357,17 +451,25 @@ const CalendarDevis = () => {
                   className="border border-gray-300 p-2 rounded mt-1 w-full"
                 />
               </div>
-          </div>
-          <div className="flex space-x-4">
           <div className="flex-1">
           <label className="text-sm font-medium">Apporteur d'affaire</label>
-                <input
-                  type="text"
+                <select
+                  id="apporteurAffaire"
                   name="apporteurAffaire"
                   value={formData.apporteurAffaire}
                   onChange={handleChange}
-                  className="border border-gray-300 p-2 rounded mt-1 w-full "
-                />
+                  className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
+                  >
+                    <option value=""></option>
+                    <option value="Cyrine Ben Aicha">Cyrine Ben Aicha</option>
+                    <option value="Sihem Selemi">Sihem Selemi</option>
+                    <option value="Hajer Askri">Hajer Askri</option>
+                    <option value="Rim Dabebi ">Rim Dabebi </option>
+                    <option value="Eya Ben Jabra">Eya Ben Jabra</option>
+                    <option value="Rihab Kouki">Rihab Kouki</option>
+                    <option value="Leads">Leads </option>
+                   
+                  </select>
           </div>
           </div>
 
@@ -396,19 +498,40 @@ const CalendarDevis = () => {
 
       <div className="bg-white shadow-lg rounded-lg overflow-hidden mt-6">
       <FullCalendar
-          locale={frLocale}
-          plugins={[dayGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          weekends={true}
-          events={devis}
-          eventClick={handleSelectEvent}  // Capture le clic sur l'événement (devis)
-          height="auto"
-          contentHeight="auto"
-          aspectRatio={1.35}
-          buttonText={{
-            today: "Aujourd'hui",
-          }}
-        />
+  locale={frLocale}
+  plugins={[dayGridPlugin, interactionPlugin]}
+  initialView="dayGridMonth"
+  weekends={true}
+  events={devis}
+  eventClick={handleSelectEvent}  // Capture le clic sur l'événement (devis)
+  height="auto"
+  contentHeight="auto"
+  aspectRatio={1.35}
+  buttonText={{
+    today: "Aujourd'hui",
+  }}
+  customButtons={{
+    listDevis: {
+      text: 'Liste des devis',
+      click: () => {
+        // Action à effectuer lorsqu'on clique sur le bouton "Liste des devis"
+        // Par exemple, vous pouvez ouvrir un modal ou rediriger vers une page spécifique
+        Swal.fire({
+          title: 'Liste des devis',
+          text: 'Ici vous pouvez afficher la liste des devis.',
+          icon: 'info',
+        });
+      },
+    },
+  }}
+  headerToolbar={{
+    left: 'prev,next today', // Ajoutez 'listDevis' ici pour afficher le bouton
+    center: 'title',
+    right: 'dayGridMonth,dayGridWeek,dayGridDay',
+
+  }}
+/>
+
       </div>
         {/* Modal de détails du devis */}
         {selectedDevis && (
@@ -423,7 +546,11 @@ const CalendarDevis = () => {
           }}
         >
         <DialogHeader>Détails du Devis</DialogHeader>
-        <DialogBody divider>
+        <DialogBody divider className="max-h-96 overflow-y-auto">
+        <div>
+       <h3 className="font-semibold">Agent: </h3>
+       <p>{selectedDevis.userName}</p>
+      </div>
       <div>
       <h3 className="font-semibold">Nom et Prénom:</h3>
       <p >{selectedDevis.nom.toUpperCase()} {selectedDevis.prenom.toUpperCase()}</p>
@@ -445,6 +572,10 @@ const CalendarDevis = () => {
       <p>{selectedDevis.devisDate}</p>
       </div>
       <div>
+      <h3 className="font-semibold">Heure:</h3>
+      <p>{selectedDevis.heure}</p>
+      </div>
+      <div>
       <h3 className="font-semibold">Compagnie:</h3>
       <p>{selectedDevis.compagnie}</p>
       </div>
@@ -453,8 +584,12 @@ const CalendarDevis = () => {
       <p>{selectedDevis.formulePropose}</p>
       </div>
       <div>
-      <h3 className="font-semibold">Montant Cotisation:</h3>
+      <h3 className="font-semibold">Montant VP:</h3>
       <p>{selectedDevis.cotisation}</p>
+      </div>
+      <div>
+      <h3 className="font-semibold">Apporteur d'affaire:</h3>
+      <p>{selectedDevis.apporteurAffaire}</p>
       </div>
       <div>
       <h3 className="font-semibold">Commentaire de l'Agent:</h3>

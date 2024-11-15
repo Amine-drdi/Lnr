@@ -1,11 +1,7 @@
 // models/Contrat.js
-
 const mongoose = require('mongoose');
 
 const devisSchema = new mongoose.Schema({
-
-
-
   nom: String,
   prenom: String,
   telephone: String,
@@ -14,6 +10,7 @@ const devisSchema = new mongoose.Schema({
   address: String,
   profession: String,
   devisDate: String,
+  heure: String,
   cotisation: Number,
   compagnie: String,
   effetDate: String,
@@ -29,11 +26,8 @@ const devisSchema = new mongoose.Schema({
   retourCompagnie : String,
   suiviGestion :String ,
   ancienneMutuelle: String,
-  Commercial: String, // Ajouté par l'utilisateur
   date: { type: Date, default: Date.now },
   createdAt: { type: Date, default: Date.now },
-  
 });
-
 const Devis = mongoose.model('Devis', devisSchema);
 module.exports = Devis;

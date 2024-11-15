@@ -1,10 +1,7 @@
 // models/Contrat.js
-
 const mongoose = require('mongoose');
 
 const contratSchema = new mongoose.Schema({
-
-
 
   nom: String,
   prenom: String,

@@ -33,6 +33,7 @@ import ListeDevisComm from '../contrat/ListeDevisComm';
 import Agenda from "../Agenda";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import BlocNotes from '../BlocNotes';
+import CalendarDevis from '../CalendarDevis';
 function Commercial() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -136,9 +137,6 @@ const handleStatusChange = async () => {
     console.error("Erreur lors de la mise à jour du statut :", error);
   }
 };
-
-
-  
   const renderComponent = () => {
     if (etat === 0) return null; // Désactive le rendu des composants si etat est égal à 0
     switch (activeComponent) {
@@ -158,11 +156,10 @@ const handleStatusChange = async () => {
         return <Souscription />;
     }
   };
-
   return (
     <div className="flex">
-      <Card className="h-[calc(100vh-2rem)] min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
-        <img
+      <Card className="h-full min-w-[20rem] p-4 shadow-xl bg-blue-gray-500 text-white">
+      <img
           className="object-cover w-auto h-24"
           src={logo}
           alt="Company Logo"
@@ -178,10 +175,10 @@ const handleStatusChange = async () => {
           </Typography>
           </div>
           <button
-  onClick={handleStatusChange}
-  className={`flex items-center px-4 py-2 mt-4 font-semibold text-white rounded-full shadow-md transition-colors duration-200 ease-in-out
-    ${isOnline ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 hover:bg-gray-500'}
-  `}
+            onClick={handleStatusChange}
+            className={`flex items-center px-4 py-2 mt-4 font-semibold text-white rounded-full shadow-md transition-colors duration-200 ease-in-out
+            ${isOnline ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 hover:bg-gray-500'}
+            `}
 >
   {isOnline ? (
     <>
@@ -218,7 +215,6 @@ const handleStatusChange = async () => {
         : 'Bloc Notes'} {/* Nom Bloc Notes */}
     </ListItem>
   ))}
-
   <ListItem
     onClick={handleLogout}
     className="hover:bg-blue-600 text-white"
@@ -229,13 +225,10 @@ const handleStatusChange = async () => {
     Se déconnecter
   </ListItem>
 </List>
-
       </Card>
-
       <div className="flex-1 p-6">
         {renderComponent()}
       </div>
-
       <Dialog open={open} handler={handleOpen} className="max-h-[75vh]">
         <DialogHeader className='text-green-700'> <IoIosNotifications/> Notifications</DialogHeader>
         <DialogBody className="overflow-y-auto max-h-[50vh]">
@@ -259,5 +252,4 @@ const handleStatusChange = async () => {
     </div>
   );
 }
-
 export default Commercial;

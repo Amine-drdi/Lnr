@@ -223,12 +223,8 @@ app.post('/api/devis',  async (req, res) => {
       Commercial,
       commentaireAgent,
       ancienneMutuelle,
-      
-   
+
     } = req.body;
-
-   
-
     const newDevis = new Devis({
       nom,
       prenom,
@@ -248,8 +244,6 @@ app.post('/api/devis',  async (req, res) => {
       Commercial,
       commentaireAgent,
       ancienneMutuelle,
-      
-
     });
 
     await newDevis.save();
@@ -423,7 +417,6 @@ app.put('/api/devis/:id', async (req, res) => {
   }
 });
 
-
 // Route pour mettre à jour un RDV
 app.put('/api/rdvs/:id', async (req, res) => {
   try {
@@ -436,9 +429,7 @@ app.put('/api/rdvs/:id', async (req, res) => {
     if (!currentRdv) {
       return res.status(404).json({ message: 'Rendez-vous non trouvé' });
     }
-
     const updatedRdv = await RDV.findByIdAndUpdate(req.params.id, req.body, { new: true });
-
     res.status(200).json({ message: 'Rendez-vous mis à jour avec succès', rdv: updatedRdv });
   } catch (error) {
     console.error('Erreur lors de la mise à jour du rendez-vous :', error);
@@ -460,7 +451,6 @@ app.delete('/api/rdvs/:id', async (req, res) => {
   }
 });
 
-
 // Route pour supprimer un contrat
 app.delete('/api/contrats/:id', async (req, res) => {
   try {
@@ -472,7 +462,6 @@ app.delete('/api/contrats/:id', async (req, res) => {
 });
 
 // route pour les alertes 
-
 app.get('/api/contrat-updates', async (req, res) => {
   try {
     // Récupérer les mises à jour récentes des contrats (par exemple, dans les 7 derniers jours)
@@ -486,32 +475,26 @@ app.get('/api/contrat-updates', async (req, res) => {
   }
 });
 
-
 // Route pour mettre à jour un utilisateur
 app.put('/api/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
     let updatedUser = req.body;
-
     // Si le mot de passe est modifié, hacher le nouveau mot de passe
     if (updatedUser.password) {
       const salt = await bcrypt.genSalt(10);
       updatedUser.password = await bcrypt.hash(updatedUser.password, salt);
     }
-
     // Trouver et mettre à jour l'utilisateur par ID
     const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
-
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
-
     res.json({ user });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 // Route pour supprimer un utilisateur
 app.delete('/api/users/:id', async (req, res) => {
@@ -553,7 +536,6 @@ app.get('/api/contrats/today', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération des données' });
   }
 });
-
 
   // compter les contrats ajouter aujourd'hui
 app.get('/api/contrats/commercials-today', async (req, res) => {
@@ -609,8 +591,6 @@ app.get('/events/stats/today', async (req, res) => {
   }
 });
 
-
-
 // route count rdv OPCO
 app.get('/rdv/stats/today', async (req, res) => {
   try {
@@ -632,8 +612,7 @@ app.get('/rdv/stats/today', async (req, res) => {
     const pourcentageProgressionRDV = yesterdayCountRDV
       ? ((todayCountRDV - yesterdayCountRDV) / yesterdayCountRDV) * 100
       : 0;
-
-    res.json({
+   res.json({
       todayCountRDV,
       pourcentageProgressionRDV: pourcentageProgressionRDV.toFixed(2) + "%"
     });
@@ -670,15 +649,12 @@ app.get('/api/commercials/ranking', async (req, res) => {
   }
 });
 
-
 // route pour calculer les rdv ajouté aujourd'hui 
-
 app.get('/api/rdvs/users-today', async (req, res) => {
   try {
     const today = new Date();
     const startOfDay = new Date(today.setHours(0, 0, 0, 0)); // Début de la journée
     const endOfDay = new Date(today.setHours(23, 59, 59, 999)); // Fin de la journée
-
     // Récupérer les RDVs du jour groupés par userName
     const rdvs = await RDV.aggregate([
       { 
@@ -692,25 +668,21 @@ app.get('/api/rdvs/users-today', async (req, res) => {
       { $group: { _id: '$userName', count: { $sum: 1 } } }, // Grouper par userName et compter les RDVs
       { $project: { userName: '$_id', count: 1, _id: 0 } } // Projeter les résultats
     ]);
-
     res.status(200).json(rdvs);
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la récupération des RDVs' });
   }
 });
 
-
 // DELETE handler function (method)
 const deleteDevisById = async (req, res) => {
   const { id } = req.params;
-
   try {
     const deletedDevis = await Devis.findByIdAndDelete(id);
 
     if (!deletedDevis) {
       return res.status(404).json({ message: 'Devis not found' });
     }
-
     res.status(200).json({ message: 'Devis deleted successfully' });
   } catch (error) {
     console.error('Error deleting devis:', error);
@@ -720,8 +692,6 @@ const deleteDevisById = async (req, res) => {
 
 // DELETE route using the separate function
 app.delete('/api/devis/:id', deleteDevisById);
-
-
 
 // Modèle d'événement
 const eventSchema = new mongoose.Schema({
@@ -756,7 +726,6 @@ app.delete("/events/:id", async (req, res) => {
   await Event.findByIdAndDelete(req.params.id);
   res.json({ message: "Event deleted" });
 });
-
 
 // Route pour enregistrer la connectivité (en ligne / hors ligne)
 app.post('/api/status', async (req, res) => {
@@ -874,7 +843,6 @@ app.get('/api/contrats/stats/monthly-cotisation', async (req, res) => {
 
     const totalCotisationCurrentMonth = await getMonthlyCotisation(currentMonth, currentYear);
     const totalCotisationPreviousMonth = await getMonthlyCotisation(previousMonth, previousYear);
-
     const cotisationProgression = totalCotisationPreviousMonth
       ? ((totalCotisationCurrentMonth - totalCotisationPreviousMonth) / totalCotisationPreviousMonth) * 100
       : 0;
@@ -889,8 +857,6 @@ app.get('/api/contrats/stats/monthly-cotisation', async (req, res) => {
   }
 });
 
-
-
 app.get('/api/events/ranking', async (req, res) => {
   try {
       const ranking = await Event.aggregate([
@@ -902,7 +868,6 @@ app.get('/api/events/ranking', async (req, res) => {
       res.status(500).json({ message: "Erreur lors de la récupération des données." });
   }
 });
-
 
 // Route pour obtenir le nombre de RDVs par userName
 app.get('/api/rdv-count', async (req, res) => {
@@ -918,6 +883,7 @@ app.get('/api/rdv-count', async (req, res) => {
 });
 
 // Route tableau classsement commerciaux
+
 app.get('/api/classement', async (req, res) => {
   try {
     const classement = await Contrat.aggregate([
@@ -926,13 +892,39 @@ app.get('/api/classement', async (req, res) => {
           _id: "$Commercial",
           totalCotisation: { $sum: "$cotisation" },
           nbContrats: { $sum: 1 },
-          compagnies: { $addToSet: "$compagnie" },
+          compagnies: {
+            $push: "$compagnie" // Collecte toutes les compagnies
+          },
           nbContratsValides: {
             $sum: { $cond: [{ $eq: ["$etatDossier", "Validé"] }, 1, 0] },
           },
         },
       },
-      { $sort: { nbContrats: -1, totalCotisation: -1 } }
+      {
+        $addFields: {
+          compagniesSignatures: {
+            $arrayToObject: {
+              $map: {
+                input: { $setUnion: "$compagnies" }, // Supprime les doublons
+                as: "compagnie",
+                in: {
+                  k: "$$compagnie",
+                  v: {
+                    $size: {
+                      $filter: {
+                        input: "$compagnies",
+                        as: "c",
+                        cond: { $eq: ["$$c", "$$compagnie"] },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      { $sort: { nbContrats: -1, totalCotisation: -1 } },
     ]);
 
     res.json(classement);
@@ -940,11 +932,8 @@ app.get('/api/classement', async (req, res) => {
     console.error("Erreur lors de l'obtention du classement:", error);
     res.status(500).json({ error: "Erreur lors de l'obtention du classement." });
   }
-});
+});                 
 
-
-
-//route classement Apporteur d'affaire 
 
 // Route pour obtenir le classement des apporteurs d'affaire
 app.get('/api/classement-apporteurs', async (req, res) => {
@@ -963,7 +952,6 @@ app.get('/api/classement-apporteurs', async (req, res) => {
       },
       { $sort: { nbContrats: -1, totalCotisation: -1 } }
     ]);
-
     res.json(classementApporteurs);
   } catch (error) {
     console.error("Erreur lors de l'obtention du classement des apporteurs d'affaire:", error);
@@ -984,14 +972,12 @@ app.get('/api/classement-rdv', async (req, res) => {
       },
       { $sort: { nbRDVs: -1 } } // Trie par nombre de RDVs en ordre décroissant
     ]);
-
     res.json(classementRDV);
   } catch (error) {
     console.error("Erreur lors de l'obtention du classement des RDVs:", error);
     res.status(500).json({ error: "Erreur lors de l'obtention du classement des RDVs." });
   }
 });
-
 
 // Route pour ajouter un devis
 app.post('/api/calend-devis', async (req, res) => {
@@ -1005,7 +991,9 @@ app.post('/api/calend-devis', async (req, res) => {
       address,
       profession,
       devisDate,
+      heure,
       cotisation,
+      Commercial,
       compagnie,
       effetDate,
       formulePropose,
@@ -1015,7 +1003,6 @@ app.post('/api/calend-devis', async (req, res) => {
       commentaireAgent,
       ancienneMutuelle
     } = req.body;
-
     // Créer un nouvel objet devis
     const newDevis = new Devis({
       nom,
@@ -1026,6 +1013,8 @@ app.post('/api/calend-devis', async (req, res) => {
       address,
       profession,
       devisDate,
+      heure,
+      Commercial,
       cotisation,
       compagnie,
       effetDate,
@@ -1036,7 +1025,6 @@ app.post('/api/calend-devis', async (req, res) => {
       commentaireAgent,
       ancienneMutuelle,
     });
-
     // Sauvegarder dans la base de données
     await newDevis.save();
 
@@ -1050,15 +1038,24 @@ app.post('/api/calend-devis', async (req, res) => {
 
 // Route pour récupérer tous les devis
 app.get('/api/devis-recup', async (req, res) => {
+  const { devisCommercial } = req.query;
   try {
-    // Récupérer tous les devis sans filtre
-    const devis = await Devis.find();  
-    res.json(devis); // Renvoie tous les devis sous forme de JSON
-  } catch (err) {
-    res.status(500).json({ message: 'Erreur lors de la récupération des devis', error: err });
+    let devis;
+
+    if (devisCommercial) {
+      // Filtrer les devis par devisCommercial
+      devis = await Devis.find({ devisCommercial });
+    } else {
+      // Récupérer tous les devis
+      devis = await Devis.find();
+    }
+
+    res.status(200).json(devis);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des devis :', error);
+    res.status(500).json({ message: 'Erreur serveur' });
   }
 });
-
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;

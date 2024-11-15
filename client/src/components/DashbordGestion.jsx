@@ -4,7 +4,6 @@ import { BsCalendarDateFill } from "react-icons/bs";
 import { FaEuroSign } from "react-icons/fa";
 import ChartComponent from './ChartComponent';
 import DashChart from './DashChart';
-
 const DashboardGestion = () => {
   const [contratsAujourdHui, setContratsAujourdHui] = useState(0);
   const [pourcentageProgression, setPourcentageProgression] = useState(0);
@@ -29,7 +28,6 @@ const DashboardGestion = () => {
       return [];
     }
   };
-
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('http://51.83.69.195:5000/api/contrats/today');
@@ -41,10 +39,8 @@ const DashboardGestion = () => {
         : 0;
       setPourcentageProgression(progression);
     };
-
     fetchData();
   }, []);
-
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -57,10 +53,8 @@ const DashboardGestion = () => {
         console.error("Erreur lors de la récupération des statistiques :", error);
       }
     };
-
     fetchStats();
   }, []);
-
   useEffect(() => {
     const fetchRDVStats = async () => {
       try {
@@ -73,10 +67,8 @@ const DashboardGestion = () => {
         console.error("Erreur lors de la récupération des statistiques RDV :", error);
       }
     };
-
     fetchRDVStats();
   }, []);
-
   // Appel pour obtenir les statistiques de cotisation mensuelle
   useEffect(() => {
     const fetchCotisationStats = async () => {
@@ -90,7 +82,6 @@ const DashboardGestion = () => {
         console.error("Erreur lors de la récupération des statistiques de cotisation :", error);
       }
     };
-
     fetchCotisationStats();
   }, []);
 
@@ -111,13 +102,6 @@ const DashboardGestion = () => {
       icon: <BsCalendarDateFill className='h-6 w-6' />,
       trend: 'up',
     },
-   /* {
-      title: 'OPCO',
-      value: todayCountRDV,
-      percentage: pourcentageProgressionRDV,
-      icon: <GiDiploma className='h-6 w-6' />,
-      trend: 'up',
-    },*/
     {
       title: 'Montant VP',
       value: totalMontantVP, // Utilisation de l'état montantVP
@@ -126,7 +110,6 @@ const DashboardGestion = () => {
       trend: 'up',
     },
   ];
-
   return (
     <div>
       <div className="flex space-x-4 pb-6">
@@ -136,14 +119,11 @@ const DashboardGestion = () => {
       </div>
       <ChartComponent />
       <DashChart/>
-      
     </div>
   );
 };
-
 const DashboardCard = ({ title, value, percentage, icon, trend }) => {
   const percentageValue = parseFloat(percentage);
-
   return (
     <div className='pl-4'>
     <div className="bg-blue-gray-500 shadow rounded-lg  p-4 h-auto w-72">
@@ -157,8 +137,8 @@ const DashboardCard = ({ title, value, percentage, icon, trend }) => {
         </div>
       </div>
       <div
-        className={`mt-2 text-sm ${
-          percentageValue > 0 ? 'text-green-700' : percentageValue < 0 ? 'text-red-600' : 'text-white'
+         className={`mt-2 text-sm ${
+          percentageValue > 0 ? 'font-semibold text-2xl text-green-800' : percentageValue < 0 ? 'font-semibold text-2xl text-red-500' : 'font-semibold text-2xl text-white'
         }`}
       >
         {percentage} {percentageValue > 0 ? '▲' : percentageValue < 0 ? '▼' : ''}
@@ -167,5 +147,4 @@ const DashboardCard = ({ title, value, percentage, icon, trend }) => {
     </div>
   );
 };
-
 export default DashboardGestion;
