@@ -39,7 +39,7 @@ const CalendarDevis = () => {
 
   const [devis, setDevis] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userName, setUserName] = useState('');
+  const [Commercial, setUserName] = useState('');
   const [role, setRole] = useState('');
   const navigate = useNavigate();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false); // Nouveau modal pour afficher les détails
@@ -63,7 +63,7 @@ const CalendarDevis = () => {
     apporteurAffaire: '',
     commentaireAgent: '',
     ancienneMutuelle: '',
-    userName: '',
+    Commercial
    
     
   });
@@ -102,7 +102,7 @@ const CalendarDevis = () => {
           if (role === 'Direction') {
             return true; // Tous les devis
           } else if (role === 'Commerciale') {
-            return devis.userName === userName; // Filtrer par devisCommercial
+            return devis.Commercial === Commercial; // Filtrer par devisCommercial
           }
           return false; // Si aucun rôle valide, ne rien retourner
         })
@@ -131,7 +131,7 @@ const CalendarDevis = () => {
   
   useEffect(() => {
     fetchDevis();
-  }, [role, userName]); // Déclenchement de l'effet lorsque role ou userName change
+  }, [role, Commercial]); // Déclenchement de l'effet lorsque role ou userName change
   
 
   const handleSelectEvent = (info) => {
@@ -549,7 +549,7 @@ const CalendarDevis = () => {
         <DialogBody divider className="max-h-96 overflow-y-auto">
         <div>
        <h3 className="font-semibold">Agent: </h3>
-       <p>{selectedDevis.userName}</p>
+       <p>{selectedDevis.Commercial}</p>
       </div>
       <div>
       <h3 className="font-semibold">Nom et Prénom:</h3>

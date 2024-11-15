@@ -148,6 +148,8 @@ const handleStatusChange = async () => {
         return <Devis />;
       case 'listeDevis':
         return <ListeDevisComm />;
+        case 'Add-devis':
+          return <CalendarDevis />;
       case 'Agenda':
         return <Agenda />;
         case 'BlocNote':
@@ -212,6 +214,7 @@ const handleStatusChange = async () => {
         : index === 2 ? 'Devis'
         : index === 3 ? 'Liste des devis'
         : index === 4 ? 'Agenda'
+
         : 'Bloc Notes'} {/* Nom Bloc Notes */}
     </ListItem>
   ))}
