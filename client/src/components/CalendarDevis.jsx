@@ -95,7 +95,7 @@ const CalendarDevis = () => {
    // Fonction pour récupérer les devis depuis le backend
    const fetchDevis = async () => {
     try {
-      const response = await axios.get('/api/devis-recup');
+      const response = await axios.get('http://51.83.69.195:5000/api/devis-recup');
       
       const devisData = response.data
         .filter((devis) => {
@@ -181,7 +181,7 @@ const CalendarDevis = () => {
     }
     try {
       const dataToSend = { ...formData, userName }; // Ajout de Commercial aux données
-      const response = await fetch('/api/calend-devis', {
+      const response = await fetch('http://51.83.69.195:5000/api/calend-devis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
