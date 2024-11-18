@@ -185,9 +185,10 @@ function ListeDevisComm() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Vue</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Heure</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date du devis</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Téléphone</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">email</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date du devis</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date d'Effet</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Compagnie</th>
@@ -206,9 +207,10 @@ function ListeDevisComm() {
                 </td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{devis.nom ? devis.nom.toUpperCase() : ''}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{devis.prenom ? devis.prenom.toUpperCase() : '' }</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{devis.heure}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{devis.devisDate}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{devis.telephone}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{devis.email}</td>
-                <td className="px-4 py-3 text-center text-sm text-gray-700">{devis.devisDate}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{devis.effetDate}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{devis.Commercial}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{devis.compagnie}</td>
@@ -229,9 +231,10 @@ function ListeDevisComm() {
             <h2 className="text-2xl font-semibold mb-4 text-light-blue-700">Détails du Devis</h2>
             <p className='text-left'><strong>Nom:</strong> {selectedDevis.nom ? selectedDevis.nom.toUpperCase() : ''}</p>
             <p className='text-left'><strong>Prénom:</strong> {selectedDevis.prenom ? selectedDevis.prenom.toUpperCase() : ''}</p>
+            <p className='text-left'><strong>Date du devis:</strong> {selectedDevis.heure}</p>
+            <p className='text-left'><strong>Date du devis:</strong> {selectedDevis.devisDate}</p>
             <p className='text-left'><strong>Téléphone:</strong> {selectedDevis.telephone}</p>
             <p className='text-left'><strong>Email:</strong> {selectedDevis.email}</p>
-            <p className='text-left'><strong>Date du devis:</strong> {selectedDevis.devisDate}</p>
             <p className='text-left'><strong>Date d'effet:</strong> {selectedDevis.effetDate}</p>
             <p className='text-left'><strong>Agent:</strong> {selectedDevis.Commercial}</p>
             <p className='text-left'><strong>Compagnie:</strong> {selectedDevis.compagnie}</p>

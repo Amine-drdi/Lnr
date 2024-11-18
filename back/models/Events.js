@@ -7,7 +7,8 @@ const eventSchema = new mongoose.Schema({
     date: String,
     link: String,
     participants: [{ name: String }],
-    ajoutePar: String
+    ajoutePar: String,
+    createdAt: { type: Date, default: Date.now }
   });
   const Event = mongoose.model('Event', eventSchema);
 module.exports = Event;

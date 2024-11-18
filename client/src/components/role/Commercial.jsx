@@ -195,7 +195,7 @@ const handleStatusChange = async () => {
   )}
 </button>
 <List>
-  {['listeContrats', 'AjoutContrat', 'AjoutDevis', 'listeDevis', 'Agenda', 'BlocNote'].map((item, index) => (
+  {['listeContrats', 'AjoutContrat', 'Add-devis', 'listeDevis', 'Agenda', 'BlocNote'].map((item, index) => (
     <ListItem
       key={index}
       onClick={() => setActiveComponent(item)}
@@ -207,6 +207,7 @@ const handleStatusChange = async () => {
           : index === 2 ? <MdOutlinePriceChange className="h-5 w-5" />
           : index === 3 ? <CiBoxList className="h-5 w-5" />
           : index === 4 ? <IoCalendarNumber className="h-5 w-5" />
+     
           : <GiNotebook className="h-5 w-5" />} {/* Icône Bloc Notes */}
       </ListItemPrefix>
       {index === 0 ? 'Liste des contrats'
@@ -214,6 +215,7 @@ const handleStatusChange = async () => {
         : index === 2 ? 'Devis'
         : index === 3 ? 'Liste des devis'
         : index === 4 ? 'Agenda'
+       
 
         : 'Bloc Notes'} {/* Nom Bloc Notes */}
     </ListItem>

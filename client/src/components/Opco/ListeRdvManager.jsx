@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
-
+import { FaDoorOpen, FaDoorClosed } from 'react-icons/fa';
 function ListeRdvManager() {
   const [rdvs, setRdvs] = useState([]);
   const [filteredRdvs, setFilteredRdvs] = useState([]);
@@ -117,6 +117,8 @@ function ListeRdvManager() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type rendez-vous</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Résultat du RDV</th>
+
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Entreprise</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
@@ -135,7 +137,6 @@ function ListeRdvManager() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire manager</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Résultat du RDV</th>
 
 
             </tr>
@@ -148,6 +149,7 @@ function ListeRdvManager() {
                   <FaEye className="text-blue-500 cursor-pointer w-4 h-4" onClick={() => handleViewRdv(RDV)} />
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.userName}</td>
+               
                 <td
                    className={`px-4 py-3 text-sm ${
                    RDV.rdvType === 'Physique' ? 'text-green-500' : RDV.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'
@@ -155,6 +157,21 @@ function ListeRdvManager() {
                 >
                  {RDV.rdvType}
                 </td>
+                <td
+                className={`px-4 py-3 text-sm flex items-center gap-2 ${
+                RDV.resultatRdv === 'Porte ouverte'
+                 ? 'text-green-500'
+                : RDV.resultatRdv === 'Porte non-ouverte'
+                ? 'text-red-700'
+                : 'text-gray-700'
+                }`}
+                 >
+                {/* Affichage de l'icône en fonction de resultatRdv */}
+                {RDV.resultatRdv === 'Porte ouverte' && <FaDoorOpen />}
+                {RDV.resultatRdv === 'Porte non-ouverte' && <FaDoorClosed />}
+                {RDV.resultatRdv}
+                </td>
+
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.entreprise}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.nom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.prenom}</td>
@@ -173,7 +190,6 @@ function ListeRdvManager() {
                 <td className="px-4 py-3 text-sm text-red-500">{RDV.commentaireCommercial}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireManager}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.etatDossier}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{RDV.resultatRdv}</td>
               </tr>
             ))}
           </tbody>
@@ -193,6 +209,7 @@ function ListeRdvManager() {
                {selectedRdv.rdvType}
               </span>
               </p>
+              <p className="text-left"><strong>Résultat du RDV :</strong> {selectedRdv.resultatRdv}</p>
               <p className="text-left"><strong>Nom du l'entreprise :</strong> {selectedRdv.entreprise}</p>
                 <p className="text-left"><strong>Nom :</strong> {selectedRdv.nom}</p>
                 <p className="text-left"><strong>Prénom :</strong> {selectedRdv.prenom}</p>
@@ -211,7 +228,7 @@ function ListeRdvManager() {
                 <p className="text-left"><strong>état du dossier :</strong> {selectedRdv.commentaireAgent}</p>
                 <p className="text-left"><strong>Commentaire Commercial :</strong><span className="text-red-500"> {selectedRdv.commentaireCommercial}</span></p>
                 <p className="text-left"><strong>état du dossier :</strong> {selectedRdv.commentaireManager}</p>
-                <p className="text-left"><strong>Résultat du RDV :</strong> {selectedRdv.resultatRdv}</p>
+
 
                 
                 <button
@@ -225,6 +242,7 @@ function ListeRdvManager() {
               <>
                 <h2 className="text-2xl text-blue-500 font-semibold mb-4">Modifier le Rendez-vous</h2>
                 <form>
+
                 <label className="block mb-2">
                     <span className="text-gray-700">Agent :</span>
                     <input

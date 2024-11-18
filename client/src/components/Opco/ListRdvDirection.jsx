@@ -160,8 +160,8 @@ function ListeRdvDirection() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Agent</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type Rendez-vous</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Résultat du RDV</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Entreprise</th>
-
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Téléphone</th>
@@ -179,7 +179,7 @@ function ListeRdvDirection() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire Manager</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Résultat du RDV</th>
+
 
 
             </tr>
@@ -208,6 +208,13 @@ function ListeRdvDirection() {
                 >
                  {RDV.rdvType}
                 </td>
+                <td
+                   className={`px-4 py-3 text-sm ${
+                   RDV.resultatRdv === 'Porte ouverte' ? 'text-green-500' : RDV.resultatRdv === 'Porte non-ouverte' ? 'text-red-700' : 'text-gray-700'
+                   }`}
+                >
+                 {RDV.resultatRdv}
+                </td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.entreprise}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.nom}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.prenom}</td>
@@ -226,7 +233,7 @@ function ListeRdvDirection() {
                 <td className="px-4 py-3 text-sm text-red-500">{RDV.commentaireCommercial}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireManager}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.etatDossier}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{RDV.resultatRdv}</td>
+
 
               </tr>
             ))}

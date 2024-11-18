@@ -213,6 +213,7 @@ app.post('/api/devis',  async (req, res) => {
       address,
       profession,
       devisDate,
+      heure,
       cotisation,
       compagnie,
       effetDate,
@@ -234,6 +235,7 @@ app.post('/api/devis',  async (req, res) => {
       address,
       profession,
       devisDate,
+      heure,
       cotisation,
       compagnie,
       effetDate,
@@ -277,7 +279,8 @@ app.post('/api/rdvs', async (req, res) => {
       rdvType,
       commentaireManager,
       commentaireAgent,
-      resultatRdv
+      resultatRdv,
+      
     } = req.body;
 
     const newRDV = new RDV({
@@ -591,6 +594,8 @@ app.get('/events/stats/today', async (req, res) => {
   }
 });
 
+
+
 // route count rdv OPCO
 app.get('/rdv/stats/today', async (req, res) => {
   try {
@@ -701,7 +706,8 @@ const eventSchema = new mongoose.Schema({
   date: String,
   link: String,
   participants: Array,
-  ajoutePar: String
+  ajoutePar: String,
+  createdAt: { type: Date, default: Date.now }
 });
 const Event = mongoose.model("Event", eventSchema);
 
@@ -883,7 +889,6 @@ app.get('/api/rdv-count', async (req, res) => {
 });
 
 // Route tableau classsement commerciaux
-
 app.get('/api/classement', async (req, res) => {
   try {
     const classement = await Contrat.aggregate([
@@ -1035,7 +1040,6 @@ app.post('/api/calend-devis', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de l\'ajout du devis' });
   }
 });
-
 // Route pour récupérer tous les devis
 app.get('/api/devis-recup', async (req, res) => {
   const { devisCommercial } = req.query;

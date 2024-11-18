@@ -39,7 +39,7 @@ const CalendarDevis = () => {
 
   const [devis, setDevis] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [Commercial, setUserName] = useState('');
+  const [userName, setUserName] = useState('');
   const [role, setRole] = useState('');
   const navigate = useNavigate();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false); // Nouveau modal pour afficher les détails
@@ -63,7 +63,7 @@ const CalendarDevis = () => {
     apporteurAffaire: '',
     commentaireAgent: '',
     ancienneMutuelle: '',
-    Commercial
+    
    
     
   });
@@ -102,7 +102,7 @@ const CalendarDevis = () => {
           if (role === 'Direction') {
             return true; // Tous les devis
           } else if (role === 'Commerciale') {
-            return devis.Commercial === Commercial; // Filtrer par devisCommercial
+            return devis.Commercial === userName; // Filtrer par devisCommercial
           }
           return false; // Si aucun rôle valide, ne rien retourner
         })
@@ -131,7 +131,7 @@ const CalendarDevis = () => {
   
   useEffect(() => {
     fetchDevis();
-  }, [role, Commercial]); // Déclenchement de l'effet lorsque role ou userName change
+  }, [role, userName]); // Déclenchement de l'effet lorsque role ou userName change
   
 
   const handleSelectEvent = (info) => {
@@ -170,39 +170,43 @@ const CalendarDevis = () => {
       'niveauPropose',
       'ancienneMutuelle',
       'apporteurAffaire',
-    
     ];
   
-    // Vérification des champs obligatoires
     const missingFields = requiredFields.filter((field) => !formData[field]);
     if (missingFields.length > 0) {
-      alert(`Veuillez remplir tous les champs obligatoires : ${missingFields.join(', ')}`);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Champs manquants',
+        text: `Veuillez remplir tous les champs obligatoires : ${missingFields.join(', ')}`,
+      });
       return;
     }
+  
     try {
-      const dataToSend = { ...formData, userName }; // Ajout de Commercial aux données
+      const dataToSend = { ...formData, Commercial: userName }; // Ajout automatique de `userName` au champ `Commercial`
       const response = await fetch('http://51.83.69.195:5000/api/calend-devis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dataToSend), // Envoie des données complètes
+        body: JSON.stringify(dataToSend),
       });
   
       if (!response.ok) {
-        throw new Error('Erreur lors de l\'ajout du devis');
+        throw new Error("Erreur lors de l'ajout du devis");
       }
   
       const result = await response.json();
-      console.log(result.message);
+      Swal.fire({
+        icon: 'success',
+        title: 'Ajout réussi',
+        text: result.message,
+      });
   
-      // Mise à jour de l'état local
-      setDevis([
-        ...devis,
-        { title: `${formData.nom} ${formData.prenom}`, start: new Date(formData.devisDate), userName },
-      ]);
+      // Recharger les devis après ajout
+      fetchDevis();
   
-      setIsModalOpen(false);
+      // Réinitialiser le formulaire
       setFormData({
         nom: '',
         prenom: '',
@@ -212,7 +216,7 @@ const CalendarDevis = () => {
         address: '',
         profession: '',
         devisDate: '',
-        heure:'',
+        heure: '',
         cotisation: '',
         compagnie: '',
         effetDate: '',
@@ -223,9 +227,15 @@ const CalendarDevis = () => {
         commentaireAgent: '',
         ancienneMutuelle: '',
       });
+  
+      setIsModalOpen(false);
     } catch (error) {
       console.error(error);
-      alert('Une erreur est survenue lors de l\'ajout du devis');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: "Une erreur est survenue lors de l'ajout du devis. Veuillez réessayer.",
+      });
     }
   };
   

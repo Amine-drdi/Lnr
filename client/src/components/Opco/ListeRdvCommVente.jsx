@@ -213,7 +213,13 @@ function ListeRdvCommVente() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.dateRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.heureRDV}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.commentaireCommercial}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{RDV.resultatRdv}</td>
+                <td
+                   className={`px-4 py-3 text-sm ${
+                   RDV.resultatRdv === 'Porte ouverte' ? 'text-green-500' : RDV.resultatRdv === 'Porte non-ouverte' ? 'text-red-700' : 'text-gray-700'
+                   }`}
+                >
+                 {RDV.resultatRdv}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -249,8 +255,8 @@ function ListeRdvCommVente() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-gray-500"
               >
                 <option value=""></option>
-                <option value="porte ouverte">Porte ouverte</option>
-                <option value="porte non-ouverte">Porte non-ouverte</option>
+                <option value="Porte ouverte">Porte ouverte</option>
+                <option value="Porte non-ouverte">Porte non-ouverte</option>
               </select>
             </div>
 

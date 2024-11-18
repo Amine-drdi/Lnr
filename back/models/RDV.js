@@ -72,7 +72,10 @@ const RDVSchema = new mongoose.Schema({
       userName : String ,
       role : String ,
       commentaireAgent : String ,
-      resultatRdv : String ,
+      resultatRdv: {
+        type: String,
+        default: "Porte ouverte" // Définir "Porte ouverte" comme valeur par défaut
+    },
 });
 
 const RDV = mongoose.model('RDV', RDVSchema);

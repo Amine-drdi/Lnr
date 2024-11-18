@@ -92,6 +92,7 @@ function Devis({ setIsAdding }) {
       address,
       profession,
       devisDate: formattedDevisDate,
+      heure: String,
       cotisation,
       compagnie,
       effetDate: formattedEffetDate,
