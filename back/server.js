@@ -566,21 +566,22 @@ app.get('/api/contrats/commercials-today', async (req, res) => {
 // prise Today
 app.get('/events/stats/today', async (req, res) => {
   try {
-    // Formatage de la date d'aujourd'hui et d'hier en chaînes `yyyy-mm-dd`
-    const today = moment().format('YYYY-MM-DD');
-    const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD');
+    const startOfToday = moment().startOf('day').toDate(); // Début de la journée
+    const endOfToday = moment().endOf('day').toDate(); // Fin de la journée
+    const startOfYesterday = moment().subtract(1, 'days').startOf('day').toDate(); // Début d'hier
+    const endOfYesterday = moment().subtract(1, 'days').endOf('day').toDate(); // Fin d'hier
 
-    // Nombre d'événements enregistrés aujourd'hui
+    // Nombre d'événements créés aujourd'hui
     const todayCountEvent = await Event.countDocuments({
-      date: today
+      createdAt: { $gte: startOfToday, $lte: endOfToday }
     });
 
-    // Nombre d'événements enregistrés hier
+    // Nombre d'événements créés hier
     const yesterdayCountEvent = await Event.countDocuments({
-      date: yesterday
+      createdAt: { $gte: startOfYesterday, $lte: endOfYesterday }
     });
 
-    // Calcul du pourcentage d'augmentation
+    // Calcul du pourcentage de progression
     const pourcentageProgressionEvent = yesterdayCountEvent
       ? ((todayCountEvent - yesterdayCountEvent) / yesterdayCountEvent) * 100
       : 0;
@@ -593,8 +594,6 @@ app.get('/events/stats/today', async (req, res) => {
     res.status(500).json({ error: 'Une erreur est survenue' });
   }
 });
-
-
 
 // route count rdv OPCO
 app.get('/rdv/stats/today', async (req, res) => {
@@ -865,13 +864,38 @@ app.get('/api/contrats/stats/monthly-cotisation', async (req, res) => {
 
 app.get('/api/events/ranking', async (req, res) => {
   try {
-      const ranking = await Event.aggregate([
-          { $group: { _id: "$ajoutePar", count: { $sum: 1 } } },
-          { $sort: { count: -1 } }
-      ]);
-      res.json(ranking);
+    const ranking = await Event.aggregate([
+      // Jointure avec la collection User pour récupérer les détails des utilisateurs
+      {
+        $lookup: {
+          from: 'users', // Nom de la collection User
+          localField: 'ajoutePar', // Champ dans Event
+          foreignField: 'name', // Champ correspondant dans User
+          as: 'userDetails', // Nom de l'array résultante
+        },
+      },
+      // Filtrer les événements où le rôle de l'utilisateur est 'Prise'
+      {
+        $match: {
+          'userDetails.role': 'Prise',
+        },
+      },
+      // Grouper par le champ ajoutePar
+      {
+        $group: {
+          _id: '$ajoutePar',
+          count: { $sum: 1 },
+        },
+      },
+      // Trier les résultats par le nombre d'événements ajoutés
+      {
+        $sort: { count: -1 },
+      },
+    ]);
+
+    res.json(ranking);
   } catch (error) {
-      res.status(500).json({ message: "Erreur lors de la récupération des données." });
+    res.status(500).json({ message: 'Erreur lors de la récupération des données.' });
   }
 });
 
@@ -887,7 +911,7 @@ app.get('/api/rdv-count', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
+ 
 // Route tableau classsement commerciaux
 app.get('/api/classement', async (req, res) => {
   try {
@@ -1008,6 +1032,7 @@ app.post('/api/calend-devis', async (req, res) => {
       commentaireAgent,
       ancienneMutuelle
     } = req.body;
+
     // Créer un nouvel objet devis
     const newDevis = new Devis({
       nom,
@@ -1040,6 +1065,7 @@ app.post('/api/calend-devis', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de l\'ajout du devis' });
   }
 });
+
 // Route pour récupérer tous les devis
 app.get('/api/devis-recup', async (req, res) => {
   const { devisCommercial } = req.query;
