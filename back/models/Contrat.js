@@ -20,15 +20,15 @@ const contratSchema = new mongoose.Schema({
   apporteurAffaire: String,
   Commercial: String,
   etatDossier: String,
-  commentaire:  String,
+  commentaire: String,
   commentaireAgent:  String,
-  remarque:  String,
+  remarque: String,
   retourCompagnie : String,
   suiviGestion :String ,
   typeResiliation :  String ,
   ancienneMutuelle: String,
   createdAt: { type: Date, default: Date.now },
-  payement: String,
+  payement: String 
 });
 
 const Contrat = mongoose.model('Contrat', contratSchema);

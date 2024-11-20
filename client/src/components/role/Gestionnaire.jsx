@@ -131,7 +131,7 @@ const handleStatusChange = async () => {
       case 'dashboard':
         return <DashboardGestion /> ;
       case 'listeContrats':
-        return <ListeContratsGestio />;
+        return <ListeContratsGestio/>;
       case 'AjoutContrat':
         return <Souscription />;
       case 'AjoutDevis':

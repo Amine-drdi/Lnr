@@ -19,6 +19,7 @@ import ListeRdvManager from './ListeRdvManager';
 function ManagerOPCO() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
+  const [etat, setEtat] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,6 +34,7 @@ function ManagerOPCO() {
             },
           });
           setUserName(response.data.user.name);
+          setEtat(response.data.user.etat);
         } else {
           navigate('/');
         }
@@ -43,6 +45,13 @@ function ManagerOPCO() {
     };
 
     fetchProfile();
+       // Actualisation toutes les 20 secondes
+       const intervalId = setInterval(() => {
+        fetchProfile(); // Rafraîchir les informations du profil
+      }, 20000); // 20000 ms = 20 secondes
+  
+      // Nettoyer l'intervalle lors du démontage du composant
+      return () => clearInterval(intervalId);
   }, [navigate]);
 
   // Logout function
@@ -54,6 +63,7 @@ function ManagerOPCO() {
 
   // Function to render the correct component based on state
   const renderComponent = () => {
+    if (etat === 0) return null;
     switch (activeComponent) {
       case 'listeRdv':
         return <ListeRdvManager />;
@@ -85,7 +95,7 @@ function ManagerOPCO() {
         <List>
           <ListItem
             onClick={() => setActiveComponent('listeRdv')}
-            className="hover:bg-blue-600 text-white"
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
           >
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
@@ -95,7 +105,7 @@ function ManagerOPCO() {
 
           <ListItem
             onClick={() => setActiveComponent('AjoutRDV')}
-            className="hover:bg-blue-600 text-white"
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
           >
             <ListItemPrefix>
               <IoCalendarNumber className="h-5 w-5" />

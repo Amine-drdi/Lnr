@@ -194,7 +194,7 @@ function ListeEmp() {
     </td>
 
                 <td className="px-4 py-3 text-sm text-gray-700">
-                {(user.role === "Gestionnaire" || user.role === "Commerciale" || user.role === "Manager" || user.role === "Prise") && (
+                {(user.role === "Gestionnaire" || user.role === "Commerciale" || user.role === "Manager" || user.role === "Prise" || user.role === "ManagerOPCO" || user.role === "CommercialeOPCO(A)" || user.role === "CommercialeOPCO(B)" || user.role === "CommercialeVente(A)" || user.role === "CommercialeVente(B)") && (
                   <Switch
                     checked={user.etat === 1}
                     onChange={() => handleToggleEtat(user)}

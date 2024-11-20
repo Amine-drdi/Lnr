@@ -396,6 +396,7 @@ app.put('/api/contrats/:id', async (req, res) => {
   }
 });
 
+
 // Route PUT pour mettre à jour un devis
 app.put('/api/devis/:id', async (req, res) => {
   const { id } = req.params; // Récupérer l'ID du devis à mettre à jour

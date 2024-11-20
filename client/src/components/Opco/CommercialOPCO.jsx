@@ -32,6 +32,7 @@ function CommercialOPCO() {
   const [contratUpdates, setContratUpdates] = useState([]);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const [etat, setEtat] = useState('');
 
   const handleOpen = () => setOpen(!open);
 
@@ -47,6 +48,7 @@ function CommercialOPCO() {
             },
           });
           setUserName(response.data.user.name);
+          setEtat(response.data.user.etat);
         } else {
           navigate('/');
         }
@@ -67,14 +69,15 @@ function CommercialOPCO() {
     };
 
     fetchProfile();
+    
     fetchContratUpdates();
 
-    // Configurer l'intervalle de polling
+    // Actualisation toutes les 20 secondes
     const intervalId = setInterval(() => {
-      fetchContratUpdates();
-    }, 5000); // Actualiser toutes les 5 secondes
+      fetchProfile(); // Rafraîchir les informations du profil
+    }, 20000); // 20000 ms = 20 secondes
 
-    // Nettoyer l'intervalle lorsqu'on démonte le composant
+    // Nettoyer l'intervalle lors du démontage du composant
     return () => clearInterval(intervalId);
   }, [navigate]);
 
@@ -108,6 +111,7 @@ function CommercialOPCO() {
 
   // Fonction pour rendre le bon composant selon l'état
   const renderComponent = () => {
+    if (etat === 0) return null;
     switch (activeComponent) {
       case 'listeContrats':
         return <ListeRdv />;
@@ -146,7 +150,7 @@ function CommercialOPCO() {
         <List>
           <ListItem
             onClick={() => setActiveComponent('listeContrats')}
-            className="hover:bg-blue-600 text-white"
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
           >
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
@@ -155,7 +159,7 @@ function CommercialOPCO() {
           </ListItem>
           <ListItem
             onClick={() => setActiveComponent('AjoutContrat')}
-            className="hover:bg-blue-600 text-white"
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
           >
             <ListItemPrefix>
               <IoCalendarNumber className="h-5 w-5" />
@@ -165,7 +169,7 @@ function CommercialOPCO() {
 
           <ListItem
             onClick={handleLogout}
-            className="hover:bg-blue-600 text-white"
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
           >
             <ListItemPrefix>
               <PowerIcon className="h-5 w-5" />

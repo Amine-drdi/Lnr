@@ -16,7 +16,7 @@ function ListeContratsGestio() {
   const [updatedContrat, setUpdatedContrat] = useState({});
   const compagnies = ["" , "Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
   const etatDocs = ["" , "Validé", "Non validé","NRP" , "Sans effet", "Rétractation", "Résigné"];
-  const payements = ["" , "Payé", "Pas payé"];
+  const payements = ["" , "Payé", "Pas payé" , "Future"];
   const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
   const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jbara" , "Rihab Kouki" ,"Leads"];
   const [selectedMonth, setSelectedMonth] = useState(''); //state pour le mois
@@ -269,7 +269,7 @@ function ListeContratsGestio() {
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
-            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Payement</th>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">paiement</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
@@ -287,7 +287,6 @@ function ListeContratsGestio() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Remarque</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire du Gestionnaire</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire de l'Agent</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Fichier</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -355,24 +354,84 @@ function ListeContratsGestio() {
   )}
 </td>
 
-                <td className="px-4 py-3 text-sm text-gray-700">
-                 {editContratId === contrat._id ? (
-                <select
-                  name="payement"
-                  value={updatedContrat.payement}
-                  onChange={handleSelectChange}
-                  className="border rounded-md p-2"
-                 >
-                 {payements.map(payement => (
-                 <option key={payement} value={payement}>
-                 {payement}
-                 </option>
-                 ))}
-                 </select>
-                 ) : (
-                 contrat.payement
-                  )}
-                </td>
+<td className="px-4 py-3 text-sm text-gray-700">
+  {editContratId === contrat._id ? (
+    <select
+      name="payement"
+      value={updatedContrat.payement}
+      onChange={handleInputChange}
+      className="border rounded-md p-2"
+    >
+      {payements.map(payement => (
+        <option key={payement} value={payement}>
+          {payement}
+        </option>
+      ))}
+    </select>
+  ) : (
+    <span
+      className={`${
+        contrat.payement === "Payé"
+          ? "text-green-500"
+          : contrat.payement === "Pas payé"
+          ? "text-red-500"
+          : contrat.payement === "Future"
+          ? "text-blue-500"
+          : "text-gray-700"
+      } flex items-center`}
+    >
+      {contrat.payement === "Payé" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          strokeWidth="2"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+      )}
+      {contrat.payement === "Pas payé" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          strokeWidth="2"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      )}
+      {contrat.payement === "Future" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          strokeWidth="2"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 5v14M5 12h14"
+          />
+        </svg>
+      )}
+      {contrat.payement}
+    </span>
+  )}
+</td>
 
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
@@ -614,21 +673,7 @@ function ListeContratsGestio() {
                     contrat.commentaireAgent
                   )}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-        {contrat.file ? (
-          <a 
-            href={`http://51.83.69.195:5000/${contrat.file}`} // Assurez-vous que ce chemin est correct
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-blue-500 hover:underline"
-          >
-            Voir le fichier
-          </a>
-        ) : (
-          'Pas de fichier'
-        )}
-      </td>
-
+                
               </tr>
             ))}
           </tbody>
@@ -685,7 +730,7 @@ function ListeContratsGestio() {
                 <select
                  value={updatedContrat.etatDossier && selectedContrat.etatDossier} // Initialisation avec la valeur existante
                  name="etatDossier"
-                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 onChange={handleInputChangeModal} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 > <option value="">Choisissez une option</option>
                   <option value="Validé">Validé</option>
@@ -696,17 +741,17 @@ function ListeContratsGestio() {
                 </select>
                 </div>
                 <div className="flex flex-col">
-                <label className='font-semibold '>Payement : </label>
+                <label className='font-semibold '>Paiement : </label>
                 <select
                  value={updatedContrat.payement && selectedContrat.payement} // Initialisation avec la valeur existante
                  name="payement"
-                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 onChange={handleInputChangeModal} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 >
                     <option value="">Choisissez une option</option>
                   <option value="Payé">Payé</option>
                   <option value="Pas payé">Pas payé</option>
-
+                  <option value="Future">Future</option>
                 </select>
                 </div>
                 <div className="flex flex-col">
@@ -764,7 +809,7 @@ function ListeContratsGestio() {
                   <select
                  value={updatedContrat.compagnie && selectedContrat.compagnie} // Initialisation avec la valeur existante
                  name="compagnie"
-                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 onChange={handleInputChangeModal} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 >
                   <option value="">Choisissez une option</option>
@@ -814,10 +859,10 @@ function ListeContratsGestio() {
                   <select
                  value={updatedContrat.apporteurAffaire && selectedContrat.apporteurAffaire} // Initialisation avec la valeur existante
                  name="apporteurAffaire"
-                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 onChange={handleInputChangeModal} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 >
-                  <option value=""></option>
+                  <option value="">Choisissez une option</option>
                   <option value="Cyrine Ben Aicha">Cyrine Ben Aicha</option>
                   <option value="Sihem Selemi">Sihem Selemi</option>
                   <option value="Hajer Askri">Hajer Askri</option>
@@ -843,10 +888,10 @@ function ListeContratsGestio() {
                   <select
                  value={updatedContrat.typeResiliation && selectedContrat.typeResiliation} // Initialisation avec la valeur existante
                  name="typeResiliation"
-                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 onChange={handleInputChangeModal} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 >
-                  <option value=""></option>
+                  <option value="">Choisissez une option</option>
                   <option value="Infra">Infra</option>
                   <option value="Résiliation à échéance">Résiliation à échéance</option>
 

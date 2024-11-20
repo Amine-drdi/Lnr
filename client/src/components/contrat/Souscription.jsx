@@ -252,7 +252,7 @@ function Souscription({ setIsAdding }) {
           className="border border-blue-gray-300 rounded-md p-3 w-full focus:ring-blue-gray-500 focus:border-blue-gray-500"
         >
           <option value="">Sélectionnez la compagnie</option>
-          <option value="Néolyane">Néoliane</option>
+          <option value="Néoliane">Néoliane</option>
           <option value="Assurema">Assurema</option>
           <option value="Alptis">Alptis</option>
           <option value="April">April</option>

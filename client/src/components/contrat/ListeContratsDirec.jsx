@@ -16,10 +16,10 @@ function ListeContratsDirec() {
   const [updatedContrat, setUpdatedContrat] = useState({});
   const [selectedCommercial, setSelectedCommercial] = useState('');  // État pour le commercial sélectionné
   const [commercials, setCommercials] = useState([]);  // Pour stocker la liste des commerciaux
-  const compagnies = ["Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife" ,"Soly Azar" , "Zenio"];
+  const compagnies = ["","Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife" ,"Soly Azar" , "Zenio"];
   const etatDocs = ["" , "Validé", "Non validé", "NRP" , "Impayé", "Sans effet", "Rétractation", "Résigné"];
-  const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jbara" , "Rihab Kouki" ,"Leads"];
-  const payements = ["" , "Payé", "Pas payé"];
+  const apporteurAffaires= ["","Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jbara" , "Rihab Kouki" ,"Leads"];
+  const payements = ["" , "Payé", "Pas payé" , "Future"];
   const typeResiliations = ["" , "Infra", "Résiliation à échéance"];
   const [selectedMonth, setSelectedMonth] = useState(''); 
   const [selectedDay, setSelectedDay] = useState(''); // State pour le jour
@@ -341,7 +341,7 @@ const handleDeleteClick = async (contratId) => {
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">état du dossier</th>
-            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Payement</th>
+            <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Paiement</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Prénom</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
@@ -395,7 +395,7 @@ const handleDeleteClick = async (contratId) => {
     <select
       name="etatDossier"
       value={updatedContrat.etatDossier}
-      onChange={handleSelectChange}
+      onChange={handleInputChangeModal}
       className="border rounded-md p-2"
     >
       {etatDocs.map((etatDossier) => (
@@ -434,7 +434,7 @@ const handleDeleteClick = async (contratId) => {
                 <select
                   name="payement"
                   value={updatedContrat.payement}
-                  onChange={handleSelectChange}
+                  onChange={handleInputChangeModal}
                   className="border rounded-md p-2"
                  >
                  {payements.map(payement => (
@@ -518,7 +518,7 @@ const handleDeleteClick = async (contratId) => {
                 <select
                   name="compagnie"
                   value={updatedContrat.compagnie}
-                  onChange={handleSelectChange}
+                  onChange={handleInputChangeModal}
                   className="border rounded-md p-2"
                  >
                  {compagnies.map(compagnie => (
@@ -575,7 +575,7 @@ const handleDeleteClick = async (contratId) => {
                 <select
                   name="apporteurAffaire"
                   value={updatedContrat.apporteurAffaire}
-                  onChange={handleSelectChange}
+                  onChange={handleInputChangeModal}
                   className="border rounded-md p-2"
                  >
                  {apporteurAffaires.map(apporteurAffaire => (
@@ -607,7 +607,7 @@ const handleDeleteClick = async (contratId) => {
                 <select
                   name="typeResiliation"
                   value={updatedContrat.typeResiliation}
-                  onChange={handleSelectChange}
+                  onChange={handleInputChangeModal}
                   className="border rounded-md p-2"
                  >
                  {typeResiliations.map(typeResiliation => (
@@ -746,10 +746,10 @@ const handleDeleteClick = async (contratId) => {
                 <select
                  value={updatedContrat.etatDossier || selectedContrat.etatDossier} // Initialisation avec la valeur existante
                  name="etatDossier"
-                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 onChange={handleInputChangeModal} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 >
-                  <option value="">État du dossier</option>
+                  <option value="">Choisissez une option</option>
                   <option value="Validé">Validé</option>
                   <option value="Non validé">Non validé</option>
                   <option value="NRP">NRP</option>
@@ -758,15 +758,16 @@ const handleDeleteClick = async (contratId) => {
                 </select>
                 </div>
                 <div className="flex flex-col">
-                <label className='font-semibold '>Payement : </label>
+                <label className='font-semibold '>Paiement : </label>
                 <select
                  value={updatedContrat.payement && selectedContrat.payement} // Initialisation avec la valeur existante
                  name="payement"
-                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 onChange={handleInputChangeModal} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 >
                   <option value="">Choisissez une option</option>
                   <option value="Payé">Payé</option>
+                  <option value="Pas payé">Pas payé</option>
                   <option value="Pas payé">Pas payé</option>
 
                 </select>
@@ -826,9 +827,10 @@ const handleDeleteClick = async (contratId) => {
                   <select
                  value={updatedContrat.compagnie || selectedContrat.compagnie} // Initialisation avec la valeur existante
                  name="compagnie"
-                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 onChange={handleInputChangeModal} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 >
+                  <option value="">Choisissez une option</option>
                   <option value="Néoliane">Néoliane</option>
                   <option value="Assurema">Assurema</option>
                   <option value="Alptis">Alptis</option>
@@ -875,10 +877,10 @@ const handleDeleteClick = async (contratId) => {
                   <select
                  value={updatedContrat.apporteurAffaire || selectedContrat.apporteurAffaire} // Initialisation avec la valeur existante
                  name="typeResiliation"
-                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 onChange={handleInputChangeModal} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 >
-                  <option value=""></option>
+                  <option value="">Choisissez une option</option>
                   <option value="Sihem Selemi">Sihem Selemi</option>
                   <option value="Hajer Askri">Hajer Askri	</option>
                   <option value="Rim Dabebi">Rim Dabebi</option>
@@ -902,10 +904,10 @@ const handleDeleteClick = async (contratId) => {
                   <select
                  value={updatedContrat.typeResiliation || selectedContrat.typeResiliation} // Initialisation avec la valeur existante
                  name="typeResiliation"
-                 onChange={handleSelectChange} // Fonction de gestion pour mettre à jour le contrat
+                 onChange={handleInputChangeModal} // Fonction de gestion pour mettre à jour le contrat
                  className="w-full border border-gray-300 rounded p-2"
                 >
-                  <option value=""></option>
+                  <option value="">Choisissez une option</option>
                   <option value="Infra">Infra</option>
                   <option value="Résiliation à échéance">Résiliation à échéance</option>
 

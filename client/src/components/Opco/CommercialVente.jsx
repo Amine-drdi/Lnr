@@ -29,6 +29,7 @@ function CommercialVente() {
   const [userName, setUserName] = useState('');
   const [contratUpdates, setContratUpdates] = useState([]);
   const [open, setOpen] = useState(false);
+  const [etat, setEtat] = useState('');
   const navigate = useNavigate();
 
   const handleOpen = () => setOpen(!open);
@@ -45,6 +46,7 @@ function CommercialVente() {
             },
           });
           setUserName(response.data.user.name);
+          setEtat(response.data.user.etat);
         } else {
           navigate('/');
         }
@@ -67,11 +69,13 @@ function CommercialVente() {
     fetchProfile();
     fetchContratUpdates();
 
-    const intervalId = setInterval(() => {
-      fetchContratUpdates();
-    }, 5000);
+ // Actualisation toutes les 20 secondes
+ const intervalId = setInterval(() => {
+  fetchProfile(); // Rafraîchir les informations du profil
+}, 20000); // 20000 ms = 20 secondes
 
-    return () => clearInterval(intervalId);
+// Nettoyer l'intervalle lors du démontage du composant
+return () => clearInterval(intervalId);
   }, [navigate]);
 
   const handleLogout = () => {
@@ -81,6 +85,7 @@ function CommercialVente() {
   };
 
   const renderComponent = () => {
+    if (etat === 0) return null;
     switch (activeComponent) {
       case 'listeContrats':
         return <ListeRdvCommVente />;
@@ -110,7 +115,7 @@ function CommercialVente() {
         <List>
           <ListItem
             onClick={() => setActiveComponent('listeContrats')}
-            className="hover:bg-blue-600 text-white"
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
           >
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
@@ -120,7 +125,7 @@ function CommercialVente() {
 
           <ListItem
             onClick={handleLogout}
-            className="hover:bg-blue-600 text-white"
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
           >
             <ListItemPrefix>
               <PowerIcon className="h-5 w-5" />

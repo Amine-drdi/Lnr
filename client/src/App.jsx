@@ -55,7 +55,7 @@ function App() {
         {/* Routes protégées */}
         <Route 
           path="/contratsGest" 
-          element={<PrivateRoute element={<ListeContratsGestio />} allowedRoles={['Gestionnaire']} />} 
+          element={<PrivateRoute element={<ListeContratsGestio/>} allowedRoles={['Gestionnaire']} />} 
         />
         <Route 
           path="/contratsComm" 
