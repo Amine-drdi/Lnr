@@ -50,6 +50,7 @@ import { VscGraph } from "react-icons/vsc";
 import { FaTableCells } from "react-icons/fa6";
 import TableauCommercial from "../TableauCommercial";
 import CalendarDevis from "../CalendarDevis";
+import ListeContratsPrise from "../contrat/ListeContratsPrise";
 
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
@@ -97,6 +98,8 @@ export function Direction() {
           return <TableauCommercial/>;
       case 'listeContrats':
         return <ListeContratsDirec/>;
+        case 'listeContratsPrise':
+          return <ListeContratsPrise />;
         case 'listeDevis':
           return <ListeDevisDirec/>;
       case 'AjoutContrat':
@@ -204,7 +207,13 @@ export function Direction() {
                   <ListItemPrefix>
                     <FaListCheck className="h-5 w-5 text-white" />
                   </ListItemPrefix>
-                  Consulter la liste des contrats
+                  liste des contrats 
+                </ListItem>
+                <ListItem onClick={() => setActiveComponent('listeContratsPrise')} className="hover:bg-blue-600 text-white pl-10">
+                  <ListItemPrefix>
+                    <FaListCheck className="h-5 w-5 text-white" />
+                  </ListItemPrefix>
+                  liste des contrats Prise
                 </ListItem>
                 <ListItem onClick={() => setActiveComponent('AjoutContrat')} className="hover:bg-blue-600 text-white pl-10">
                   <ListItemPrefix>

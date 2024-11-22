@@ -10,6 +10,7 @@ function ListeContratsPrise() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedContrat, setSelectedContrat] = useState(null); // Contrat sélectionné pour le modal
   const [showModal, setShowModal] = useState(false); // Contrôle du modal
@@ -45,6 +46,7 @@ function ListeContratsPrise() {
             },
           });
           setUserName(response.data.user.name);
+          setUserRole(response.data.user.role);
         } else {
           navigate('/');
         }
@@ -83,29 +85,52 @@ function ListeContratsPrise() {
 
   useEffect(() => {
     if (userName) {
-      const filtered = contrats.filter((contrat) => {
-        const isapporteurAffaireMatch =
-          contrat.apporteurAffaire &&
-          contrat.apporteurAffaire.toLowerCase() === userName.toLowerCase();
-
-        const signatureMonth = extractMonthFromDateString(contrat.signatureDate);
-        const isMonthMatch = selectedMonth
-          ? signatureMonth === parseInt(selectedMonth, 10)
-          : true;
-
-        const isSearchMatch =
-          searchTerm === '' ||
-          (contrat.nom && contrat.nom.toLowerCase().includes(searchTerm.toLowerCase())) ||
-          (contrat.prenom && contrat.prenom.toLowerCase().includes(searchTerm.toLowerCase()));
-
-        const isSignatureDateValid = contrat.signatureDate && contrat.signatureDate.trim() !== ''; // Vérification de la date de signature
-
-        return isapporteurAffaireMatch && isMonthMatch && isSearchMatch && isSignatureDateValid;
-      });
-
+      let filtered = contrats;
+  
+      // Appliquer le filtre par userName uniquement si le userRole est 'Prise'
+      if (userRole === 'Prise') {
+        filtered = contrats.filter((contrat) => {
+          const isapporteurAffaireMatch =
+            contrat.apporteurAffaire &&
+            contrat.apporteurAffaire.toLowerCase() === userName.toLowerCase();
+  
+          const signatureMonth = extractMonthFromDateString(contrat.signatureDate);
+          const isMonthMatch = selectedMonth
+            ? signatureMonth === parseInt(selectedMonth, 10)
+            : true;
+  
+          const isSearchMatch =
+            searchTerm === '' ||
+            (contrat.nom && contrat.nom.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (contrat.prenom && contrat.prenom.toLowerCase().includes(searchTerm.toLowerCase()));
+  
+          const isSignatureDateValid = contrat.signatureDate && contrat.signatureDate.trim() !== ''; // Vérification de la date de signature
+  
+          return isapporteurAffaireMatch && isMonthMatch && isSearchMatch && isSignatureDateValid;
+        });
+      } else {
+        // Si le userRole est 'Direction' ou 'Gestionnaire', afficher tous les contrats
+        filtered = contrats.filter((contrat) => {
+          const signatureMonth = extractMonthFromDateString(contrat.signatureDate);
+          const isMonthMatch = selectedMonth
+            ? signatureMonth === parseInt(selectedMonth, 10)
+            : true;
+  
+          const isSearchMatch =
+            searchTerm === '' ||
+            (contrat.nom && contrat.nom.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (contrat.prenom && contrat.prenom.toLowerCase().includes(searchTerm.toLowerCase()));
+  
+          const isSignatureDateValid = contrat.signatureDate && contrat.signatureDate.trim() !== ''; // Vérification de la date de signature
+  
+          return isMonthMatch && isSearchMatch && isSignatureDateValid;
+        });
+      }
+  
       setFilteredContrats(filtered);
     }
-  }, [contrats, userName, selectedMonth, searchTerm]);
+  }, [contrats, userName, selectedMonth, searchTerm, userRole]); // Ajout de userRole dans les dépendances
+  
 
   const handleViewContrat = (contrat) => {
     setSelectedContrat(contrat); // Définir le contrat sélectionné
@@ -167,6 +192,8 @@ function ListeContratsPrise() {
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">#</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Vue</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">État du dossier</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Apporteur d'affaire</th>
+
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date de Signature</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date d'Effet</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Nom</th>
@@ -174,7 +201,7 @@ function ListeContratsPrise() {
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commercial</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Compagnie</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/mois</th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Apporteur d'affaire</th>
+              <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date d'Effet</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne mutuelle</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Type de Résiliation</th>
               <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
@@ -188,14 +215,14 @@ function ListeContratsPrise() {
                   <FaEye className="text-blue-500 hover:text-blue-700 cursor-pointer" onClick={() => handleViewContrat(contrat)} />
                 </td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.etatDossier}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.apporteurAffaire}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.signatureDate}</td>
-                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.effetDate}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.nom ? contrat.nom.toUpperCase() : ''}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.prenom ? contrat.prenom.toUpperCase() : '' }</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.Commercial}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.compagnie}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.montantVP}</td>
-                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.apporteurAffaire}</td>
+                <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.effetDate}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.ancienneMutuelle}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.typeResiliation}</td>
                 <td className="px-4 py-3 text-center text-sm text-gray-700">{contrat.commentaire}</td>

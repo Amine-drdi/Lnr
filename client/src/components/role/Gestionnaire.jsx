@@ -30,6 +30,7 @@ import Agenda from "../Agenda";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import BlocNotes from "../BlocNotes";
 import DashboardGestion from "../DashbordGestion";
+import ListeContratsPrise from "../contrat/ListeContratsPrise";
 // Les composants pour chaque section de la dashboard
 function DashboardContent() {
   return <div><DashboardGestion/></div>;
@@ -132,6 +133,8 @@ const handleStatusChange = async () => {
         return <DashboardGestion /> ;
       case 'listeContrats':
         return <ListeContratsGestio/>;
+        case 'listeContratsPrise':
+          return <ListeContratsPrise />;
       case 'AjoutContrat':
         return <Souscription />;
       case 'AjoutDevis':
@@ -189,6 +192,12 @@ const handleStatusChange = async () => {
               <CiBoxList className="h-5 w-5 text-white" />
             </ListItemPrefix>
             Liste des contrats
+          </ListItem>
+          <ListItem onClick={() => setActiveComponent('listeContratsPrise')} className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
+            <ListItemPrefix>
+              <CiBoxList className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            Liste des contrats Prise
           </ListItem>
           <ListItem onClick={() => setActiveComponent('AjoutContrat')} className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
             <ListItemPrefix>
