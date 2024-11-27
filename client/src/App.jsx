@@ -46,7 +46,7 @@ import DashboardGestion from './components/DashbordGestion';
 import TableauCommercial from './components/TableauCommercial';
 import AddDevis from './components/AddDevis';
 import CalendarDevis from './components/CalendarDevis';
-import CalendrierOPCO from './components/Opco/calendrieropco';
+
 import SuperviseurOPCO from './components/Opco/SuperviseurOPCO';
 import ListeRdvSuperviseur from './components/Opco/ListeRdvSuperviseur';
 
@@ -157,10 +157,6 @@ function App() {
         <Route 
           path="/souscription-OPCO" 
           element={<PrivateRoute element={<SouscriptionOPCO />} allowedRoles={['CommercialeOPCO(A)', 'ManagerOPCO' ,'CommercialeOPCO(B)']} />} 
-        />
-                <Route 
-          path="/Calendrier-RDV-OPCO" 
-          element={<PrivateRoute element={<CalendrierOPCO />} allowedRoles={['CommercialeOPCO(A)', 'ManagerOPCO']} />} 
         />
         <Route 
           path="/liste-RDV" 
