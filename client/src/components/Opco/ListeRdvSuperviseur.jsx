@@ -23,8 +23,6 @@ function ListeRdvSuperviseur() {
           }
           const data = await response.json();
       
-          
-          
           setRdvs(filtered); // Mettre à jour `rdvs` avec les rendez-vous filtrés
           setFilteredRdvs(filtered); // Initialiser également `filteredRdvs` avec les données filtrées
         } catch (error) {

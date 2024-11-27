@@ -225,9 +225,9 @@ function ListeRdvManager() {
                 <p className="text-left"><strong>Date RDV :</strong> {selectedRdv.dateRDV}</p>
                 <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>
                 <p className="text-left"><strong>état du dossier :</strong> {selectedRdv.etatDossier}</p>
-                <p className="text-left"><strong>état du dossier :</strong> {selectedRdv.commentaireAgent}</p>
+                <p className="text-left"><strong>Commentaire Agent :</strong> {selectedRdv.commentaireAgent}</p>
                 <p className="text-left"><strong>Commentaire Commercial :</strong><span className="text-red-500"> {selectedRdv.commentaireCommercial}</span></p>
-                <p className="text-left"><strong>état du dossier :</strong> {selectedRdv.commentaireManager}</p>
+                <p className="text-left"><strong>Commentaire Manager :</strong> {selectedRdv.commentaireManager}</p>
 
 
                 
@@ -259,12 +259,13 @@ function ListeRdvManager() {
                     value={formData.rdvType}
                     onChange={handleInputChange}
                     className={`block w-full mt-1 border-gray-300 rounded-md shadow-sm ${
-                    formData.rdvType === 'Physique' ? 'text-green-500' : formData.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'
+                    formData.rdvType === 'Physique' ? 'text-green-500' : formData.rdvType === 'Téléphonique' ? 'text-blue-700' : formData.rdvType === 'Siège' ? 'text-orange-700' : 'text-gray-700'
                     }`}
                   >
                      <option value="" >Choisissez un type de rendez-vous</option>
                      <option value="Physique" className="text-green-500">Physique</option>
                      <option value="Téléphonique" className="text-blue-700">Téléphonique</option>
+                     <option value="Siège" className="text-orange-700">Siège</option>
                   </select>
                   </label>
 
@@ -413,6 +414,15 @@ function ListeRdvManager() {
                        <option value="Déjà engagé">Déjà engagé</option>
                     </select>
 
+                  </label>
+                  <label className="block mb-2">
+                    <span className="text-gray-700">Commentaire Agent:</span>
+                    <input
+                      name="commentaireAgent"
+                      value={formData.commentaireAgent}
+                      onChange={handleInputChange}
+                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
+                    />
                   </label>
                   <label className="block mb-2">
                     <span className="text-gray-700">Commentaire Manager :</span>

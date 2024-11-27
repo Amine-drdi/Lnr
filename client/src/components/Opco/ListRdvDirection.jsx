@@ -250,7 +250,7 @@ function ListeRdvDirection() {
                 <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Rendez-vous</h2>
                 <p className="text-left"><strong>Agent :</strong> {selectedRdv.userName}</p>
                 <p className="text-left"><strong>Type Rendez-vous :</strong>
-              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'}`}>
+              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-blue-700' :selectedRdv.rdvType === 'Siège' ? 'text-orange-700' : 'text-gray-700'}`}>
                {selectedRdv.rdvType}
               </span>
               </p>
@@ -302,12 +302,13 @@ function ListeRdvDirection() {
                     value={formData.rdvType}
                     onChange={handleInputChange}
                     className={`block w-full mt-1 border-gray-300 rounded-md shadow-sm ${
-                    formData.rdvType === 'Physique' ? 'text-green-500' : formData.rdvType === 'Téléphonique' ? 'text-red-500' : 'text-gray-700'
+                    formData.rdvType === 'Physique' ? 'text-green-700' : formData.rdvType === 'Téléphonique' ? 'text-blue-700' : formData.rdvType === 'Siège' ? 'text-orange-700' : 'text-gray-700'
                     }`}
                   >
                      <option value="" >Choisissez un type de rendez-vous</option>
                      <option value="Physique" className="text-green-500">Physique</option>
                      <option value="Téléphonique" className="text-blue-700">Téléphonique</option>
+                     <option value="Siège" className="text-orange-700">Siège</option>
                   </select>
                   </label>
                   <label className="block mb-2">
