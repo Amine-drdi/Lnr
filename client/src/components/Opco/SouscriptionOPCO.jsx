@@ -189,6 +189,32 @@ function SouscriptionOPCO({ setIsAdding }) {
                     </Typography>
                   </label>
                 </ListItem>
+                <ListItem className="p-0">
+                  <label
+                    htmlFor="horizontal-list-Siège"
+                    className="flex w-full cursor-pointer items-center px-3 py-2"
+                  >
+                    <ListItemPrefix className="mr-3">
+                      <Radio
+                        name="rdvType"
+                        id="horizontal-list-Siège"
+                        ripple={false}
+                        className="hover:before:opacity-0"
+                        containerProps={{
+                          className: "p-0",
+                        }}
+                        checked={rdvType === 'Siège'}
+                        onChange={() => setRdvType('Siège')}
+                      />
+                    </ListItemPrefix>
+                    <Typography
+                      color="blue-gray"
+                      className="font-medium text-blue-gray-700"
+                    >
+                      RDV Siège
+                    </Typography>
+                  </label>
+                </ListItem>
               </List>
             </Card>
           </div>

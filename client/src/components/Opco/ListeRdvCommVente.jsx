@@ -47,7 +47,7 @@ function ListeRdvCommVente() {
   const fetchRdvs = async () => {
     setLoading(true); // Show loading before fetching
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/rdvs');
+      const response = await fetch('http://51.83.69.195:5000/api/rdvsCommercial');
       if (!response.ok) {
         throw new Error('Erreur lors de la récupération des rendez-vous');
       }

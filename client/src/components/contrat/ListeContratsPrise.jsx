@@ -46,7 +46,8 @@ function ListeContratsPrise() {
             },
           });
           setUserName(response.data.user.name);
-          setUserRole(response.data.user.role);
+          setUserRole(response.data.user.UserRole);
+
         } else {
           navigate('/');
         }
@@ -119,7 +120,8 @@ function ListeContratsPrise() {
           const isSearchMatch =
             searchTerm === '' ||
             (contrat.nom && contrat.nom.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (contrat.prenom && contrat.prenom.toLowerCase().includes(searchTerm.toLowerCase()));
+            (contrat.prenom && contrat.prenom.toLowerCase().includes(searchTerm.toLowerCase()))||
+            (contrat.apporteurAffaire && contrat.apporteurAffaire.toLowerCase().includes(searchTerm.toLowerCase()));
   
           const isSignatureDateValid = contrat.signatureDate && contrat.signatureDate.trim() !== ''; // Vérification de la date de signature
   

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
 import { FaDoorOpen, FaDoorClosed } from 'react-icons/fa';
-function ListeRdvManager() {
+function ListeRdvSuperviseur() {
   const [rdvs, setRdvs] = useState([]);
   const [filteredRdvs, setFilteredRdvs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,33 +12,44 @@ function ListeRdvManager() {
   const [isEditing, setIsEditing] = useState(false); // Nouvel état pour basculer entre affichage et modification
   const [formData, setFormData] = useState({}); // Stocke les données modifiées du formulaire
 
+
   useEffect(() => {
     const fetchRdvs = async () => {
-      try {
-        const response = await fetch('http://51.83.69.195:5000/api/rdvs');
-        if (!response.ok) {
-          throw new Error('Erreur lors de la récupération des rendez-vous');
+        setLoading(true);
+        try {
+          const response = await fetch('http://51.83.69.195:5000/api/rdvs');
+          if (!response.ok) {
+            throw new Error('Erreur lors de la récupération des rendez-vous');
+          }
+          const data = await response.json();
+      
+          
+          
+          setRdvs(filtered); // Mettre à jour `rdvs` avec les rendez-vous filtrés
+          setFilteredRdvs(filtered); // Initialiser également `filteredRdvs` avec les données filtrées
+        } catch (error) {
+          setError(error.message);
+        } finally {
+          setLoading(false);
         }
-        const data = await response.json();
-        setRdvs(data.rdvs);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
+      };
+      
     fetchRdvs();
   }, []);
 
   useEffect(() => {
     if (rdvs && Array.isArray(rdvs)) {
-      const results = rdvs.filter((rdv) =>
+      // Filtrer selon le terme de recherche
+      let results = rdvs.filter((rdv) =>
         `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
       );
+  
+     
+  
       setFilteredRdvs(results);
     }
   }, [searchTerm, rdvs]);
+  
 
   const closeModal = () => {
     setShowModal(false);
@@ -51,17 +62,9 @@ function ListeRdvManager() {
     setShowModal(true);
   };
 
-  const handleEditClick = () => {
-    setIsEditing(true); // Active le mode édition
-  };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+
+  
 
   const handleSubmit = async () => {
     try {
@@ -230,209 +233,11 @@ function ListeRdvManager() {
                 <p className="text-left"><strong>état du dossier :</strong> {selectedRdv.commentaireManager}</p>
 
 
-                
-                <button
-                  onClick={handleEditClick}
-                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Modifier
-                </button>
+
               </>
             ) : (
               <>
-                <h2 className="text-2xl text-blue-500 font-semibold mb-4">Modifier le Rendez-vous</h2>
-                <form>
-
-                <label className="block mb-2">
-                    <span className="text-gray-700">Agent :</span>
-                    <input
-                      name="userName"
-                      value={formData.userName}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                  <span className="text-gray-700">Type rendez-vous :</span>
-                  <select
-                    name="rdvType"
-                    value={formData.rdvType}
-                    onChange={handleInputChange}
-                    className={`block w-full mt-1 border-gray-300 rounded-md shadow-sm ${
-                    formData.rdvType === 'Physique' ? 'text-green-500' : formData.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'
-                    }`}
-                  >
-                     <option value="" >Choisissez un type de rendez-vous</option>
-                     <option value="Physique" className="text-green-500">Physique</option>
-                     <option value="Téléphonique" className="text-blue-700">Téléphonique</option>
-                  </select>
-                  </label>
-
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Nom :</span>
-                    <input
-                      name="nom"
-                      value={formData.nom}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Prénom:</span>
-                    <input
-                      name="prenom"
-                      value={formData.prenom}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Téléphone :</span>
-                    <input
-                      name="telephone"
-                      value={formData.telephone}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Email :</span>
-                    <input
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Nom du l'entreprise :</span>
-                    <input
-                      name="entreprise"
-                      value={formData.entreprise}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">SIRET :</span>
-                    <input
-                      name="siret"
-                      value={formData.siret}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Nombre de salariés :</span>
-                    <input
-                      name="nbrempl"
-                      value={formData.nbrempl}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Adresse :</span>
-                    <input
-                      name="adresse"
-                      value={formData.adresse}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Code postal:</span>
-                    <input
-                      name="codePostal"
-                      value={formData.codePostal}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Ville :</span>
-                    <input
-                      name="ville"
-                      value={formData.ville}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Formation demander :</span>
-                    <input
-                      name="formation"
-                      value={formData.formation}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Date prise RDV :</span>
-                    <input
-                      name="datePriseRDV"
-                      value={formData.datePriseRDV}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Date RDV :</span>
-                    <input
-                      name="dateRDV"
-                      value={formData.dateRDV}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Heure RDV :</span>
-                    <input
-                      name="heureRDV"
-                      value={formData.heureRDV}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
                 
-                  <label className="block mb-2">
-                    <span className="text-gray-700">état du dossier:</span>
-                    <select
-                     name="etatDossier"
-                     value={formData.etatDossier}
-                     onChange={handleInputChange}
-                     className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    >
-                      <option value="">choisissez une option </option>
-                       <option className='text-green-700' value="Validé">Validé</option>
-                       <option className='text-red-700' value="non Validé">non Validé</option>
-                       <option value="R2">R2</option>
-                       <option value="R3">R3</option>
-                       <option value="Pas intéressé">Pas intéressé</option>
-                       <option value="Déjà engagé">Déjà engagé</option>
-                    </select>
-
-                  </label>
-                  <label className="block mb-2">
-                    <span className="text-gray-700">Commentaire Manager :</span>
-                    <input
-                      name="commentaireManager"
-                      value={formData.commentaireManager}
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-                    />
-                  </label>
-                  
-                  
-                  <button
-                    onClick={handleSubmit}
-                    className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    type="button"
-                  >
-                    Sauvegarder
-                  </button>
-                </form>
               </>
             )}
             <button onClick={closeModal} className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
@@ -445,4 +250,4 @@ function ListeRdvManager() {
   );
 }
 
-export default ListeRdvManager;
+export default ListeRdvSuperviseur;

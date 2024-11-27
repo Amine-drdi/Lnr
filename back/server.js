@@ -347,10 +347,21 @@ app.get('/api/devis', async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la récupération des devis' });
   }
 });
-// Route pour récupérer tous les RDV
+
+// Route pour récupérer tous les RDV OPCO
 app.get('/api/rdvs', async (req, res) => {
   try {
     const rdvs = await RDV.find();
+    res.status(200).json({ rdvs });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des contrats' });
+  }
+});
+// Route pour récupérer les RDV OPCO Commercail Vente
+app.get('/api/rdvsCommercial', async (req, res) => {
+  try {
+    const rdvs = await RDV.find({ rdvType: { $ne: "Siège" } }); // Exclure "Rdv Siège"
     res.status(200).json({ rdvs });
   } catch (error) {
     console.error(error);

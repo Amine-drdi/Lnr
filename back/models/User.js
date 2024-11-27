@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['Gestionnaire', 'Manager', 'Commerciale', 'Direction' , 'ManagerOPCO' ,'CommercialeOPCO(A)','CommercialeOPCO(B)' ,'CommercialeVente(A)','CommercialeVente(B)' ,'Prise'],
+    enum: ['Gestionnaire', 'Manager', 'Commerciale', 'Direction' , 'ManagerOPCO' ,'CommercialeOPCO(A)','CommercialeOPCO(B)' ,'CommercialeVente(A)','CommercialeVente(B)' ,'Prise' , 'superviseur-OPCO'],
     default: '',
   },
   demande :{

@@ -50,6 +50,8 @@ const Login = () => {
         navigate('/Commercial-Vente(B)');
       } else if (user.role === 'Prise') {
         navigate('/Prise');
+      } else if (user.role === 'superviseur-OPCO') {
+        navigate('/superviseur-OPCO');
       }
 
     } catch (error) {

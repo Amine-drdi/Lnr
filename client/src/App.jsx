@@ -46,6 +46,9 @@ import DashboardGestion from './components/DashbordGestion';
 import TableauCommercial from './components/TableauCommercial';
 import AddDevis from './components/AddDevis';
 import CalendarDevis from './components/CalendarDevis';
+import CalendrierOPCO from './components/Opco/calendrieropco';
+import SuperviseurOPCO from './components/Opco/SuperviseurOPCO';
+import ListeRdvSuperviseur from './components/Opco/ListeRdvSuperviseur';
 
 function App() {
   return (
@@ -78,11 +81,11 @@ function App() {
         
         <Route 
           path="/ajouter-contrat" 
-          element={<PrivateRoute element={<Souscription />} allowedRoles={['Gestionnaire', 'Commercial']} />} 
+          element={<PrivateRoute element={<Souscription />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
         />
                 <Route 
           path="/ajouter-devis" 
-          element={<PrivateRoute element={<Devis />} allowedRoles={['Gestionnaire', 'Commercial']} />} 
+          element={<PrivateRoute element={<Devis />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
         />
         <Route 
           path="/Liste-employe" 
@@ -94,57 +97,58 @@ function App() {
         />
         <Route 
           path="/dashboard" 
-          element={<PrivateRoute element={<Dashboard />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
+          element={<PrivateRoute element={<Dashboard />} allowedRoles={[  'Direction']} />} 
         />
         <Route 
           path="/dashboard-gestion" 
-          element={<PrivateRoute element={<DashboardGestion />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
+          element={<PrivateRoute element={<DashboardGestion />} allowedRoles={['Gestionnaire', 'Direction']} />} 
         />
         <Route 
-          path="/tableau-commerial" 
-          element={<PrivateRoute element={<TableauCommercial />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
+          path="/tableau-commercial" 
+          element={<PrivateRoute element={<TableauCommercial />} allowedRoles={['Gestionnaire', 'Direction']} />} 
         />
         <Route 
           path="/Prisechart" 
-          element={<PrivateRoute element={<DashChart />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
-        />
-                <Route 
-          path="/OPCOchart" 
-          element={<PrivateRoute element={<OPCOchart />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
+          element={<PrivateRoute element={<DashChart />} allowedRoles={['Gestionnaire', 'Direction']} />} 
         />
         <Route 
+          path="/OPCOchart" 
+          element={<PrivateRoute element={<OPCOchart />} allowedRoles={[ 'Direction']} />} 
+        />
+
+        <Route 
           path="/commToday" 
-          element={<PrivateRoute element={<CommercialsToday />} allowedRoles={['Commercial', 'Manager']} />} 
+          element={<PrivateRoute element={<CommercialsToday />} allowedRoles={['Gestionnaire', 'Direction']} />} 
         />
         <Route 
           path="/commClassement" 
-          element={<PrivateRoute element={<CommercialChart />} allowedRoles={['Commercial', 'Manager']} />} 
+          element={<PrivateRoute element={<CommercialChart />} allowedRoles={['Direction']} />} 
         />
         <Route 
           path="/chart" 
-          element={<PrivateRoute element={<ChartComponent />} allowedRoles={['Gestionnaire', 'Direction', 'Manager']} />} 
+          element={<PrivateRoute element={<ChartComponent />} allowedRoles={[ 'Direction']} />} 
         />
         <Route 
           path="/Agenda" 
-          element={<PrivateRoute element={<Agenda />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
+          element={<PrivateRoute element={<Agenda />} allowedRoles={['Commercial', 'Direction']} />} 
         />
         <Route 
           path="/Add-Devis" 
-          element={<PrivateRoute element={<AddDevis />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
+          element={<PrivateRoute element={<AddDevis />} allowedRoles={['Commercial', 'Direction']} />} 
         />
 
         <Route 
           path="/calendrier-Devis" 
-          element={<PrivateRoute element={<CalendarDevis />} allowedRoles={['Commercial', 'Manager', 'Direction']} />} 
+          element={<PrivateRoute element={<CalendarDevis />} allowedRoles={['Commercial','Direction']} />} 
         />
 
         <Route 
           path="/profile-settings" 
-          element={<PrivateRoute element={<ProfileSetting />} allowedRoles={['Gestionnaire', 'Commercial', 'Direction', 'Manager']} />} 
+          element={<PrivateRoute element={<ProfileSetting />} allowedRoles={['Direction']} />} 
         />
         <Route 
           path="/contrats-non-valide" 
-          element={<PrivateRoute element={<ContratNonValide />} allowedRoles={['Direction', 'Manager']} />} 
+          element={<PrivateRoute element={<ContratNonValide />} allowedRoles={['Direction']} />} 
         />
         <Route 
           path="/contrats-non-valideGestio" 
@@ -152,11 +156,15 @@ function App() {
         />
         <Route 
           path="/souscription-OPCO" 
-          element={<PrivateRoute element={<SouscriptionOPCO />} allowedRoles={['Gestionnaire', 'ManagerOPCO']} />} 
+          element={<PrivateRoute element={<SouscriptionOPCO />} allowedRoles={['CommercialeOPCO(A)', 'ManagerOPCO' ,'CommercialeOPCO(B)']} />} 
+        />
+                <Route 
+          path="/Calendrier-RDV-OPCO" 
+          element={<PrivateRoute element={<CalendrierOPCO />} allowedRoles={['CommercialeOPCO(A)', 'ManagerOPCO']} />} 
         />
         <Route 
           path="/liste-RDV" 
-          element={<PrivateRoute element={<ListeRdv />} allowedRoles={['CommercialeOPCO', 'ManagerOPCO']} />} 
+          element={<PrivateRoute element={<ListeRdv />} allowedRoles={['CommercialeOPCO' ,'CommercialeOPCO(B)', 'ManagerOPCO']} />} 
         />
         <Route 
           path="/liste-RDV-manager" 
@@ -168,7 +176,11 @@ function App() {
         />
         <Route 
           path="/liste-RDV-commercial" 
-          element={<PrivateRoute element={<ListeRdvCommVente />} allowedRoles={['ManagerOPCO' ,'CommercialeVente']} />} 
+          element={<PrivateRoute element={<ListeRdvCommVente />} allowedRoles={['ManagerOPCO' ,'Commerciale']} />} 
+        />
+         <Route 
+          path="/liste-RDV-superviseur" 
+          element={<PrivateRoute element={<ListeRdvSuperviseur />} allowedRoles={['superviseur-OPCO']} />} 
         />
         
         <Route 
@@ -239,11 +251,16 @@ function App() {
           path="/Commercial-Vente(A)" 
           element={<PrivateRoute element={<CommercialVente />} allowedRoles={['CommercialeVente(A)']} />} 
         />
-                  <Route 
+          <Route 
           path="/Commercial-Vente(B)" 
           element={<PrivateRoute element={<CommercialVente />} allowedRoles={['CommercialeVente(B)']} />} 
         />
+        <Route 
+          path="/superviseur-OPCO" 
+          element={<PrivateRoute element={<SuperviseurOPCO />} allowedRoles={['superviseur-OPCO']} />} 
+        />
       </Routes>
+      
     </Router>
   );
 }

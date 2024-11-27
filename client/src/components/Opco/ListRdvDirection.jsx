@@ -203,7 +203,7 @@ function ListeRdvDirection() {
                 <td className="px-4 py-3 text-sm text-gray-700">{RDV.userName}</td>
                 <td
                    className={`px-4 py-3 text-sm ${
-                   RDV.rdvType === 'Physique' ? 'text-green-500' : RDV.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'
+                   RDV.rdvType === 'Physique' ? 'text-green-500' : RDV.rdvType === 'Téléphonique' ? 'text-blue-700' : RDV.rdvType === 'Siège' ? 'text-orange-700' : 'text-gray-700'
                    }`}
                 >
                  {RDV.rdvType}
