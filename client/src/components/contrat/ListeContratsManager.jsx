@@ -157,7 +157,7 @@ function ListeContratsManager() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredContrats.map((contrat, index) => (
+          {filteredContrats.slice().reverse().map((contrat, index) => (
               <tr key={contrat._id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-4 py-3 text-sm text-gray-700 text-center">{index + 1}</td>
                   <td className="px-4 py-3 text-sm text-gray-700">

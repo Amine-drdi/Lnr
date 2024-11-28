@@ -142,7 +142,7 @@ function ListeRdvManager() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredRdvs.map((RDV , index) => (
+          {filteredRdvs.slice().reverse().map((RDV, index) => (
               <tr key={RDV._id} className="hover:bg-gray-50 transition-colors">
               <td className="px-4 py-3 text-sm text-gray-700 text-center">{index + 1}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">
