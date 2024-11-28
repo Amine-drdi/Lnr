@@ -12,28 +12,26 @@ function ListeRdvSuperviseur() {
   const [isEditing, setIsEditing] = useState(false); // Nouvel état pour basculer entre affichage et modification
   const [formData, setFormData] = useState({}); // Stocke les données modifiées du formulaire
 
-
   useEffect(() => {
-    const fetchRdvs = async () => {
-        setLoading(true);
-        try {
-          const response = await fetch('http://51.83.69.195:5000/api/rdvs');
-          if (!response.ok) {
-            throw new Error('Erreur lors de la récupération des rendez-vous');
-          }
-          const data = await response.json();
-      
-          setRdvs(filtered); // Mettre à jour `rdvs` avec les rendez-vous filtrés
-          setFilteredRdvs(filtered); // Initialiser également `filteredRdvs` avec les données filtrées
-        } catch (error) {
-          setError(error.message);
-        } finally {
-          setLoading(false);
+    const fetchFilteredRdvs = async () => {
+      try {
+        const response = await fetch('http://51.83.69.195:5000/api/rdvs/siege'); // Appel de la route spécifique
+        if (!response.ok) {
+          throw new Error('Erreur lors du chargement des rendez-vous');
         }
-      };
-      
-    fetchRdvs();
-  }, []);
+        const data = await response.json();
+        setRdvs(data);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+  
+    fetchFilteredRdvs();
+  }, []); // Chargement uniquement au montage
+  
+
 
   useEffect(() => {
     if (rdvs && Array.isArray(rdvs)) {
@@ -42,13 +40,10 @@ function ListeRdvSuperviseur() {
         `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
       );
   
-     
-  
       setFilteredRdvs(results);
     }
   }, [searchTerm, rdvs]);
   
-
   const closeModal = () => {
     setShowModal(false);
     setIsEditing(false); // Ferme le mode édition
@@ -59,10 +54,6 @@ function ListeRdvSuperviseur() {
     setFormData(RDV); // Pré-remplit le formulaire avec les données actuelles
     setShowModal(true);
   };
-
-
-
-  
 
   const handleSubmit = async () => {
     try {
@@ -88,7 +79,6 @@ function ListeRdvSuperviseur() {
       setError(error.message);
     }
   };
-
   if (loading) {
     return <div className="flex justify-center items-center h-screen text-gray-600">Chargement des rendez-vous...</div>;
   }
@@ -206,11 +196,15 @@ function ListeRdvSuperviseur() {
                 <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Rendez-vous</h2>
                 <p className="text-left"><strong>Agent :</strong> {selectedRdv.userName}</p>
                 <p className="text-left"><strong>Type Rendez-vous :</strong>
-              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'}`}>
+              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-blue-700' : selectedRdv.rdvType === 'Siège' ? 'text-orange-700' : 'text-gray-700'}`}>
                {selectedRdv.rdvType}
               </span>
               </p>
-              <p className="text-left"><strong>Résultat du RDV :</strong> {selectedRdv.resultatRdv}</p>
+              <p className="text-left"><strong>Résultat du RDV :</strong> 
+              <span className={`${selectedRdv.resultatRdv === 'Porte ouverte' ? 'text-green-700' : selectedRdv.resultatRdv === 'Porte non-ouverte' ? 'text-red-700' :  'text-gray-700'}`}>
+               {selectedRdv.resultatRdv}
+              </span>
+              </p>
               <p className="text-left"><strong>Nom du l'entreprise :</strong> {selectedRdv.entreprise}</p>
                 <p className="text-left"><strong>Nom :</strong> {selectedRdv.nom}</p>
                 <p className="text-left"><strong>Prénom :</strong> {selectedRdv.prenom}</p>
@@ -226,7 +220,7 @@ function ListeRdvSuperviseur() {
                 <p className="text-left"><strong>Date RDV :</strong> {selectedRdv.dateRDV}</p>
                 <p className="text-left"><strong>Heure RDV :</strong> {selectedRdv.heureRDV}</p>
                 <p className="text-left"><strong>état du dossier :</strong> {selectedRdv.etatDossier}</p>
-                <p className="text-left"><strong>état du dossier :</strong> {selectedRdv.commentaireAgent}</p>
+                <p className="text-left"><strong>Cammentaire agent :</strong> {selectedRdv.commentaireAgent}</p>
                 <p className="text-left"><strong>Commentaire Commercial :</strong><span className="text-red-500"> {selectedRdv.commentaireCommercial}</span></p>
                 <p className="text-left"><strong>état du dossier :</strong> {selectedRdv.commentaireManager}</p>
 
@@ -249,3 +243,4 @@ function ListeRdvSuperviseur() {
 }
 
 export default ListeRdvSuperviseur;
+

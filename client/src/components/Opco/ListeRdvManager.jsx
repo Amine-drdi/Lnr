@@ -205,11 +205,15 @@ function ListeRdvManager() {
                 <h2 className="text-2xl text-blue-500 font-semibold mb-4">Détails du Rendez-vous</h2>
                 <p className="text-left"><strong>Agent :</strong> {selectedRdv.userName}</p>
                 <p className="text-left"><strong>Type Rendez-vous :</strong>
-              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-blue-700' : 'text-gray-700'}`}>
+              <span className={`${selectedRdv.rdvType === 'Physique' ? 'text-green-500' : selectedRdv.rdvType === 'Téléphonique' ? 'text-blue-700' :selectedRdv.rdvType === 'Siège' ? 'text-orange-700' : 'text-gray-700'}`}>
                {selectedRdv.rdvType}
               </span>
               </p>
-              <p className="text-left"><strong>Résultat du RDV :</strong> {selectedRdv.resultatRdv}</p>
+              <p className="text-left"><strong>Résultat du RDV :</strong> 
+              <span className={`${selectedRdv.resultatRdv === 'Porte ouverte' ? 'text-green-500' : selectedRdv.resultatRdv === 'Porte non-ouverte' ? 'text-blue-700' : 'text-gray-700'}`}>
+               {selectedRdv.resultatRdv}
+              </span>
+              </p>
               <p className="text-left"><strong>Nom du l'entreprise :</strong> {selectedRdv.entreprise}</p>
                 <p className="text-left"><strong>Nom :</strong> {selectedRdv.nom}</p>
                 <p className="text-left"><strong>Prénom :</strong> {selectedRdv.prenom}</p>
