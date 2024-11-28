@@ -42,7 +42,7 @@ function CommercialOPCO() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -61,7 +61,7 @@ function CommercialOPCO() {
     // Fonction pour récupérer les modifications des contrats
     const fetchContratUpdates = async () => {
       try {
-        const response = await axios.get('http://51.83.69.195:5000/api/contrat-updates');
+        const response = await axios.get('http://localhost:5000/api/contrat-updates');
         setContratUpdates(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des mises à jour :", error);

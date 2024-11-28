@@ -15,7 +15,7 @@ function ListeRdvSuperviseur() {
   useEffect(() => {
     const fetchFilteredRdvs = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/rdvs/siege'); // Appel de la route spécifique
+        const response = await fetch('http://localhost:5000/api/rdvs/siege'); // Appel de la route spécifique
         if (!response.ok) {
           throw new Error('Erreur lors du chargement des rendez-vous');
         }
@@ -57,7 +57,7 @@ function ListeRdvSuperviseur() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`http://51.83.69.195:5000/api/rdvs/${selectedRdv._id}`, {
+      const response = await fetch(`http://localhost:5000/api/rdvs/${selectedRdv._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -222,9 +222,7 @@ function ListeRdvSuperviseur() {
                 <p className="text-left"><strong>état du dossier :</strong> {selectedRdv.etatDossier}</p>
                 <p className="text-left"><strong>Cammentaire agent :</strong> {selectedRdv.commentaireAgent}</p>
                 <p className="text-left"><strong>Commentaire Commercial :</strong><span className="text-red-500"> {selectedRdv.commentaireCommercial}</span></p>
-                <p className="text-left"><strong>état du dossier :</strong> {selectedRdv.commentaireManager}</p>
-
-
+                <p className="text-left"><strong>Commentaire Manager :</strong> {selectedRdv.commentaireManager}</p>
 
               </>
             ) : (
@@ -243,4 +241,3 @@ function ListeRdvSuperviseur() {
 }
 
 export default ListeRdvSuperviseur;
-

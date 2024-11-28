@@ -29,7 +29,7 @@ function SuperviseurOPCO() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -66,11 +66,11 @@ function SuperviseurOPCO() {
   const renderComponent = () => {
     if (etat === 0) return null;
     switch (activeComponent) {
-      case 'listeRdv':
+      case 'listeRdvSuper':
         return <ListeRdvSuperviseur />;
      
       default:
-        return <ListeRdvManager />;
+        return <ListeRdvSuperviseur />;
     }
   };
 
@@ -94,7 +94,7 @@ function SuperviseurOPCO() {
         {/* Menu List */}
         <List>
           <ListItem
-            onClick={() => setActiveComponent('listeRdv')}
+            onClick={() => setActiveComponent('listeRdvSuper')}
             className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
           >
             <ListItemPrefix>

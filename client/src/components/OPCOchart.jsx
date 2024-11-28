@@ -20,7 +20,7 @@ function OPCOchart() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/rdv-count');
+        const response = await fetch('http://localhost:5000/api/rdv-count');
         
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des données');

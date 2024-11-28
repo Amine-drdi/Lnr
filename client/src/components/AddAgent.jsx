@@ -18,7 +18,7 @@ const AddAgent = () => {
     e.preventDefault();
    
     try {
-      const response = await axios.post('http://51.83.69.195:5000/api/registerEmp', formData);
+      const response = await axios.post('http://localhost:5000/api/registerEmp', formData);
       alert(response.data.message);
     } catch (error) {
       console.error('Erreur lors de l\'ajout de l\'employé', error.response?.data || error.message);

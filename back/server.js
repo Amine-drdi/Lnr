@@ -373,12 +373,14 @@ app.get('/api/rdvsCommercial', async (req, res) => {
 // Nouvelle route pour récupérer uniquement les RDVs avec rdvType="Siège" (pour le superviseur)
 app.get('/api/rdvs/siege', async (req, res) => {
   try {
-    const rdvs = await RDV.find({ rdvType: 'Siège' }); // Filtrage par rdvType
+    // Filtre les rendez-vous par type "Siège"
+    const rdvs = await RDV.find({ rdvType: 'Siège' });
     res.json(rdvs);
   } catch (error) {
     res.status(500).json({ message: 'Erreur serveur : ' + error.message });
   }
 });
+
 
 // Route pour mettre à jour un contrat
 app.put('/api/contrats/:id', async (req, res) => {
