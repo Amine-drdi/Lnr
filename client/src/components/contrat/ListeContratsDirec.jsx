@@ -36,7 +36,7 @@ function ListeContratsDirec() {
 
   const handleSaveModal = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/contrats/${editedContrat._id}`, {
+      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${editedContrat._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ function ListeContratsDirec() {
     const fetchContrats = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:5000/api/contrats');
+        const response = await fetch('http://51.83.69.195:5000/api/contrats');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des contrats');
         }
@@ -127,7 +127,7 @@ const handleEditClick = (contrat) => {
 // Fonction pour sauvegarder les modifications
 const handleSaveClick = async (contratId) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/contrats/${contratId}`, {
+    const response = await fetch(`http://51.83.69.195:5000/api/contrats/${contratId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -182,7 +182,7 @@ const handleDeleteClick = async (contratId) => {
 
   if (result.isConfirmed) {
     try {
-      const response = await fetch(`http://localhost:5000/api/contrats/${contratId}`, {
+      const response = await fetch(`http://51.83.69.195:5000/api/contrats/${contratId}`, {
         method: 'DELETE',
       });
 

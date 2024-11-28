@@ -7,7 +7,7 @@ function TablePointage() {
   useEffect(() => {
     const fetchStatusHistory = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/status-history');
+        const response = await axios.get('http://51.83.69.195:5000/api/status-history');
         setHistory(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération de l'historique des statuts :", error);
