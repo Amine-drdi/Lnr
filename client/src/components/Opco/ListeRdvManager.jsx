@@ -34,7 +34,7 @@ function ListeRdvManager() {
   useEffect(() => {
     if (rdvs && Array.isArray(rdvs)) {
       const results = rdvs.filter((rdv) =>
-        `${rdv.nom} ${rdv.prenom}`.toLowerCase().includes(searchTerm.toLowerCase())
+        `${rdv.nom} ${rdv.prenom} ${rdv.userName}`.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredRdvs(results);
     }

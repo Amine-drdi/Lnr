@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
   role: {
     type: String,
     enum: ['Gestionnaire', 'Manager', 'Commerciale', 'Direction' , 'ManagerOPCO' ,'CommercialeOPCO(A)','CommercialeOPCO(B)' ,'CommercialeVente(A)','CommercialeVente(B)' ,'Prise' , 'superviseur-OPCO'],
