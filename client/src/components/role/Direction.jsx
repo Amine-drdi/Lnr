@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-
 import {
   Card,
   List,
@@ -15,6 +14,7 @@ import {
   PresentationChartBarIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
+import { BsChatRightTextFill } from "react-icons/bs";
 import { IoIosAddCircle } from "react-icons/io";
 import { IoCalendarNumber } from "react-icons/io5";
 import { ImUsers } from "react-icons/im";
@@ -51,10 +51,12 @@ import { FaTableCells } from "react-icons/fa6";
 import TableauCommercial from "../TableauCommercial";
 import CalendarDevis from "../CalendarDevis";
 import ListeContratsPrise from "../contrat/ListeContratsPrise";
+import Chat from "../Chat";
 
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
+  const [etat, setEtat] = useState('');
   const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(0); // State for accordion
   const [showModal, setShowModal] = useState(false);
@@ -73,6 +75,7 @@ export function Direction() {
             },
           });
           setUserName(response.data.user.name);
+          setEtat(response.data.user.matricule);
         } else {
           navigate('/');
         }
@@ -122,7 +125,8 @@ export function Direction() {
             return <Agenda />;
             case 'Add-devis':
               return <CalendarDevis />;
-      
+              case 'Chat':
+                return <Chat currentUser={{ matricule: etat, name: userName }} />;
              case 'BlocNote':
               return <BlocNotes />;
             case 'Pointage':
@@ -282,6 +286,12 @@ export function Direction() {
 
         {/* Paramètres et déconnexion */}
         <List>
+        <ListItem onClick={() => setActiveComponent('Chat')} className="hover:bg-blue-600 text-white  ">
+            <ListItemPrefix>
+              <BsChatRightTextFill className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+           Chat
+          </ListItem>
         <ListItem onClick={() => setActiveComponent('BlocNote')} className="hover:bg-blue-600 text-white  ">
             <ListItemPrefix>
               <GiNotebook className="h-5 w-5 text-white" />

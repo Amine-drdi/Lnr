@@ -1,26 +1,36 @@
-const express = require('express');  
+const express = require('express'); 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const User = require('./models/User'); // Importer le modèle User
+const User = require('./models/User'); 
 const Contrat = require('./models/Contrat');
 const Devis = require('./models/Devis');
 const RDV = require('./models/RDV');
 const Note = require('./models/Note');
 const UserStatus = require('./models/UserStatus');
+const messageRoutes = require('./routes/messages');
 const ContratUpdate = require('./models/ContratUpdate') ;
 const moment = require('moment');
+const path = require('path');
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Remplacez par l'URL de votre frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
+
 
 // Connexion à MongoDB
 mongoose.connect('mongodb://mongodb:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
 
-// Route pour se connecter
+
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+  app.use('/api/messages', messageRoutes);
+
+ // Route pour se connecter
 app.post('/api/login', async (req, res) => {
   const { matricule, password } = req.body;
 
@@ -80,10 +90,23 @@ app.post('/api/registerEmp', async (req, res) => {
 // Route pour récupérer tous les utilisateurs
 app.get('/api/users', async (req, res) => {
   try {
-    const users = await User.find();
-    res.status(200).json({ users });
+    const users = await User.find({}, { matricule: 1, name: 1, _id: 0 }); // Renvoyer uniquement les champs nécessaires
+    res.json(users);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la récupération des utilisateurs' });
+    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
+  }
+});
+
+
+// Récupérer les utilisateurs pour chat
+
+app.get('/api/userschat', async (req, res) => {
+  try {
+    const allowedRoles = ['Direction', 'Commerciale', 'Manager', 'Gestionnaire', 'Prise'];
+    const users = await User.find({ role: { $in: allowedRoles } }, 'matricule name role');
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
   }
 });
 

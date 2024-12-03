@@ -32,8 +32,8 @@ const userSchema = new mongoose.Schema({
   },
   etat :{
     type: Number,
-  }
- 
+  },
+
 }, {
   timestamps: true
 });

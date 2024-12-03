@@ -11,6 +11,7 @@ import {
   PresentationChartBarIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
+import { BsChatRightTextFill } from "react-icons/bs";
 import { MdOutlinePriceChange } from "react-icons/md";
 import { VscError } from "react-icons/vsc";
 import { FaFileContract} from "react-icons/fa6";
@@ -31,6 +32,7 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import BlocNotes from "../BlocNotes";
 import DashboardGestion from "../DashbordGestion";
 import ListeContratsPrise from "../contrat/ListeContratsPrise";
+import Chat from "../Chat";
 // Les composants pour chaque section de la dashboard
 function DashboardContent() {
   return <div><DashboardGestion/></div>;
@@ -48,6 +50,7 @@ export default function Gestionnaire() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
   const [etat, setEtat] = useState('');
+  const [Matricule, setMatricule] = useState('');
   const [notifications, setNotifications] = useState([]); 
   const [isOnline, setIsOnline] = useState(false);
   const navigate = useNavigate();
@@ -63,7 +66,8 @@ export default function Gestionnaire() {
             },
           });
           setUserName(response.data.user.name);
-          setEtat(response.data.user.etat);
+          setEtat(response.data.user.etat); 
+          setMatricule(response.data.user.matricule); 
           if (response.data.user.notifications) {
             setNotifications(response.data.user.notifications);
           } else {
@@ -90,6 +94,7 @@ export default function Gestionnaire() {
             },
           });
           setEtat(response.data.user.etat);
+          
         }
       } catch (error) {
         console.error("Erreur lors de l'actualisation de l'état :", error);
@@ -143,6 +148,8 @@ const handleStatusChange = async () => {
         return <ListeDevisGestio />;
       case 'Agenda':
         return <Agenda />;
+        case 'Chat':
+          return <Chat currentUser={{ matricule: Matricule, name: userName }} />;
       case 'NonValide':
         return <ContratNvalideGestio />;
       case 'BlocNote':
@@ -216,6 +223,12 @@ const handleStatusChange = async () => {
               <CiBoxList className="h-5 w-5 text-white" />
             </ListItemPrefix>
             Liste des Devis
+          </ListItem>
+          <ListItem onClick={() => setActiveComponent('Chat')} className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
+            <ListItemPrefix>
+              <GiNotebook className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            Chat
           </ListItem>
           <ListItem onClick={() => setActiveComponent('BlocNote')} className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
             <ListItemPrefix>

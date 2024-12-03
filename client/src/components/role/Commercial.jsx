@@ -24,6 +24,7 @@ import { FaFileSignature } from "react-icons/fa6";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import { MdOutlinePriceChange } from "react-icons/md";
 import { IoCalendarNumber } from "react-icons/io5";
+import { BsChatRightTextFill } from "react-icons/bs";
 import logo from "../../assets/logo.png";
 import img from "../../assets/user.png";
 import ListeContratsComm from '../contrat/ListeContratsComm';
@@ -34,10 +35,13 @@ import Agenda from "../Agenda";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import BlocNotes from '../BlocNotes';
 import CalendarDevis from '../CalendarDevis';
+import Chat from '../Chat';
 function Commercial() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
   const [etat, setEtat] = useState('');
+  const [Matricule, setMatricule] = useState('');
+
   const [contratUpdates, setContratUpdates] = useState([]);
   const [open, setOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(false);
@@ -56,9 +60,10 @@ function Commercial() {
               Authorization: `Bearer ${token}`,
             },
           });
-          setUserName(response.data.user.name);
-          setEtat(response.data.user.etat);
 
+          setUserName(response.data.user.name);
+          setEtat(response.data.user.etat); 
+          setMatricule(response.data.user.matricule);
         } else {
           navigate('/');
         }
@@ -67,6 +72,7 @@ function Commercial() {
         navigate('/');
       }
     };
+  
     
 
     const fetchContratUpdates = async () => {
@@ -152,6 +158,9 @@ const handleStatusChange = async () => {
           return <CalendarDevis />;
       case 'Agenda':
         return <Agenda />;
+        case 'Chat':
+           return <Chat currentUser={{ matricule: Matricule, name: userName }} />;
+
         case 'BlocNote':
           return <BlocNotes />;
       default:
@@ -195,7 +204,7 @@ const handleStatusChange = async () => {
   )}
 </button>
 <List>
-  {['listeContrats', 'AjoutContrat', 'Add-devis', 'listeDevis', 'Agenda', 'BlocNote'].map((item, index) => (
+  {['listeContrats', 'AjoutContrat', 'Add-devis', 'listeDevis', 'Agenda', 'Chat' , 'BlocNote'].map((item, index) => (
     <ListItem
       key={index}
       onClick={() => setActiveComponent(item)}
@@ -207,7 +216,7 @@ const handleStatusChange = async () => {
           : index === 2 ? <MdOutlinePriceChange className="h-5 w-5" />
           : index === 3 ? <CiBoxList className="h-5 w-5" />
           : index === 4 ? <IoCalendarNumber className="h-5 w-5" />
-     
+          : index === 5 ? <BsChatRightTextFill className="h-5 w-5" />
           : <GiNotebook className="h-5 w-5" />} {/* Icône Bloc Notes */}
       </ListItemPrefix>
       {index === 0 ? 'Liste des contrats'
@@ -215,6 +224,7 @@ const handleStatusChange = async () => {
         : index === 2 ? 'Devis'
         : index === 3 ? 'Liste des devis'
         : index === 4 ? 'Agenda'
+         : index === 5 ? 'Chat'
        
 
         : 'Bloc Notes'} {/* Nom Bloc Notes */}

@@ -48,6 +48,7 @@ import AddDevis from './components/AddDevis';
 import CalendarDevis from './components/CalendarDevis';
 import SuperviseurOPCO from './components/Opco/SuperviseurOPCO';
 import ListeRdvSuperviseur from './components/Opco/ListeRdvSuperviseur';
+import Chat from './components/Chat';
 
 function App() {
   return (
@@ -140,6 +141,13 @@ function App() {
           path="/calendrier-Devis" 
           element={<PrivateRoute element={<CalendarDevis />} allowedRoles={['Commercial','Direction']} />} 
         />
+
+
+        <Route 
+          path="/chat" 
+          element={<PrivateRoute element={<Chat />} allowedRoles={['Commercial','Direction']} />} 
+        />
+
 
         <Route 
           path="/profile-settings" 
@@ -256,6 +264,7 @@ function App() {
           element={<PrivateRoute element={<SuperviseurOPCO />} allowedRoles={['superviseur-OPCO']} />} 
         />
       </Routes>
+      
       
     </Router>
   );

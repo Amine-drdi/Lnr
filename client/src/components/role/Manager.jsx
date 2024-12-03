@@ -16,10 +16,12 @@ import Souscription from '../contrat/Souscription';
 import ListeContratsManager from '../contrat/ListeContratsManager';
 import { CiBoxList } from "react-icons/ci";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import Chat from '../Chat';
 function Manager() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
   const [etat, setEtat] = useState('');
+  const [Matricule, setMatricule] = useState('');
   const [isOnline, setIsOnline] = useState(false);
   const navigate = useNavigate();
 
@@ -36,6 +38,7 @@ function Manager() {
           });
           setUserName(response.data.user.name);
           setEtat(response.data.user.etat);
+          setMatricule(response.data.user.matricule);
         } else {
           navigate('/');
         }
@@ -104,6 +107,8 @@ const handleStatusChange = async () => {
         return <ListeContratsManager />;
       case 'AjoutContrat':
         return <Souscription />;
+        case 'Chat':
+          return <Chat currentUser={{ matricule: Matricule, name: userName }} />;
       default:
         return <Souscription />;
     }
@@ -163,6 +168,15 @@ const handleStatusChange = async () => {
               <FaFileSignature className="h-5 w-5" />
             </ListItemPrefix>
             Ajouter un Contrat
+          </ListItem>
+          <ListItem
+            onClick={() => setActiveComponent('Chat')}
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
+          >
+            <ListItemPrefix>
+              <FaFileSignature className="h-5 w-5" />
+            </ListItemPrefix>
+           Chat
           </ListItem>
 
           <ListItem

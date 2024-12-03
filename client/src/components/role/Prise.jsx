@@ -23,6 +23,7 @@ function Prise() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
   const [etat, setEtat] = useState('');
+  const [Matricule, setMatricule] = useState('');
   const [isOnline, setIsOnline] = useState(false);
   const navigate = useNavigate();
 
@@ -39,6 +40,7 @@ function Prise() {
           });
           setUserName(response.data.user.name);
           setEtat(response.data.user.etat);
+          setMatricule(response.data.user.matricule);
         } else {
           navigate('/');
         }
@@ -106,6 +108,8 @@ const handleStatusChange = async () => {
           return <BlocNotes />;
             case 'Agenda':
               return <Agenda />;
+              case 'Chat':
+                return <Chat currentUser={{ matricule: Matricule, name: userName }} />;
       default:
         return <Agenda/>;
     }
@@ -170,6 +174,13 @@ const handleStatusChange = async () => {
               <IoCalendarNumber className="h-5 w-5 text-white" />
             </ListItemPrefix>
            Agenda
+          </ListItem>
+          <ListItem onClick={() => setActiveComponent('Chat')} 
+          className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
+            <ListItemPrefix>
+              <IoCalendarNumber className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+           Chat
           </ListItem>
           <ListItem onClick={() => setActiveComponent('BlocNote')} 
           className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
