@@ -16,10 +16,9 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: 'http://51.83.69.195:5173', // Remplacez par l'URL de votre frontend
+  origin: "http://lnrfinance.fr/", // Remplacez par l'URL de votre frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
-
 
 // Connexion à MongoDB
 mongoose.connect('mongodb://mongodb:27017/mydatabase')
