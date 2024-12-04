@@ -9,7 +9,7 @@ const Chat = ({ currentUser }) => {
   const [newMessage, setNewMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
 
-  const backendURL = 'http://localhost:5000'; // URL du serveur backend
+  const backendURL = 'http://51.83.69.195:5000'; // URL du serveur backend
 
   // Récupération des utilisateurs
   useEffect(() => {

@@ -15,7 +15,7 @@ function ListeEmp() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/users');
+        const response = await fetch('http://51.83.69.195:5000/api/users');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des utilisateurs');
         }
@@ -48,7 +48,7 @@ if (Array.isArray(data)) {
     }
   
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${id}`, {
+      const response = await fetch(`http://51.83.69.195:5000/api/users/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ if (Array.isArray(data)) {
 
   const handleDeleteUser = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${id}`, {
+      const response = await fetch(`http://51.83.69.195:5000/api/users/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ if (Array.isArray(data)) {
   const handleToggleEtat = async (user) => {
     try {
       const newEtat = user.etat === 1 ? 0 : 1;
-      const response = await fetch(`http://localhost:5000/api/users/${user._id}`, {
+      const response = await fetch(`http://51.83.69.195:5000/api/users/${user._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

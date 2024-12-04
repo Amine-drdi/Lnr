@@ -16,7 +16,14 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: "http://lnrfinance.fr", // URL autorisée
+  origin: (origin, callback) => {
+    // Vérifier si l'origine est "http://lnrfinance.fr" ou l'IP "51.83.69.195"
+    if (origin === 'http://lnrfinance.fr' || origin === 'http://51.83.69.195') {
+      callback(null, true); // Autoriser la requête
+    } else {
+      callback(new Error('Not allowed by CORS'), false); // Refuser la requête
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 
