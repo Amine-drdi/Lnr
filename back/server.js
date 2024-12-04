@@ -10,12 +10,14 @@ const RDV = require('./models/RDV');
 const Note = require('./models/Note');
 const UserStatus = require('./models/UserStatus');
 const messageRoutes = require('./routes/messages');
+const appointmentRoutes = require("./routes/appointments");
+const energieRoutes = require("./routes/energie");
 const ContratUpdate = require('./models/ContratUpdate') ;
 const moment = require('moment');
 const path = require('path');
 const app = express();
 app.use(express.json());
-app.use(cors({
+/*app.use(cors({
   origin: (origin, callback) => {
     // Vérifier si l'origine est "http://lnrfinance.fr" ou l'IP "51.83.69.195"
     if (origin === 'http://lnrfinance.fr' || origin === 'http://51.83.69.195') {
@@ -25,13 +27,13 @@ app.use(cors({
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}));
-
-
-/*app.use(cors({
-  origin: "http://localhost:5173", // URL autorisée
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));*/
+
+
+app.use(cors({
+  origin: "http://lnrfinance.fr", // URL autorisée
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 
 
 // Connexion à MongoDB
@@ -41,7 +43,9 @@ mongoose.connect('mongodb://mongodb:27017/mydatabase')
 
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
   app.use('/api/messages', messageRoutes);
-
+  app.use('/api/energies', energieRoutes);
+// Routes calendrier2
+app.use("/api", appointmentRoutes);
  // Route pour se connecter
 app.post('/api/login', async (req, res) => {
   const { matricule, password } = req.body;

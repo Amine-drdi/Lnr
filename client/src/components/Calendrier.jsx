@@ -1,55 +1,68 @@
-import React, { useState, useEffect } from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import axios from 'axios';
 
 const Calendrier = () => {
   const [events, setEvents] = useState([]);
 
-  // Charger les rendez-vous depuis le backend
   useEffect(() => {
-    axios.get("/api/appointments").then((response) => {
-      setEvents(response.data);
-    });
+    // Récupérer les événements depuis le serveur
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get('/api/appointments'); // Adapter l'URL de votre API
+        console.log('Données récupérées du serveur :', response.data);
+
+        // Formater les événements pour FullCalendar
+        const formattedEvents = response.data.map((event) => {
+          if (!event.date || !event.time) {
+            console.error("La date ou l'heure est manquante pour l'événement :", event);
+            return null; // Si la date ou l'heure est manquante, on ignore cet événement
+          }
+
+          // Convertir la date en objet Date
+          const eventDate = new Date(event.date);
+
+          // Extraire la date (yyyy-mm-dd) et l'heure (hh:mm)
+          const eventDateString = eventDate.toISOString().split('T')[0]; // Format: yyyy-mm-dd
+          const eventTimeString = event.time.replace('h', ':00'); // Format: hh:mm
+
+          // Créer la chaîne de date + heure pour FullCalendar
+          const eventStart = `${eventDateString}T${eventTimeString}`;
+
+          // Formater l'événement
+          const formattedEvent = {
+            title: event.title,
+            start: eventStart, // Formaté comme yyyy-mm-ddThh:mm
+            extendedProps: {
+              subtitle: event.subtitle,
+              participants: event.participants,
+            },
+          };
+
+          return formattedEvent;
+        }).filter(event => event !== null); // Filtrer les événements invalides
+
+        console.log("Événements formatés pour FullCalendar :", formattedEvents);
+        setEvents(formattedEvents);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des événements :', error);
+      }
+    };
+
+    fetchEvents();
   }, []);
 
-  // Ajouter un rendez-vous
-  const handleDateClick = (info) => {
-    const title = prompt("Titre du rendez-vous :");
-    const subtitle = prompt("Sous-titre :");
-    const time = prompt("Heure (HH:mm) :");
-    const participants = prompt("Participants (séparés par des virgules) :");
-
-    if (title && time) {
-      const newEvent = {
-        title,
-        subtitle,
-        time,
-        start: info.dateStr + "T" + time,
-        participants: participants.split(","),
-      };
-
-      axios.post("/api/appointments", newEvent).then((response) => {
-        setEvents([...events, response.data]);
-      });
-    }
-  };
-
   return (
-    <div className="px-6 py-20">
+    <div>
+      <h2>Calendrier des Rendez-vous</h2>
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        editable={true}
-        selectable={true}
-        events={events}
-        dateClick={handleDateClick}
-        headerToolbar={{
-          left: "prev,next today",
-          center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay",
+        plugins={[dayGridPlugin, timeGridPlugin]}
+        initialView="dayGridMonth" // Vue initiale (peut être modifiée selon le besoin)
+        events={events} // Liste des événements formatés
+        eventClick={(info) => {
+          console.log('Événement cliqué :', info.event);
         }}
       />
     </div>

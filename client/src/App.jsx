@@ -49,6 +49,11 @@ import CalendarDevis from './components/CalendarDevis';
 import SuperviseurOPCO from './components/Opco/SuperviseurOPCO';
 import ListeRdvSuperviseur from './components/Opco/ListeRdvSuperviseur';
 import Chat from './components/Chat';
+import Calendrier from './components/Calendrier';
+import ManagerEnergie from './components/energie/ManagerEnergie';
+import AgentEnergie from './components/energie/AgentEnergie';
+import ListeEnergieAgent from './components/energie/ListeEnergieAgent';
+import ListeEnergieManager from './components/energie/ListeEnergieManager';
 
 function App() {
   return (
@@ -83,13 +88,17 @@ function App() {
           path="/ajouter-contrat" 
           element={<PrivateRoute element={<Souscription />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
         />
-                <Route 
+        <Route 
           path="/ajouter-devis" 
           element={<PrivateRoute element={<Devis />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
         />
+          <Route 
+          path="/Calend" 
+          element={<PrivateRoute element={<Calendrier />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
+        />
         <Route 
           path="/Liste-employe" 
-          element={<PrivateRoute element={<ListeEmp />} allowedRoles={['Manager']} />} 
+          element={<PrivateRoute element={<ListeEmp />} allowedRoles={['Direction']} />} 
         />
         <Route 
           path="/ajout-employe" 
@@ -115,7 +124,6 @@ function App() {
           path="/OPCOchart" 
           element={<PrivateRoute element={<OPCOchart />} allowedRoles={[ 'Direction']} />} 
         />
-
         <Route 
           path="/commToday" 
           element={<PrivateRoute element={<CommercialsToday />} allowedRoles={['Gestionnaire', 'Direction']} />} 
@@ -199,25 +207,24 @@ function App() {
           path="/devis-Comm" 
           element={<PrivateRoute element={<ListeDevisComm />} allowedRoles={['Commercial']} />} 
         />
-
           <Route 
           path="/devis-Gest" 
           element={<PrivateRoute element={<ListeDevisGestio />} allowedRoles={['Gestionnaire']} />} 
         />
-                <Route 
+         <Route 
           path="/devi-Direction" 
           element={<PrivateRoute element={<ListeDevisDirec />} allowedRoles={['Direction']} />} 
         />
           <Route 
           path="/pointage" 
           element={<PrivateRoute element={<TablePointage />} allowedRoles={['Direction']} />} 
-        />
+          />
           <Route 
           path="/blocNote" 
           element={<PrivateRoute element={<BlocNotes />} allowedRoles={['Direction']} />} 
-        />
+          />
         {/* Rôles spécifiques */}
-        <Route 
+         <Route 
           path="/gestionnaire" 
           element={<PrivateRoute element={<Gestionnaire />} allowedRoles={['Gestionnaire']} />} 
         />
@@ -263,11 +270,29 @@ function App() {
           path="/superviseur-OPCO" 
           element={<PrivateRoute element={<SuperviseurOPCO />} allowedRoles={['superviseur-OPCO']} />} 
         />
-      </Routes>
-      
-      
+     
+      <Route 
+          path="/Manager-energie" 
+          element={<PrivateRoute element={<ManagerEnergie />} allowedRoles={['ManagerEnergie']} />} 
+        />
+        <Route 
+          path="/Agent-energie" 
+          element={<PrivateRoute element={<AgentEnergie />} allowedRoles={['AgentEnergie']} />} 
+        />
+          <Route 
+          path="/Souscription-energie" 
+          element={<PrivateRoute element={<AgentEnergie />} allowedRoles={['ManagerEnergie','AgentEnergie']} />} 
+        />
+          <Route 
+          path="/Liste-RDV-Energie" 
+          element={<PrivateRoute element={<ListeEnergieAgent/>} allowedRoles={['ManagerEnergie','AgentEnergie']} />} 
+        />
+         <Route 
+          path="/Liste-Energie-Manager" 
+          element={<PrivateRoute element={<ListeEnergieManager/>} allowedRoles={['ManagerEnergie','AgentEnergie']} />} 
+        />
+       </Routes>
     </Router>
   );
 }
-
 export default App;

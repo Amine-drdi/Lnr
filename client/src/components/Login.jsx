@@ -53,6 +53,11 @@ const Login = () => {
       } else if (user.role === 'superviseur-OPCO') {
         navigate('/superviseur-OPCO');
       }
+      else if (user.role === 'ManagerEnergie') {
+        navigate('/Manager-energie');
+      } else if (user.role === 'AgentEnergie') {
+        navigate('/Agent-energie');
+      }
 
     } catch (error) {
       console.error('Erreur lors de la connexion', error.response?.data || error.message);
