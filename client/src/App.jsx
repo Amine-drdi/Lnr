@@ -50,6 +50,7 @@ import SuperviseurOPCO from './components/Opco/SuperviseurOPCO';
 import ListeRdvSuperviseur from './components/Opco/ListeRdvSuperviseur';
 import Chat from './components/Chat';
 
+
 function App() {
   return (
     <Router>
@@ -87,6 +88,7 @@ function App() {
           path="/ajouter-devis" 
           element={<PrivateRoute element={<Devis />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
         />
+
         <Route 
           path="/Liste-employe" 
           element={<PrivateRoute element={<ListeEmp />} allowedRoles={['Manager']} />} 

@@ -16,9 +16,17 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: "http://lnrfinance.fr", // Remplacez par l'URL de votre frontend
+  origin: (origin, callback) => {
+    // Vérifier si l'origine est "http://lnrfinance.fr" ou l'IP "51.83.69.195"
+    if (origin === 'http://lnrfinance.fr' || origin === 'http://51.83.69.195') {
+      callback(null, true); // Autoriser la requête
+    } else {
+      callback(new Error('Not allowed by CORS'), false); // Refuser la requête
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
+
 
 // Connexion à MongoDB
 mongoose.connect('mongodb://mongodb:27017/mydatabase')
@@ -527,24 +535,31 @@ app.get('/api/contrat-updates', async (req, res) => {
 
 // Route pour mettre à jour un utilisateur
 app.put('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'ID utilisateur invalide' });
+  }
+
   try {
-    const { id } = req.params;
     let updatedUser = req.body;
-    // Si le mot de passe est modifié, hacher le nouveau mot de passe
+
     if (updatedUser.password) {
       const salt = await bcrypt.genSalt(10);
       updatedUser.password = await bcrypt.hash(updatedUser.password, salt);
     }
-    // Trouver et mettre à jour l'utilisateur par ID
+
     const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
+
     res.json({ user });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'utilisateur' });
   }
 });
+
 
 // Route pour supprimer un utilisateur
 app.delete('/api/users/:id', async (req, res) => {

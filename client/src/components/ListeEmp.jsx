@@ -20,11 +20,12 @@ function ListeEmp() {
           throw new Error('Erreur lors de la récupération des utilisateurs');
         }
         const data = await response.json();
-        if (data.users && Array.isArray(data.users)) {
-          setUsers(data.users);
-        } else {
-          throw new Error('Données utilisateur invalides');
-        }
+if (Array.isArray(data)) {
+  setUsers(data);
+} else {
+  throw new Error('Données utilisateur invalides');
+}
+
       } catch (error) {
         setError(error.message);
       } finally {
@@ -41,6 +42,11 @@ function ListeEmp() {
   };
 
   const handleSaveClick = async (id) => {
+    if (!id) {
+      console.error("Erreur : ID manquant lors de l'enregistrement de l'utilisateur");
+      return;
+    }
+  
     try {
       const response = await fetch(`http://51.83.69.195:5000/api/users/${id}`, {
         method: 'PUT',
@@ -49,11 +55,11 @@ function ListeEmp() {
         },
         body: JSON.stringify(updatedUser),
       });
-
+  
       if (!response.ok) {
         throw new Error('Erreur lors de la mise à jour de l\'utilisateur');
       }
-
+  
       const updatedList = users.map((user) =>
         user._id === id ? updatedUser : user
       );
@@ -61,8 +67,10 @@ function ListeEmp() {
       setEditUserId(null);
     } catch (error) {
       setError(error.message);
+      console.error("Erreur lors de la mise à jour :", error.message);
     }
   };
+  
 
   const handleDeleteUser = async (id) => {
     try {
@@ -138,11 +146,11 @@ function ListeEmp() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {Array.isArray(users) && users.length > 0 ? (
-              users
-                .filter(user => user.role !== "Direction")
-                .map((user) => (
-                  <tr key={user._id} className="hover:bg-gray-50 transition-colors">
+  {Array.isArray(users) && users.length > 0 ? (
+    users
+      .filter(user => user.role !== "Direction")
+      .map((user) => (
+                  <tr key={user._id || user.matricule || index}  className="hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3 text-sm text-gray-700">
                       {editUserId === user._id ? (
                         <input
