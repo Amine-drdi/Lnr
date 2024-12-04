@@ -18,7 +18,7 @@ const DashboardGestion = () => {
   // Fonction pour récupérer les données de classement des commerciaux
   const getCommercialRanking = async () => {
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/commercials/ranking');
+      const response = await fetch('http://localhost:5000/api/commercials/ranking');
       if (!response.ok) throw new Error("Erreur lors de la récupération des données");
 
       const data = await response.json();
@@ -30,7 +30,7 @@ const DashboardGestion = () => {
   };
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://51.83.69.195:5000/api/contrats/today');
+      const response = await fetch('http://localhost:5000/api/contrats/today');
       const data = await response.json();
       setContratsAujourdHui(data.todayCount);
 
@@ -44,7 +44,7 @@ const DashboardGestion = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/events/stats/today');
+        const response = await fetch('http://localhost:5000/events/stats/today');
         const data = await response.json();
 
         setTodayCountEvent(data.todayCountEvent);
@@ -58,7 +58,7 @@ const DashboardGestion = () => {
   useEffect(() => {
     const fetchRDVStats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/rdv/stats/today');
+        const response = await fetch('http://localhost:5000/rdv/stats/today');
         const data = await response.json();
 
         setTodayCountRDV(data.todayCountRDV);
@@ -73,7 +73,7 @@ const DashboardGestion = () => {
   useEffect(() => {
     const fetchCotisationStats = async () => {
       try {
-        const response = await fetch('http://51.83.69.195:5000/api/contrats/stats/monthly-cotisation');
+        const response = await fetch('http://localhost:5000/api/contrats/stats/monthly-cotisation');
         const data = await response.json();
 
         setTotalMontantVP(data.totalCotisationCurrentMonth);

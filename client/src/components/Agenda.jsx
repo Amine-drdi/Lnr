@@ -25,7 +25,7 @@ const Agenda = () => {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -73,7 +73,7 @@ const Agenda = () => {
   ];
 
   useEffect(() => {
-    axios.get("http://51.83.69.195:5000/api/events")
+    axios.get("http://localhost:5000/api/events")
       .then((response) => setEvents(response.data))
       .catch((error) => console.error(error));
   }, []);
@@ -103,14 +103,14 @@ const Agenda = () => {
 
   const handleSaveEvent = () => {
     if (isEditing) {
-      axios.put(`http://51.83.69.195:5000/events/${eventToEdit._id}`, newEvent)
+      axios.put(`http://localhost:5000/events/${eventToEdit._id}`, newEvent)
         .then((response) => {
           setEvents(events.map((e) => (e._id === eventToEdit._id ? response.data : e)));
           setIsEditing(false);
         })
         .catch((error) => console.error(error));
     } else {
-      axios.post("http://51.83.69.195:5000/events", newEvent)
+      axios.post("http://localhost:5000/events", newEvent)
         .then((response) => {
           setEvents([...events, response.data]);
           setIsAdding(false);
@@ -128,7 +128,7 @@ const Agenda = () => {
   };
 
   const handleDeleteEvent = (id) => {
-    axios.delete(`http://51.83.69.195:5000/events/${id}`)
+    axios.delete(`http://localhost:5000/events/${id}`)
       .then(() => setEvents(events.filter((event) => event._id !== id)))
       .catch((error) => console.error(error));
   };

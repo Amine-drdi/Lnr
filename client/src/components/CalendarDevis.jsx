@@ -73,7 +73,7 @@ const CalendarDevis = () => {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -95,7 +95,7 @@ const CalendarDevis = () => {
    // Fonction pour récupérer les devis depuis le backend
    const fetchDevis = async () => {
     try {
-      const response = await axios.get('http://51.83.69.195:5000/api/devis-recup');
+      const response = await axios.get('http://localhost:5000/api/devis-recup');
       
       const devisData = response.data
         .filter((devis) => {
@@ -184,7 +184,7 @@ const CalendarDevis = () => {
   
     try {
       const dataToSend = { ...formData, Commercial: userName }; // Ajout automatique de `userName` au champ `Commercial`
-      const response = await fetch('http://51.83.69.195:5000/api/calend-devis', {
+      const response = await fetch('http://localhost:5000/api/calend-devis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

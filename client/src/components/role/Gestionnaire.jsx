@@ -60,7 +60,7 @@ export default function Gestionnaire() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -88,7 +88,7 @@ export default function Gestionnaire() {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://51.83.69.195:5000/api/profile', {
+          const response = await axios.get('http://localhost:5000/api/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -117,7 +117,7 @@ const handleStatusChange = async () => {
     const token = localStorage.getItem("authToken");
     if (token) {
       await axios.post(
-        "http://51.83.69.195:5000/api/status",
+        "http://localhost:5000/api/status",
         { username: userName, status: newStatus },
         {
           headers: {

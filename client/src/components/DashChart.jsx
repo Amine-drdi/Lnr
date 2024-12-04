@@ -6,7 +6,7 @@ const DashChart = () => {
   const [chartData, setChartData] = useState(null);  // Initialisez avec null pour vérifier plus tard
 
   useEffect(() => {
-    axios.get('http://51.83.69.195:5000/api/events/ranking')
+    axios.get('http://localhost:5000/api/events/ranking')
       .then(response => {
         if (response.data && Array.isArray(response.data)) {
           const labels = response.data.map(item => item._id || "Inconnu");

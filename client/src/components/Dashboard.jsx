@@ -21,7 +21,7 @@ const Dashboard = () => {
   // Fonction pour récupérer les données de classement des commerciaux
   const getCommercialRanking = async () => {
     try {
-      const response = await fetch('http://51.83.69.195:5000/api/commercials/ranking');
+      const response = await fetch('http://localhost:5000/api/commercials/ranking');
       if (!response.ok) throw new Error("Erreur lors de la récupération des données");
 
       const data = await response.json();
@@ -35,7 +35,7 @@ const Dashboard = () => {
   // Fonction de mise à jour des données
   const fetchData = async () => {
     try {
-      const contratsResponse = await fetch('http://51.83.69.195:5000/api/contrats/today');
+      const contratsResponse = await fetch('http://localhost:5000/api/contrats/today');
       const contratsData = await contratsResponse.json();
       setContratsAujourdHui(contratsData.todayCount);
       const progression = contratsData.yesterdayCount
@@ -43,17 +43,17 @@ const Dashboard = () => {
         : 0;
       setPourcentageProgression(progression);
 
-      const eventStatsResponse = await fetch('http://51.83.69.195:5000/events/stats/today');
+      const eventStatsResponse = await fetch('http://localhost:5000/events/stats/today');
       const eventStatsData = await eventStatsResponse.json();
       setTodayCountEvent(eventStatsData.todayCountEvent);
       setPourcentageProgressionEvent(eventStatsData.pourcentageProgressionEvent);
 
-      const rdvStatsResponse = await fetch('http://51.83.69.195:5000/rdv/stats/today');
+      const rdvStatsResponse = await fetch('http://localhost:5000/rdv/stats/today');
       const rdvStatsData = await rdvStatsResponse.json();
       setTodayCountRDV(rdvStatsData.todayCountRDV);
       setPourcentageProgressionRDV(rdvStatsData.pourcentageProgressionRDV);
 
-      const cotisationStatsResponse = await fetch('http://51.83.69.195:5000/api/contrats/stats/monthly-cotisation');
+      const cotisationStatsResponse = await fetch('http://localhost:5000/api/contrats/stats/monthly-cotisation');
       const cotisationStatsData = await cotisationStatsResponse.json();
       setTotalMontantVP(cotisationStatsData.totalCotisationCurrentMonth);
       setPourcentageProgressionVP(cotisationStatsData.cotisationProgression);

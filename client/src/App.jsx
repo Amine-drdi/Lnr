@@ -49,6 +49,7 @@ import CalendarDevis from './components/CalendarDevis';
 import SuperviseurOPCO from './components/Opco/SuperviseurOPCO';
 import ListeRdvSuperviseur from './components/Opco/ListeRdvSuperviseur';
 import Chat from './components/Chat';
+import Calendrier from './components/Calendrier';
 
 
 function App() {
@@ -87,6 +88,11 @@ function App() {
                 <Route 
           path="/ajouter-devis" 
           element={<PrivateRoute element={<Devis />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
+        />
+
+         <Route 
+          path="/calend" 
+          element={<PrivateRoute element={<Calendrier />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
         />
 
         <Route 

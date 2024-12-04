@@ -16,14 +16,7 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: (origin, callback) => {
-    // Vérifier si l'origine est "http://lnrfinance.fr" ou l'IP "51.83.69.195"
-    if (origin === 'http://lnrfinance.fr' || origin === 'http://51.83.69.195') {
-      callback(null, true); // Autoriser la requête
-    } else {
-      callback(new Error('Not allowed by CORS'), false); // Refuser la requête
-    }
-  },
+  origin: "http://lnrfinance.fr", // URL autorisée
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 
@@ -32,7 +25,6 @@ app.use(cors({
 mongoose.connect('mongodb://mongodb:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.log('Erreur de connexion à MongoDB :', error));
-
 
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
   app.use('/api/messages', messageRoutes);
