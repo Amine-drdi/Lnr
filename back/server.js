@@ -28,6 +28,12 @@ app.use(cors({
 }));
 
 
+/*app.use(cors({
+  origin: "http://localhost:5173", // URL autorisée
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));*/
+
+
 // Connexion à MongoDB
 mongoose.connect('mongodb://mongodb:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))
