@@ -41,4 +41,26 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// Route pour supprimer une énergie
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Vérifiez si l'énergie existe
+    const energie = await Energie.findById(id);
+    if (!energie) {
+      return res.status(404).json({ message: "Énergie non trouvée." });
+    }
+
+    // Supprimez l'énergie
+    await Energie.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "Énergie supprimée avec succès." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur lors de la suppression de l'énergie." });
+  }
+});
+
+
 module.exports = router;

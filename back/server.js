@@ -31,11 +31,9 @@ app.use(express.json());
 
 
 app.use(cors({
-  origin: "http://lnrfinance.fr", // URL autorisée
+  origin: "http://lnrfinance.fr",   //http://localhost:5173
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
-
-
 // Connexion à MongoDB
 mongoose.connect('mongodb://mongodb:27017/mydatabase')
   .then(() => console.log('Connexion à MongoDB réussie !'))

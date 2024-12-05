@@ -157,7 +157,7 @@ function AgentEnergie() {
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
             </ListItemPrefix>
-             la liste des rendez-vous
+            Liste des Souscriptions
           </ListItem>
           <ListItem
             onClick={() => setActiveComponent('AjoutContrat')}
@@ -166,7 +166,7 @@ function AgentEnergie() {
             <ListItemPrefix>
               <IoCalendarNumber className="h-5 w-5" />
             </ListItemPrefix>
-            Ajouter un rendez-vous 
+           Souscription 
           </ListItem>
 
           <ListItem

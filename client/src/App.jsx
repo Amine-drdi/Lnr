@@ -54,6 +54,7 @@ import ManagerEnergie from './components/energie/ManagerEnergie';
 import AgentEnergie from './components/energie/AgentEnergie';
 import ListeEnergieAgent from './components/energie/ListeEnergieAgent';
 import ListeEnergieManager from './components/energie/ListeEnergieManager';
+import ListeEnergieDirection from './components/energie/ListeEnergieDirection';
 
 function App() {
   return (
@@ -285,11 +286,15 @@ function App() {
         />
           <Route 
           path="/Liste-RDV-Energie" 
-          element={<PrivateRoute element={<ListeEnergieAgent/>} allowedRoles={['ManagerEnergie','AgentEnergie']} />} 
+          element={<PrivateRoute element={<ListeEnergieAgent/>} allowedRoles={['ManagerEnergie']} />} 
         />
          <Route 
           path="/Liste-Energie-Manager" 
-          element={<PrivateRoute element={<ListeEnergieManager/>} allowedRoles={['ManagerEnergie','AgentEnergie']} />} 
+          element={<PrivateRoute element={<ListeEnergieManager/>} allowedRoles={['ManagerEnergie']} />} 
+        />
+         <Route 
+          path="/Liste-Energie-Direction" 
+          element={<PrivateRoute element={<ListeEnergieDirection/>} allowedRoles={['Direction']} />} 
         />
        </Routes>
     </Router>

@@ -27,6 +27,7 @@ import { GiDiploma } from "react-icons/gi";
 import { IoSettingsSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import { FaListCheck } from "react-icons/fa6";
+import { MdElectricBolt } from "react-icons/md";
 import logo from "../../assets/logo.png";
 import img from "../../assets/direction.png";
 import ListeContratsDirec from "../contrat/ListeContratsDirec";
@@ -52,6 +53,8 @@ import TableauCommercial from "../TableauCommercial";
 import CalendarDevis from "../CalendarDevis";
 import ListeContratsPrise from "../contrat/ListeContratsPrise";
 import Chat from "../Chat";
+import ListeEnergieDirection from "../energie/ListeEnergieDirection";
+import SouscriptionEnergie from "../energie/SouscriptionEnergie";
 
 export function Direction() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
@@ -131,6 +134,11 @@ export function Direction() {
               return <BlocNotes />;
             case 'Pointage':
               return <TablePointage/>;
+
+              case 'ListEnergie':
+              return <ListeEnergieDirection />;
+            case 'AjoutEnergie':
+              return <SouscriptionEnergie/>;
       default:
         return <DashboardContent />;
     }
@@ -278,6 +286,35 @@ export function Direction() {
                     <FaPlusCircle className="h-5 w-5 text-white " />
                   </ListItemPrefix>
                   ajouter un RDV
+                </ListItem>
+              </List>
+            </AccordionBody>
+          </Accordion>
+
+          <Accordion open={open === 3} icon={<RiArrowDropDownLine className="h-7 w-7 text-white" />}>
+            <ListItem className="p-0">
+              <AccordionHeader onClick={() => handleAccordionOpen(3)} className="border-b-0 p-3">
+                <ListItemPrefix>
+                  <MdElectricBolt className="h-5 w-5 text-white" />
+                </ListItemPrefix>
+                <Typography color="white" className="mr-auto font-normal">
+                  Energie
+                </Typography>
+              </AccordionHeader>
+            </ListItem>
+            <AccordionBody className="py-1">
+              <List className="p-0">
+                <ListItem onClick={() => setActiveComponent('ListEnergie')} className="hover:bg-blue-600 text-white pl-10">
+                  <ListItemPrefix>
+                    <FaListCheck className="h-5 w-5 text-white " />
+                  </ListItemPrefix>
+                  Liste des Souscriptions energie
+                </ListItem>
+                <ListItem onClick={() => setActiveComponent('AjoutEnergie')} className="hover:bg-blue-600 text-white pl-10">
+                  <ListItemPrefix>
+                    <FaPlusCircle className="h-5 w-5 text-white " />
+                  </ListItemPrefix>
+                  Souscription energie
                 </ListItem>
               </List>
             </AccordionBody>

@@ -99,7 +99,7 @@ function ManagerEnergie() {
             <ListItemPrefix>
               <CiBoxList className="h-5 w-5" />
             </ListItemPrefix>
-           liste des Rendez-vous
+            Liste des Souscriptions
           </ListItem>
 
           <ListItem
@@ -109,7 +109,7 @@ function ManagerEnergie() {
             <ListItemPrefix>
               <IoCalendarNumber className="h-5 w-5" />
             </ListItemPrefix>
-            Ajouter UN RDV
+            Souscription
           </ListItem>
 
           <ListItem

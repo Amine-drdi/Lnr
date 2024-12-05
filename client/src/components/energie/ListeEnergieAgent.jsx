@@ -91,7 +91,7 @@ function ListeEnergieAgent() {
 
   return (
     <div className="max-w-full mx-auto p-6 bg-blue-gray-50 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-semibold text-left  text-blue-gray-700 mb-6 border-b pb-4 "> Liste des Rendez-vous</h1>
+      <h1 className="text-3xl font-semibold text-left  text-blue-gray-700 mb-6 border-b pb-4 ">Liste des Souscriptions</h1>
       <div className="mb-4">
         <input
           type="text"

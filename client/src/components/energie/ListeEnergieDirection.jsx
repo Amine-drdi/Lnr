@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
-
-
-function ListeEnergieManager() {
+import { RiDeleteBinLine } from "react-icons/ri";
+import Swal from "sweetalert2";
+function ListeEnergieDirection() {
   const [energies, setEnergies] = useState([]);
   const [filteredEnergies, setFilteredEnergies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -86,6 +86,49 @@ function ListeEnergieManager() {
     }
   };
 
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: 'Êtes-vous sûr ?',
+      text: "Cette action est irréversible !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler',
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`http://51.83.69.195:5000/api/energies/${id}`, {
+          method: 'DELETE',
+        });
+  
+        if (!response.ok) {
+          throw new Error('Erreur lors de la suppression');
+        }
+  
+        // Met à jour la liste des énergies
+        setEnergies((prevEnergies) => prevEnergies.filter((energie) => energie._id !== id));
+        setFilteredEnergies((prevEnergies) => prevEnergies.filter((energie) => energie._id !== id));
+  
+        // Notification de succès
+        Swal.fire(
+          'Supprimé !',
+          'Le contrat a été supprimé avec succès.',
+          'success'
+        );
+      } catch (error) {
+        console.error(error.message);
+        Swal.fire(
+          'Erreur !',
+          "Une erreur s'est produite lors de la suppression.",
+          'error'
+        );
+      }
+    }
+  };
+
   if (loading) {
     return <div>Chargement des données...</div>;
   }
@@ -135,7 +178,10 @@ function ListeEnergieManager() {
               <tr key={Energie._id} className="hover:bg-gray-50 transition-colors">
               <td className="px-4 py-3 text-sm text-gray-700 text-center">{filteredEnergies.length - index}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">
+                <div className="flex items-center space-x-2">
                   <FaEye className="text-blue-500 cursor-pointer w-4 h-4" onClick={() => handleViewEnergie(Energie)} />
+                  <RiDeleteBinLine className="text-red-500 cursor-pointer w-4 h-4" onClick={() => handleDelete(Energie._id)}/>
+                </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">{Energie.userName}</td>
                
@@ -298,7 +344,7 @@ function ListeEnergieManager() {
                   </label>
 
                   <label className="block mb-2">
-                    <span className="text-gray-700">Date prise RDV:</span>
+                    <span className="text-gray-700">Date prise RDV :</span>
                     <input
                       name="datePriseRDV"
                       value={formData.datePriseRDV}
@@ -307,7 +353,7 @@ function ListeEnergieManager() {
                     />
                   </label>
                   <label className="block mb-2">
-                    <span className="text-gray-700">Date RDV:</span>
+                    <span className="text-gray-700">Date RDV :</span>
                     <input
                       name="dateRDV"
                       value={formData.dateRDV}
@@ -316,9 +362,9 @@ function ListeEnergieManager() {
                     />
                   </label>
                   <label className="block mb-2">
-                    <span className="text-gray-700">Heure RDV:</span>
+                    <span className="text-gray-700">Heure RDV :</span>
                     <input
-                      name="heureRDV"
+                      name="heureEnergie"
                       value={formData.heureRDV}
                       onChange={handleInputChange}
                       className="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
@@ -366,4 +412,4 @@ function ListeEnergieManager() {
   );
 }
 
-export default ListeEnergieManager;
+export default ListeEnergieDirection;
