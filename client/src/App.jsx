@@ -55,7 +55,6 @@ import AgentEnergie from './components/energie/AgentEnergie';
 import ListeEnergieAgent from './components/energie/ListeEnergieAgent';
 import ListeEnergieManager from './components/energie/ListeEnergieManager';
 import ListeEnergieDirection from './components/energie/ListeEnergieDirection';
-import FileReader from './components/fileReader';
 import ChatEnergie from './components/ChatEnergie';
 
 function App() {
