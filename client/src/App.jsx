@@ -290,10 +290,10 @@ function App() {
           path="/Liste-Energie-Direction" 
           element={<PrivateRoute element={<ListeEnergieDirection/>} allowedRoles={['Direction']} />} 
         />
-        <Route 
+        {/*<Route 
           path="/file" 
           element={<PrivateRoute element={<FileReader/>} allowedRoles={['Direction']} />} 
-        />
+        />*/}
        </Routes>
     </Router>
   );
