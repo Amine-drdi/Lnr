@@ -8,10 +8,14 @@ const Contrat = require('./models/Contrat');
 const Devis = require('./models/Devis');
 const RDV = require('./models/RDV');
 const Note = require('./models/Note');
+const Challenge = require('./models/Challenge');
 const UserStatus = require('./models/UserStatus');
 const messageRoutes = require('./routes/messages');
+const messageRoutesENERGIE = require("./routes/messagesenergies");
 const appointmentRoutes = require("./routes/appointments");
 const energieRoutes = require("./routes/energie");
+
+
 const ContratUpdate = require('./models/ContratUpdate') ;
 const moment = require('moment');
 const path = require('path');
@@ -41,6 +45,7 @@ mongoose.connect('mongodb://mongodb:27017/mydatabase')
 
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
   app.use('/api/messages', messageRoutes);
+  app.use('/api/messagesEnergie', messageRoutesENERGIE);
   app.use('/api/energies', energieRoutes);
 // Routes calendrier2
 app.use("/api", appointmentRoutes);
@@ -116,7 +121,20 @@ app.get('/api/users', async (req, res) => {
 
 app.get('/api/userschat', async (req, res) => {
   try {
-    const allowedRoles = ['Direction', 'Commerciale', 'Manager', 'Gestionnaire', 'Prise'];
+    const allowedRoles = ['Direction', 'Commerciale', 'Manager', 'Gestionnaire', 'Prise' ];
+    const users = await User.find({ role: { $in: allowedRoles } }, 'matricule name role');
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
+  }
+});
+
+
+// Récupérer les utilisateurs pour chat energie
+
+app.get('/api/userschatenergies', async (req, res) => {
+  try {
+    const allowedRoles = ['AgentEnergie' ,'ManagerEnergie' ];
     const users = await User.find({ role: { $in: allowedRoles } }, 'matricule name role');
     res.json(users);
   } catch (error) {
@@ -199,6 +217,7 @@ app.post('/api/contrats',  async (req, res) => {
       ancienneMutuelle,
       typeResiliation,
       payement,
+      challengeValue
    
     } = req.body;
 
@@ -225,6 +244,7 @@ app.post('/api/contrats',  async (req, res) => {
       ancienneMutuelle,
       typeResiliation,
       payement,
+      challengeValue
 
     });
 
@@ -1099,7 +1119,8 @@ app.post('/api/calend-devis', async (req, res) => {
       niveauPropose,
       apporteurAffaire,
       commentaireAgent,
-      ancienneMutuelle
+      ancienneMutuelle,
+    
     } = req.body;
 
     // Créer un nouvel objet devis
@@ -1123,6 +1144,7 @@ app.post('/api/calend-devis', async (req, res) => {
       apporteurAffaire,
       commentaireAgent,
       ancienneMutuelle,
+      
     });
     // Sauvegarder dans la base de données
     await newDevis.save();
@@ -1155,6 +1177,63 @@ app.get('/api/devis-recup', async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur' });
   }
 });
+
+
+app.post('/api/challenges', async (req, res) => {
+  try {
+    const { value, userMatricule } = req.body; // Récupérer la valeur et le matricule depuis la requête
+    const newChallenge = new Challenge({
+      value,
+      userMatricule,
+      createdAt: new Date()
+    });
+    await newChallenge.save();
+    res.status(201).json({ message: 'Challenge enregistré avec succès!' });
+  } catch (error) {
+    console.error('Erreur lors de l\'enregistrement du challenge:', error);
+    res.status(500).json({ error: 'Une erreur est survenue.' });
+  }
+});
+
+
+// Exemple de code côté serveur (Express)
+app.get('/api/challenge', async (req, res) => {
+  try {
+    const challenge = await Challenge.findOne(); // Remplacez avec votre logique de récupération
+    if (!challenge) {
+      return res.status(404).json({ message: 'Challenge non trouvé' });
+    }
+    res.json({ value: challenge.value });
+  } catch (error) {
+    console.error('Erreur serveur:', error);  // Loggez l'erreur dans les logs du serveur
+    res.status(500).json({ message: 'Erreur interne du serveur', error: error.message });
+  }
+});
+
+app.put('/api/challenges/:id', async (req, res) => {
+  const { id } = req.params; // Récupération de l'ID
+  const { value } = req.body; // Récupération de la nouvelle valeur
+
+  try {
+    // Recherche et mise à jour du challenge
+    const updatedChallenge = await Challenge.findByIdAndUpdate(
+      id,
+      { value }, // Nouvelle valeur
+      { new: true } // Retourner le document mis à jour
+    );
+
+    if (!updatedChallenge) {
+      return res.status(404).json({ message: 'Challenge introuvable.' });
+    }
+
+    res.json({ message: 'Challenge mis à jour avec succès.', challenge: updatedChallenge });
+  } catch (error) {
+    console.error("Erreur serveur :", error);
+    res.status(500).json({ message: "Erreur serveur." });
+  }
+});
+
+
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;

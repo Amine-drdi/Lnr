@@ -22,15 +22,16 @@ import { CiBoxList } from "react-icons/ci";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import logo from "../../assets/logo.png";
 import img from "../../assets/user.png";
-
 import SouscriptionEnergie from './SouscriptionEnergie';
 import ListeEnergieAgent from './ListeEnergieAgent';
+import ChatEnergie from '../ChatEnergie';
 
 function AgentEnergie() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
   const [contratUpdates, setContratUpdates] = useState([]);
   const [open, setOpen] = useState(false);
+  const [Matricule, setMatricule] = useState('');
   const navigate = useNavigate();
   const [etat, setEtat] = useState('');
 
@@ -49,6 +50,7 @@ function AgentEnergie() {
           });
           setUserName(response.data.user.name);
           setEtat(response.data.user.etat);
+          setMatricule(response.data.user.matricule);
         } else {
           navigate('/');
         }
@@ -119,6 +121,8 @@ function AgentEnergie() {
 
       case 'AjoutContrat':
         return <SouscriptionEnergie />;
+        case 'ChatEnergie':
+          return <ChatEnergie currentUser={{ matricule: Matricule, name: userName }} />;
       default:
         return <SouscriptionEnergie />;
     }
@@ -167,6 +171,16 @@ function AgentEnergie() {
               <IoCalendarNumber className="h-5 w-5" />
             </ListItemPrefix>
            Souscription 
+          </ListItem>
+
+          <ListItem
+            onClick={() => setActiveComponent('ChatEnergie')}
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
+          >
+            <ListItemPrefix>
+              <IoCalendarNumber className="h-5 w-5" />
+            </ListItemPrefix>
+           Chat
           </ListItem>
 
           <ListItem

@@ -4,8 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { FaEye } from 'react-icons/fa';
 import { IoIosRefresh } from "react-icons/io";
 import Swal from 'sweetalert2';
-import { FaCheckCircle, FaTimesCircle} from 'react-icons/fa';
 import { MdPhoneMissed } from "react-icons/md";
+import { FaTimesCircle, FaCheckCircle, FaClock } from "react-icons/fa";
+
 function ListeContratsDirec() {
   const [contrats, setContrats] = useState([]);
   const [filteredContrats, setFilteredContrats] = useState([]);
@@ -429,24 +430,43 @@ const handleDeleteClick = async (contratId) => {
   )}
 </td>
 
-                <td className="px-4 py-3 text-sm text-gray-700">
-                 {editContratId === contrat._id ? (
-                <select
-                  name="payement"
-                  value={updatedContrat.payement}
-                  onChange={handleInputChangeModal}
-                  className="border rounded-md p-2"
-                 >
-                 {payements.map(payement => (
-                 <option key={payement} value={payement}>
-                 {payement}
-                 </option>
-                 ))}
-                 </select>
-                 ) : (
-                 contrat.payement
-                  )}
-                </td>
+<td className="px-4 py-3 text-sm">
+  {editContratId === contrat._id ? (
+    <select
+      name="payement"
+      value={updatedContrat.payement}
+      onChange={handleInputChangeModal}
+      className="border rounded-md p-2"
+    >
+      {payements.map(payement => (
+        <option key={payement} value={payement}>
+          {payement}
+        </option>
+      ))}
+    </select>
+  ) : (
+    <span
+      className={`flex items-center gap-2 ${
+        contrat.payement === "Pas payé"
+          ? "text-red-500"
+          : contrat.payement === "Payé"
+          ? "text-green-500"
+          : "text-blue-500"
+      }`}
+    >
+      {contrat.payement === "Pas payé" && (
+        <i className="fas fa-times-circle"></i> /* Exemple avec FontAwesome */
+      )}
+      {contrat.payement === "Payé" && (
+        <i className="fas fa-check-circle"></i> /* Exemple avec FontAwesome */
+      )}
+      {contrat.payement === "Future" && (
+        <i className="fas fa-clock"></i> /* Exemple avec FontAwesome */
+      )}
+      {contrat.payement}
+    </span>
+  )}
+</td>
 
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (

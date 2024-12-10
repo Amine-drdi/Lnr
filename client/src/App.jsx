@@ -55,6 +55,8 @@ import AgentEnergie from './components/energie/AgentEnergie';
 import ListeEnergieAgent from './components/energie/ListeEnergieAgent';
 import ListeEnergieManager from './components/energie/ListeEnergieManager';
 import ListeEnergieDirection from './components/energie/ListeEnergieDirection';
+import FileReader from './components/fileReader';
+import ChatEnergie from './components/ChatEnergie';
 
 function App() {
   return (
@@ -70,12 +72,10 @@ function App() {
           path="/contratsComm" 
           element={<PrivateRoute element={<ListeContratsComm />} allowedRoles={['Commercial']} />} 
         />
-
         <Route 
           path="/contratsPrise" 
           element={<PrivateRoute element={<ListeContratsPrise />} allowedRoles={['Prise']} />} 
         />
-  
         <Route 
           path="/contratsDire" 
           element={<PrivateRoute element={<ListeContratsDirec />} allowedRoles={['Direction']} />} 
@@ -84,7 +84,6 @@ function App() {
           path="/contratsManager" 
           element={<PrivateRoute element={<ListeContratsManager />} allowedRoles={['Manager']} />} 
         />
-        
         <Route 
           path="/ajouter-contrat" 
           element={<PrivateRoute element={<Souscription />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
@@ -93,7 +92,7 @@ function App() {
           path="/ajouter-devis" 
           element={<PrivateRoute element={<Devis />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
         />
-          <Route 
+        <Route 
           path="/Calend" 
           element={<PrivateRoute element={<Calendrier />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
         />
@@ -150,14 +149,14 @@ function App() {
           path="/calendrier-Devis" 
           element={<PrivateRoute element={<CalendarDevis />} allowedRoles={['Commercial','Direction']} />} 
         />
-
-
         <Route 
           path="/chat" 
           element={<PrivateRoute element={<Chat />} allowedRoles={['Commercial','Direction']} />} 
         />
-
-
+          <Route 
+          path="/chat-energie" 
+          element={<PrivateRoute element={<ChatEnergie/>} allowedRoles={['ManagerEnergie','AgentEnergie']} />} 
+        />
         <Route 
           path="/profile-settings" 
           element={<PrivateRoute element={<ProfileSetting />} allowedRoles={['Direction']} />} 
@@ -174,7 +173,6 @@ function App() {
           path="/souscription-OPCO" 
           element={<PrivateRoute element={<SouscriptionOPCO />} allowedRoles={['CommercialeOPCO(A)', 'ManagerOPCO' ,'CommercialeOPCO(B)']} />} 
         />
-
         <Route 
           path="/liste-RDV" 
           element={<PrivateRoute element={<ListeRdv />} allowedRoles={['CommercialeOPCO' ,'CommercialeOPCO(B)', 'ManagerOPCO']} />} 
@@ -183,7 +181,7 @@ function App() {
           path="/liste-RDV-manager" 
           element={<PrivateRoute element={<ListeRdvManager />} allowedRoles={['ManagerOPCO']} />} 
         />
-          <Route 
+        <Route 
           path="/liste-RDV-direction" 
           element={<PrivateRoute element={<ListeRdvDirection />} allowedRoles={['Direction']} />} 
         />
@@ -191,11 +189,10 @@ function App() {
           path="/liste-RDV-commercial" 
           element={<PrivateRoute element={<ListeRdvCommVente />} allowedRoles={['ManagerOPCO' ,'Commerciale']} />} 
         />
-         <Route 
+        <Route 
           path="/liste-RDV-superviseur" 
           element={<PrivateRoute element={<ListeRdvSuperviseur />} allowedRoles={['superviseur-OPCO']} />} 
         />
-        
         <Route 
           path="/formation" 
           element={<PrivateRoute element={<Formation />} allowedRoles={['SouscriptionOPCO']} />} 
@@ -204,28 +201,28 @@ function App() {
           path="/rdv-today" 
           element={<PrivateRoute element={<RdvToday />} allowedRoles={['Direction']} />} 
         />
-         <Route 
+        <Route 
           path="/devis-Comm" 
           element={<PrivateRoute element={<ListeDevisComm />} allowedRoles={['Commercial']} />} 
         />
-          <Route 
+        <Route 
           path="/devis-Gest" 
           element={<PrivateRoute element={<ListeDevisGestio />} allowedRoles={['Gestionnaire']} />} 
         />
-         <Route 
+        <Route 
           path="/devi-Direction" 
           element={<PrivateRoute element={<ListeDevisDirec />} allowedRoles={['Direction']} />} 
         />
-          <Route 
+        <Route 
           path="/pointage" 
           element={<PrivateRoute element={<TablePointage />} allowedRoles={['Direction']} />} 
-          />
-          <Route 
+        />
+        <Route 
           path="/blocNote" 
           element={<PrivateRoute element={<BlocNotes />} allowedRoles={['Direction']} />} 
-          />
+        />
         {/* Rôles spécifiques */}
-         <Route 
+        <Route 
           path="/gestionnaire" 
           element={<PrivateRoute element={<Gestionnaire />} allowedRoles={['Gestionnaire']} />} 
         />
@@ -233,7 +230,7 @@ function App() {
           path="/commerciale" 
           element={<PrivateRoute element={<Commercial />} allowedRoles={['Commerciale']} />} 
         />
-          <Route 
+        <Route 
           path="/Prise" 
           element={<PrivateRoute element={<Prise />} allowedRoles={['Prise']} />} 
         />
@@ -241,12 +238,10 @@ function App() {
           path="/direction" 
           element={<PrivateRoute element={<Direction />} allowedRoles={['Direction']} />} 
         />
-   
         <Route 
           path="/manager" 
           element={<PrivateRoute element={<Manager />} allowedRoles={['Manager']} />} 
         />
-    
         <Route 
           path="/manager-OPCO" 
           element={<PrivateRoute element={<ManagerOPCO />} allowedRoles={['ManagerOPCO']} />} 
@@ -255,15 +250,15 @@ function App() {
           path="/Commercial-OPCO(A)" 
           element={<PrivateRoute element={<CommercialOPCO />} allowedRoles={['CommercialeOPCO(A)']} />} 
         />
-          <Route 
+        <Route 
           path="/Commercial-OPCO(B)" 
           element={<PrivateRoute element={<CommercialOPCO />} allowedRoles={['CommercialeOPCO(B)']} />} 
         />
-          <Route 
+        <Route 
           path="/Commercial-Vente(A)" 
           element={<PrivateRoute element={<CommercialVente />} allowedRoles={['CommercialeVente(A)']} />} 
         />
-          <Route 
+        <Route 
           path="/Commercial-Vente(B)" 
           element={<PrivateRoute element={<CommercialVente />} allowedRoles={['CommercialeVente(B)']} />} 
         />
@@ -271,8 +266,7 @@ function App() {
           path="/superviseur-OPCO" 
           element={<PrivateRoute element={<SuperviseurOPCO />} allowedRoles={['superviseur-OPCO']} />} 
         />
-     
-      <Route 
+        <Route 
           path="/Manager-energie" 
           element={<PrivateRoute element={<ManagerEnergie />} allowedRoles={['ManagerEnergie']} />} 
         />
@@ -280,21 +274,25 @@ function App() {
           path="/Agent-energie" 
           element={<PrivateRoute element={<AgentEnergie />} allowedRoles={['AgentEnergie']} />} 
         />
-          <Route 
+        <Route 
           path="/Souscription-energie" 
           element={<PrivateRoute element={<AgentEnergie />} allowedRoles={['ManagerEnergie','AgentEnergie']} />} 
         />
-          <Route 
+        <Route 
           path="/Liste-RDV-Energie" 
           element={<PrivateRoute element={<ListeEnergieAgent/>} allowedRoles={['ManagerEnergie']} />} 
         />
-         <Route 
+        <Route 
           path="/Liste-Energie-Manager" 
           element={<PrivateRoute element={<ListeEnergieManager/>} allowedRoles={['ManagerEnergie']} />} 
         />
-         <Route 
+        <Route 
           path="/Liste-Energie-Direction" 
           element={<PrivateRoute element={<ListeEnergieDirection/>} allowedRoles={['Direction']} />} 
+        />
+        <Route 
+          path="/file" 
+          element={<PrivateRoute element={<FileReader/>} allowedRoles={['Direction']} />} 
         />
        </Routes>
     </Router>

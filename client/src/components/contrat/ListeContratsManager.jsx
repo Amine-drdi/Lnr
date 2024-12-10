@@ -153,6 +153,8 @@ function ListeContratsManager() {
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Date d'Effet</th>
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Montant VP/mois</th>
             <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Ancienne Mutuelle</th>
+            <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Challenge</th>
+
             <th className="px-4 py-2 text-center text-xs font-medium text-white uppercase tracking-wider">Commentaire</th>
             </tr>
           </thead>
@@ -307,6 +309,19 @@ function ListeContratsManager() {
                     />
                   ) : (
                     contrat.ancienneMutuelle
+                  )}
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {editContratId === contrat._id ? (
+                    <input
+                      type="text"
+                      name="challengeValue"
+                      value={updatedContrat.challengeValue}
+                      onChange={handleInputChange}
+                      className="border rounded-md p-2"
+                    />
+                  ) : (
+                    contrat.challengeValue
                   )}
                 </td>
 

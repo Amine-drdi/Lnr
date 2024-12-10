@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import axios from 'axios'; // Assure-toi d'avoir installé axios
+import axios from 'axios'; 
 import { useNavigate } from 'react-router-dom';
 
 function Souscription({ setIsAdding }) {
@@ -23,9 +23,9 @@ function Souscription({ setIsAdding }) {
   const [typeResiliation , setTypeResiliation] = useState('');
   const [commentaireAgent, setCommentaireAgent] = useState('');
   const [Commercial, setUserName] = useState('');
+  const [challengeValue, setChallengeValue] = useState(null);
   const textInput = useRef(null);
   const navigate = useNavigate(); // Utilisation du hook navigate pour rediriger
-
   useEffect(() => {
     if (textInput.current) {
       textInput.current.focus();
@@ -50,10 +50,29 @@ function Souscription({ setIsAdding }) {
         navigate('/');
       }
     };
+  
 
     fetchProfile();
   }, [navigate]);
+  useEffect(() => {
+    const fetchChallenge = async () => {
+      try {
+        const response = await axios.get('http://51.83.69.195:5000/api/challenge'); // URL de votre API pour obtenir le challenge
+        setChallengeValue(response.data.value); // Supposons que la réponse a une propriété 'value'
+      } catch (error) {
+        console.error('Erreur lors de la récupération du challenge:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: 'Impossible de récupérer la valeur du challenge.',
+          showConfirmButton: true,
+          timer: 1500,
+        });
+      }
+    };
 
+    fetchChallenge(); // Appel de la fonction
+  }, []); // L'appel API se fait une seule fois lors du montage du composant
 
 
   const handleAdd = async (e) => {
@@ -103,6 +122,9 @@ function Souscription({ setIsAdding }) {
       commentaireAgent,
       ancienneMutuelle,
       typeResiliation,
+      challengeValue
+
+
      
 
     };
@@ -144,8 +166,9 @@ function Souscription({ setIsAdding }) {
       <form onSubmit={handleAdd} className="space-y-6">
       
         {/* Section Identité du Souscripteur */}
+        <p className="text-xl font-bold text-green-600 mb-4 text-left"> challenge: {challengeValue} DT  </p>
         <h2 className="text-2xl font-bold text-blue-gray-800 mb-4">Identité du Souscripteur  </h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="nom" className="block text-sm font-medium text-blue-gray-700">Nom</label>

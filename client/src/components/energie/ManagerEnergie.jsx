@@ -15,10 +15,13 @@ import img from "../../assets/manager.png";
 import { CiBoxList } from "react-icons/ci";
 import SouscriptionEnergie from './SouscriptionEnergie';
 import ListeEnergieManager from './ListeEnergieManager';
+import ChatEnergie from '../ChatEnergie';
+
 function ManagerEnergie() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
   const [etat, setEtat] = useState('');
+  const [Matricule, setMatricule] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +37,7 @@ function ManagerEnergie() {
           });
           setUserName(response.data.user.name);
           setEtat(response.data.user.etat);
+          setMatricule(response.data.user.matricule);
         } else {
           navigate('/');
         }
@@ -68,6 +72,8 @@ function ManagerEnergie() {
         return <ListeEnergieManager />;
       case 'AjoutRDV':
         return <SouscriptionEnergie />;
+        case 'ChatEnergie':
+          return <ChatEnergie currentUser={{ matricule: Matricule, name: userName }} />;
       default:
         return <SouscriptionEnergie />;
     }
@@ -111,7 +117,15 @@ function ManagerEnergie() {
             </ListItemPrefix>
             Souscription
           </ListItem>
-
+          <ListItem
+            onClick={() => setActiveComponent('ChatEnergie')}
+            className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}
+          >
+            <ListItemPrefix>
+              <IoCalendarNumber className="h-5 w-5" />
+            </ListItemPrefix>
+           Chat
+          </ListItem>
           <ListItem
             onClick={handleLogout}
             className="hover:bg-blue-600 text-white"
