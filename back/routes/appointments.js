@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const User = require('../models/User');
 const Appointment = require("../models/Appointment");
 
 // Récupérer tous les rendez-vous
@@ -38,6 +39,20 @@ router.get("/appointments/month/:month", async (req, res) => {
     date: { $regex: `^${month}` },
   });
   res.json(appointments);
+});
+
+
+router.get('/users', async (req, res) => {
+  try {
+    // Filtrer les utilisateurs par rôle ("Commerciale" ou "Prise")
+    const users = await User.find(
+      { role: { $in: ['Commerciale', 'Prise'] } }, // Utilisation de $in pour correspondre aux rôles
+      'name _id' // Récupérer uniquement le nom et l'ID
+    );
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
+  }
 });
 
 module.exports = router;

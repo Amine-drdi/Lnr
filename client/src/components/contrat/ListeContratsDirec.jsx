@@ -6,7 +6,10 @@ import { IoIosRefresh } from "react-icons/io";
 import Swal from 'sweetalert2';
 import { MdPhoneMissed } from "react-icons/md";
 import { FaTimesCircle, FaCheckCircle, FaClock } from "react-icons/fa";
-
+import { AiOutlineMinusCircle } from "react-icons/ai";
+import { MdCancel } from "react-icons/md";
+import { FaCheck } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa";
 function ListeContratsDirec() {
   const [contrats, setContrats] = useState([]);
   const [filteredContrats, setFilteredContrats] = useState([]);
@@ -20,7 +23,7 @@ function ListeContratsDirec() {
   const compagnies = ["","Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife" ,"Soly Azar" , "Zenio"];
   const etatDocs = ["" , "Validé", "Non validé", "NRP" , "Impayé", "Sans effet", "Rétractation", "Résigné"];
   const apporteurAffaires= ["","Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jbara" , "Rihab Kouki" ,"Leads"];
-  const payements = ["" , "Payé", "Pas payé" , "Future"];
+  const payements = ["" , "Payé", "Pas payé" , "Future" , "Retrait de commission"];
   const typeResiliations = ["" , "Infra", "Résiliation à échéance"];
   const [selectedMonth, setSelectedMonth] = useState(''); 
   const [selectedDay, setSelectedDay] = useState(''); // State pour le jour
@@ -396,7 +399,7 @@ const handleDeleteClick = async (contratId) => {
     <select
       name="etatDossier"
       value={updatedContrat.etatDossier}
-      onChange={handleInputChangeModal}
+      onChange={handleInputChange}
       className="border rounded-md p-2"
     >
       {etatDocs.map((etatDossier) => (
@@ -435,7 +438,7 @@ const handleDeleteClick = async (contratId) => {
     <select
       name="payement"
       value={updatedContrat.payement}
-      onChange={handleInputChangeModal}
+      onChange={handleInputChange}
       className="border rounded-md p-2"
     >
       {payements.map(payement => (
@@ -446,22 +449,29 @@ const handleDeleteClick = async (contratId) => {
     </select>
   ) : (
     <span
-      className={`flex items-center gap-2 ${
-        contrat.payement === "Pas payé"
-          ? "text-red-500"
-          : contrat.payement === "Payé"
+      className={`${
+        contrat.payement === "Payé"
           ? "text-green-500"
-          : "text-blue-500"
-      }`}
+          : contrat.payement === "Pas payé"
+          ? "text-red-500"
+          : contrat.payement === "Future"
+          ? "text-blue-500"
+          : contrat.payement === "Retrait de commission"
+          ? "text-orange-700"
+          : "text-gray-700"
+      } flex items-center`}
     >
       {contrat.payement === "Pas payé" && (
-        <i className="fas fa-times-circle"></i> /* Exemple avec FontAwesome */
+        <MdCancel className="h-4 w-4 mr-2"/>
       )}
       {contrat.payement === "Payé" && (
-        <i className="fas fa-check-circle"></i> /* Exemple avec FontAwesome */
+        <FaCheck className="h-4 w-4 mr-2"/> /* Exemple avec FontAwesome */
       )}
       {contrat.payement === "Future" && (
-        <i className="fas fa-clock"></i> /* Exemple avec FontAwesome */
+        <FaPlus className="h-4 w-4 mr-2"/>
+      )}
+            {contrat.payement === "Retrait de commission" && (
+        <AiOutlineMinusCircle className="h-4 w-4 mr-2"/>/* Exemple avec FontAwesome */
       )}
       {contrat.payement}
     </span>
@@ -538,7 +548,7 @@ const handleDeleteClick = async (contratId) => {
                 <select
                   name="compagnie"
                   value={updatedContrat.compagnie}
-                  onChange={handleInputChangeModal}
+                  onChange={handleInputChange}
                   className="border rounded-md p-2"
                  >
                  {compagnies.map(compagnie => (
@@ -595,7 +605,7 @@ const handleDeleteClick = async (contratId) => {
                 <select
                   name="apporteurAffaire"
                   value={updatedContrat.apporteurAffaire}
-                  onChange={handleInputChangeModal}
+                  onChange={handleInputChange}
                   className="border rounded-md p-2"
                  >
                  {apporteurAffaires.map(apporteurAffaire => (
@@ -627,7 +637,7 @@ const handleDeleteClick = async (contratId) => {
                 <select
                   name="typeResiliation"
                   value={updatedContrat.typeResiliation}
-                  onChange={handleInputChangeModal}
+                  onChange={handleInputChange}
                   className="border rounded-md p-2"
                  >
                  {typeResiliations.map(typeResiliation => (
@@ -788,8 +798,8 @@ const handleDeleteClick = async (contratId) => {
                   <option value="">Choisissez une option</option>
                   <option value="Payé">Payé</option>
                   <option value="Pas payé">Pas payé</option>
-                  <option value="Pas payé">Pas payé</option>
-
+                  <option value="Future">Future</option>
+                  <option value="Retrait de commission">Retrait de commission</option>
                 </select>
                 </div>
                 <div className="flex flex-col">

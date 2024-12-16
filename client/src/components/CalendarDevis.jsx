@@ -563,7 +563,7 @@ const CalendarDevis = () => {
       </div>
       <div>
       <h3 className="font-semibold">Nom et Prénom:</h3>
-      <p >{selectedDevis.nom.toUpperCase()} {selectedDevis.prenom.toUpperCase()}</p>
+      <p >{selectedDevis.nom.toUpperCase()}{selectedDevis.prenom.toUpperCase()}</p>
       </div>
       <div>
        <h3 className="font-semibold">Téléphone: </h3>

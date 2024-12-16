@@ -6,6 +6,7 @@ import { IoIosRefresh } from "react-icons/io";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { FaCheckCircle, FaTimesCircle} from 'react-icons/fa';
 import { MdPhoneMissed } from "react-icons/md";
+import { AiOutlineMinusCircle } from "react-icons/ai";
 function ListeContratsGestio() {
   const [contrats, setContrats] = useState([]);
   const [filteredContrats, setFilteredContrats] = useState([]);
@@ -16,7 +17,7 @@ function ListeContratsGestio() {
   const [updatedContrat, setUpdatedContrat] = useState({});
   const compagnies = ["" , "Néoliane", "Assurema", "Alptis", "April", "Malakoff Humanis", "Cegema", "Swisslife"];
   const etatDocs = ["" , "Validé", "Non validé","NRP" , "Sans effet", "Rétractation", "Résigné"];
-  const payements = ["" , "Payé", "Pas payé" , "Future"];
+  const payements = ["" , "Payé", "Pas payé" , "Future" , "Retrait de commission"];
   const typeResiliations= ["" , "Infra", "Résiliation à échéance"];
   const apporteurAffaires= ["Cyrine Ben Aicha" , "Sihem Selemi", "Hajer Askri" , "Rim Dabebi" , "Eya Ben Jbara" , "Rihab Kouki" ,"Leads"];
   const [selectedMonth, setSelectedMonth] = useState(''); //state pour le mois
@@ -377,6 +378,8 @@ function ListeContratsGestio() {
           ? "text-red-500"
           : contrat.payement === "Future"
           ? "text-blue-500"
+          : contrat.payement === "Retrait de commission"
+          ? "text-orange-700"
           : "text-gray-700"
       } flex items-center`}
     >
@@ -427,6 +430,11 @@ function ListeContratsGestio() {
             d="M12 5v14M5 12h14"
           />
         </svg>
+      )}
+            {contrat.payement === "Retrait de commission" && (
+       
+          <AiOutlineMinusCircle className="h-5 w-5 mr-2"/>
+        
       )}
       {contrat.payement}
     </span>
@@ -532,7 +540,7 @@ function ListeContratsGestio() {
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {editContratId === contrat._id ? (
                     <input
-                      type="text"
+                      type="text" 
                       name="effetDate"
                       value={updatedContrat.effetDate}
                       onChange={handleInputChange}
@@ -696,7 +704,7 @@ function ListeContratsGestio() {
               <>
 
             <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.etatDossier}</p>
-            <p className='text-left'><strong>État du dossier :</strong> {selectedContrat.payement}</p>
+            <p className='text-left'><strong>Paiement :</strong> {selectedContrat.payement}</p>
             <p className='text-left'><strong>Nom:</strong> {selectedContrat.nom ? selectedContrat.nom.toUpperCase() : ''}</p>
             <p className='text-left'><strong>Prénom:</strong> {selectedContrat.prenom ? selectedContrat.prenom.toUpperCase() : ''}</p>
             <p className='text-left'><strong>Date de Signature :</strong> {selectedContrat.signatureDate}</p>
@@ -752,6 +760,7 @@ function ListeContratsGestio() {
                   <option value="Payé">Payé</option>
                   <option value="Pas payé">Pas payé</option>
                   <option value="Future">Future</option>
+                  <option value="Retrait de commission">Retrait de commission</option>
                 </select>
                 </div>
                 <div className="flex flex-col">

@@ -36,6 +36,7 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import BlocNotes from '../BlocNotes';
 import CalendarDevis from '../CalendarDevis';
 import Chat from '../Chat';
+
 function Commercial() {
   const [activeComponent, setActiveComponent] = useState('dashboard');
   const [userName, setUserName] = useState('');
@@ -156,8 +157,7 @@ const handleStatusChange = async () => {
         return <ListeDevisComm />;
         case 'Add-devis':
           return <CalendarDevis />;
-      case 'Agenda':
-        return <Agenda />;
+
         case 'Chat':
            return <Chat currentUser={{ matricule: Matricule, name: userName }} />;
 

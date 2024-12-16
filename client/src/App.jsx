@@ -49,13 +49,13 @@ import CalendarDevis from './components/CalendarDevis';
 import SuperviseurOPCO from './components/Opco/SuperviseurOPCO';
 import ListeRdvSuperviseur from './components/Opco/ListeRdvSuperviseur';
 import Chat from './components/Chat';
-import Calendrier from './components/Calendrier';
 import ManagerEnergie from './components/energie/ManagerEnergie';
 import AgentEnergie from './components/energie/AgentEnergie';
 import ListeEnergieAgent from './components/energie/ListeEnergieAgent';
 import ListeEnergieManager from './components/energie/ListeEnergieManager';
 import ListeEnergieDirection from './components/energie/ListeEnergieDirection';
 import ChatEnergie from './components/ChatEnergie';
+import Calendrier from './components/Calendrier';
 
 function App() {
   return (
@@ -91,10 +91,12 @@ function App() {
           path="/ajouter-devis" 
           element={<PrivateRoute element={<Devis />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
         />
+        
         <Route 
-          path="/Calend" 
+          path="/Calendrier" 
           element={<PrivateRoute element={<Calendrier />} allowedRoles={['Gestionnaire', 'Commercial' , 'Direction']} />} 
         />
+
         <Route 
           path="/Liste-employe" 
           element={<PrivateRoute element={<ListeEmp />} allowedRoles={['Direction']} />} 

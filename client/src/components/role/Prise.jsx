@@ -108,6 +108,7 @@ const handleStatusChange = async () => {
           return <BlocNotes />;
             case 'Agenda':
               return <Agenda />;
+
               case 'Chat':
                 return <Chat currentUser={{ matricule: Matricule, name: userName }} />;
       default:
@@ -175,6 +176,7 @@ const handleStatusChange = async () => {
             </ListItemPrefix>
            Agenda
           </ListItem>
+
           <ListItem onClick={() => setActiveComponent('Chat')} 
           className={`hover:bg-blue-600 text-white ${etat === 0 ? 'pointer-events-none opacity-50' : ''}`}>
             <ListItemPrefix>
