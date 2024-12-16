@@ -93,7 +93,7 @@ app.post('/api/registerEmp', async (req, res) => {
       matricule,
       name,
       password,
-      role,
+      role, 
     });
 
     // Hacher le mot de passe avant d'enregistrer l'utilisateur
@@ -109,10 +109,50 @@ app.post('/api/registerEmp', async (req, res) => {
 // Route pour récupérer tous les utilisateurs
 app.get('/api/users', async (req, res) => {
   try {
-    const users = await User.find({}, { matricule: 1, name: 1, _id: 0 }); // Renvoyer uniquement les champs nécessaires
+    const users = await User.find();
     res.json(users);
+  } catch (err) {
+    console.error(err); // Affiche l'erreur dans la console serveur
+    res.status(500).json({ message: 'Erreur lors de la récupération des utilisateurs', error: err });
+  }
+});
+
+
+// Récupérer un utilisateur par ID
+app.get('/api/users/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur lors de la récupération de l\'utilisateur', error: err });
+  }
+});
+app.put('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'ID utilisateur invalide' });
+  }
+
+  try {
+    let updatedUser = req.body;
+
+    if (updatedUser.password) {
+      const salt = await bcrypt.genSalt(10);
+      updatedUser.password = await bcrypt.hash(updatedUser.password, salt);
+    }
+
+    const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    res.json({ user });
   } catch (error) {
-    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
+    res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'utilisateur' });
   }
 });
 

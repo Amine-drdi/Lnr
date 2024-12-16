@@ -42,7 +42,7 @@ router.get("/appointments/month/:month", async (req, res) => {
 });
 
 
-router.get('/users', async (req, res) => {
+router.get('/usersapp', async (req, res) => {
   try {
     // Filtrer les utilisateurs par rôle ("Commerciale" ou "Prise")
     const users = await User.find(

@@ -33,7 +33,7 @@ const Calendrier = () => {
     };
     const fetchUsers = async () => {
       try {
-        const { data } = await axios.get("/api/users");
+        const { data } = await axios.get("/api/usersapp");
         setUsers(data.map((user) => ({ value: user._id, label: user.name })));
       } catch (error) {
         console.error("Erreur lors de la récupération des utilisateurs :", error);

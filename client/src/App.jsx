@@ -57,6 +57,7 @@ import ListeEnergieDirection from './components/energie/ListeEnergieDirection';
 import ChatEnergie from './components/ChatEnergie';
 import Calendrier from './components/Calendrier';
 
+
 function App() {
   return (
     <Router>
@@ -101,6 +102,9 @@ function App() {
           path="/Liste-employe" 
           element={<PrivateRoute element={<ListeEmp />} allowedRoles={['Direction']} />} 
         />
+
+ 
+         
         <Route 
           path="/ajout-employe" 
           element={<PrivateRoute element={<AddAgent />} allowedRoles={['Manager']} />} 
